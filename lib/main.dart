@@ -21,6 +21,7 @@ void main() async {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme: TextTheme(
+          titleLarge: const TextStyle(),
           bodyLarge: TextStyle(fontSize: 16.sp),
           bodyMedium: TextStyle(fontSize: 14.sp),
           displayLarge: TextStyle(fontSize: 24.sp),
