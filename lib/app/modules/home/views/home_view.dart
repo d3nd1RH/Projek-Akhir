@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
@@ -45,19 +47,30 @@ class HomeView extends GetView<HomeController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 175.w,
-                    height: 175.h,
-                    color: const Color.fromRGBO(217, 217, 217, 1),
-                    child: Center(
-                      child: Text("Lihat Laporan",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.sp),),
+                  GestureDetector(
+                    onTap: (){
+                      Get.toNamed("/lihat-laporan");
+                    },
+                    child: Container(
+                      width: 175.w,
+                      height: 175.h,
+                      color: const Color.fromRGBO(217, 217, 217, 1),
+                      child: Center(
+                        child: Text("Lihat Laporan",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.sp),),
+                      ),
                     ),
                   ),
                   SizedBox(width:20.w),
-                  Container(
-                    width: 175.w,
-                    height: 175.h,
-                    color: const Color.fromRGBO(217, 217, 217, 1),
+                  GestureDetector(
+                    onTap: (){
+                      Get.toNamed("/costumer");
+                    },
+                    child: Container(
+                      width: 175.w,
+                      height: 175.h,
+                      color: const Color.fromRGBO(217, 217, 217, 1),
+                      child: Center(child: Text("Customer",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.sp),)),
+                    ),
                   ),
                 ],
               ),
@@ -67,7 +80,7 @@ class HomeView extends GetView<HomeController> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Get.offNamed("/stock-barang");
+                      Get.toNamed("/stock-barang");
                     },
                     child: Container(
                       width: 175.w,

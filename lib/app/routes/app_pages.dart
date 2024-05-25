@@ -1,6 +1,10 @@
 import 'package:get/get.dart';
 
 import '../../splash.dart';
+import '../modules/Costumer/bindings/costumer_binding.dart';
+import '../modules/Costumer/views/costumer_view.dart';
+import '../modules/Lihat_Laporan/bindings/lihat_laporan_binding.dart';
+import '../modules/Lihat_Laporan/views/lihat_laporan_view.dart';
 import '../modules/Stock_Barang/bindings/stock_barang_binding.dart';
 import '../modules/Stock_Barang/views/stock_barang_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -29,6 +33,16 @@ class AppPages {
       name: _Paths.STOCK_BARANG,
       page: () => const StockBarangView(),
       binding: StockBarangBinding(),
+    ),
+    GetPage(
+      name: _Paths.COSTUMER,
+      page: () => const CostumerView(),
+      binding: CostumerBinding(),
+    ),
+    GetPage(
+      name: _Paths.LIHAT_LAPORAN,
+      page: () => const LihatLaporanView(),
+      binding: LihatLaporanBinding(),
     ),
   ];
 }
