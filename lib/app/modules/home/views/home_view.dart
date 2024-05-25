@@ -65,12 +65,17 @@ class HomeView extends GetView<HomeController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 175.w,
-                    height: 175.h,
-                    color: const Color.fromRGBO(217, 217, 217, 1),
-                    child: Center(
-                      child: Text("Stock Barang",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.sp),),
+                  GestureDetector(
+                    onTap: () {
+                      Get.offNamed("/stock-barang");
+                    },
+                    child: Container(
+                      width: 175.w,
+                      height: 175.h,
+                      color: const Color.fromRGBO(217, 217, 217, 1),
+                      child: Center(
+                        child: Text("Stock Barang",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.sp),),
+                      ),
                     ),
                   ),
                   SizedBox(width:20.w),

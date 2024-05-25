@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../controllers/stock_barang_controller.dart';
 
 class StockBarangView extends GetView<StockBarangController> {
-  const StockBarangView({Key? key}) : super(key: key);
+  const StockBarangView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
