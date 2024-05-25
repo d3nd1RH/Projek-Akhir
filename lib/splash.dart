@@ -12,13 +12,14 @@ class Splash extends StatelessWidget{
     });
     return Scaffold(
       body: Container(
-      color: Colors.blue[100],
+      color: Colors.white,
       child: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Konsep",style: TextStyle(fontSize: 24.sp , fontWeight: FontWeight.bold, color: Colors.white), textAlign: TextAlign.center,),
-              Text("Ini Splash",style: TextStyle(fontSize: 24.sp , fontWeight: FontWeight.bold, color: Colors.white), textAlign: TextAlign.center,),
+              Image.asset("assets/images/Logo_Funtime.jpg",
+              width: 350.sp,
+              height: 350.sp,),
             ],
           ),
         ),
