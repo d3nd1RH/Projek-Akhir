@@ -44,38 +44,38 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBmo1Gsr2WkG2OS_QvEtA8EoWvae0z27QI',
-    appId: '1:528589416423:web:d22fe0c259111775cfff42',
-    messagingSenderId: '528589416423',
-    projectId: 'projectakhir-3736f',
-    authDomain: 'projectakhir-3736f.firebaseapp.com',
-    storageBucket: 'projectakhir-3736f.appspot.com',
-    measurementId: 'G-Y8318GNZP4',
+    apiKey: 'AIzaSyAcM3Px6UM-8j3NgUMMzILKrmoGDhdg71o',
+    appId: '1:99415410470:web:d0392d0c24881d1c7423e7',
+    messagingSenderId: '99415410470',
+    projectId: 'funtimeapp-c839f',
+    authDomain: 'funtimeapp-c839f.firebaseapp.com',
+    storageBucket: 'funtimeapp-c839f.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCYB7IDEM5FL_AYWNMcJjibpV4rwVfmwl0',
-    appId: '1:528589416423:android:1d86f906558f6caccfff42',
-    messagingSenderId: '528589416423',
-    projectId: 'projectakhir-3736f',
-    storageBucket: 'projectakhir-3736f.appspot.com',
+    apiKey: 'AIzaSyA2Fvec2lMq_dtWOZCdhou4eby0vBfUsZo',
+    appId: '1:99415410470:android:c4b3619641914e3c7423e7',
+    messagingSenderId: '99415410470',
+    projectId: 'funtimeapp-c839f',
+    storageBucket: 'funtimeapp-c839f.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBmpxeIK4zIxyu95emYJ1NvlIKCE-eJOrw',
-    appId: '1:528589416423:ios:4ec438e864828a63cfff42',
-    messagingSenderId: '528589416423',
-    projectId: 'projectakhir-3736f',
-    storageBucket: 'projectakhir-3736f.appspot.com',
+    apiKey: 'AIzaSyARwSr7iOuQSbdWGLdc1cT73Yvdf2vLaGU',
+    appId: '1:99415410470:ios:424f89dc707f9f297423e7',
+    messagingSenderId: '99415410470',
+    projectId: 'funtimeapp-c839f',
+    storageBucket: 'funtimeapp-c839f.appspot.com',
     iosBundleId: 'com.example.projectAkhir',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBmpxeIK4zIxyu95emYJ1NvlIKCE-eJOrw',
-    appId: '1:528589416423:ios:4ec438e864828a63cfff42',
-    messagingSenderId: '528589416423',
-    projectId: 'projectakhir-3736f',
-    storageBucket: 'projectakhir-3736f.appspot.com',
+    apiKey: 'AIzaSyARwSr7iOuQSbdWGLdc1cT73Yvdf2vLaGU',
+    appId: '1:99415410470:ios:424f89dc707f9f297423e7',
+    messagingSenderId: '99415410470',
+    projectId: 'funtimeapp-c839f',
+    storageBucket: 'funtimeapp-c839f.appspot.com',
     iosBundleId: 'com.example.projectAkhir',
   );
+
 }

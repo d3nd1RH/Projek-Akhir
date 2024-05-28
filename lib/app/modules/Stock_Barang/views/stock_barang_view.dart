@@ -25,222 +25,224 @@ class StockBarangView extends GetView<StockBarangController> {
             ),
         ],
       ),
-      body: Center(
-        child: Column(
-          children: [
-            DataTable(
-              border: TableBorder.all(color: Colors.black),
-              columns: const <DataColumn>[
-                DataColumn(
-                  label: Text(
-                    'Makanan',
-                    style: TextStyle(fontWeight: FontWeight.bold,),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              DataTable(
+                border: TableBorder.all(color: Colors.black),
+                columns: const <DataColumn>[
+                  DataColumn(
+                    label: Text(
+                      'Makanan',
+                      style: TextStyle(fontWeight: FontWeight.bold,),
+                    ),
                   ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'Stock',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  DataColumn(
+                    label: Text(
+                      'Stock',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-              ],
-              rows: <DataRow>[
-                DataRow(
-                  cells: <DataCell>[
-                    DataCell(
-                      Row(
-                      children: [
-                        const CircleAvatar(
-                        backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
-                        SizedBox(width: 10.w),
-                        const Flexible(child: Text('Pisang Goreng Crispy')),
-                      ],
-                    )),
-                    DataCell(Row(
-                      children: [
-                        IconButton(
-                          onPressed: (){
-                        }, 
-                        icon: const Icon(Icons.add)
-                        ),
-                        const Text('25'),
-                        IconButton(
-                          onPressed: (){
-                        }, 
-                        icon: const Icon(Icons.remove)
-                        ),
-                      ],
-                    )),
-                  ],
-                ),
-                DataRow(
-                  cells: <DataCell>[
-                    DataCell(
-                      Row(
-                      children: [
-                        const CircleAvatar(
-                        backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
-                        SizedBox(width: 10.w),
-                        const Flexible(child: Text('Kentang Goreng')),
-                      ],
-                    )),
-                    DataCell(Row(
-                      children: [
-                        IconButton(
-                          onPressed: (){
-                        }, 
-                        icon: const Icon(Icons.add)
-                        ),
-                        const Text('25'),
-                        IconButton(
-                          onPressed: (){
-                        }, 
-                        icon: const Icon(Icons.remove)
-                        ),
-                      ],
-                    )),
-                  ],
-                ),
-               DataRow(
-                  cells: <DataCell>[
-                    DataCell(
-                      Row(
-                      children: [
-                        const CircleAvatar(
-                        backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
-                        SizedBox(width: 10.w),
-                        const Flexible(child: Text('Sosis Keju')),
-                      ],
-                    )),
-                    DataCell(Row(
-                      children: [
-                        IconButton(
-                          onPressed: (){
-                        }, 
-                        icon: const Icon(Icons.add)
-                        ),
-                        const Text('25'),
-                        IconButton(
-                          onPressed: (){
-                        }, 
-                        icon: const Icon(Icons.remove)
-                        ),
-                      ],
-                    )),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 20.h),
-            DataTable(
-              border: TableBorder.all(color: Colors.black),
-              columns: const <DataColumn>[
-                DataColumn(
-                  label: Text(
-                    'Minuman',
-                    style: TextStyle(fontWeight: FontWeight.bold,),
+                ],
+                rows: <DataRow>[
+                  DataRow(
+                    cells: <DataCell>[
+                      DataCell(
+                        Row(
+                        children: [
+                          const CircleAvatar(
+                          backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
+                          SizedBox(width: 10.w),
+                          const Flexible(child: Text('Pisang Goreng Crispy')),
+                        ],
+                      )),
+                      DataCell(Row(
+                        children: [
+                          IconButton(
+                            onPressed: (){
+                          }, 
+                          icon: const Icon(Icons.add)
+                          ),
+                          const Text('25'),
+                          IconButton(
+                            onPressed: (){
+                          }, 
+                          icon: const Icon(Icons.remove)
+                          ),
+                        ],
+                      )),
+                    ],
                   ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'Stock',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  DataRow(
+                    cells: <DataCell>[
+                      DataCell(
+                        Row(
+                        children: [
+                          const CircleAvatar(
+                          backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
+                          SizedBox(width: 10.w),
+                          const Flexible(child: Text('Kentang Goreng')),
+                        ],
+                      )),
+                      DataCell(Row(
+                        children: [
+                          IconButton(
+                            onPressed: (){
+                          }, 
+                          icon: const Icon(Icons.add)
+                          ),
+                          const Text('25'),
+                          IconButton(
+                            onPressed: (){
+                          }, 
+                          icon: const Icon(Icons.remove)
+                          ),
+                        ],
+                      )),
+                    ],
                   ),
-                ),
-              ],
-              rows: <DataRow>[
-                DataRow(
-                  cells: <DataCell>[
-                    DataCell(
-                      Row(
-                      children: [
-                        const CircleAvatar(
-                        backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
-                        SizedBox(width: 10.w),
-                        const Flexible(child: Text('Juice Mangga')),
-                      ],
-                    )),
-                    DataCell(Row(
-                      children: [
-                        IconButton(
-                          onPressed: (){
-                        }, 
-                        icon: const Icon(Icons.add)
-                        ),
-                        const Text('25'),
-                        IconButton(
-                          onPressed: (){
-                        }, 
-                        icon: const Icon(Icons.remove)
-                        ),
-                      ],
-                    )),
-                  ],
-                ),
-                DataRow(
-                  cells: <DataCell>[
-                    DataCell(
-                      Row(
-                      children: [
-                        const CircleAvatar(
-                        backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
-                        SizedBox(width: 10.w),
-                        const Flexible(child: Text('Juice Jeruk')),
-                      ],
-                    )),
-                    DataCell(Row(
-                      children: [
-                        IconButton(
-                          onPressed: (){
-                        }, 
-                        icon: const Icon(Icons.add)
-                        ),
-                        const Text('25'),
-                        IconButton(
-                          onPressed: (){
-                        }, 
-                        icon: const Icon(Icons.remove)
-                        ),
-                      ],
-                    )),
-                  ],
-                ),
-               DataRow(
-                  cells: <DataCell>[
-                    DataCell(
-                      Row(
-                      children: [
-                        const CircleAvatar(
-                        backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
-                        SizedBox(width: 10.w),
-                        const Flexible(child: Text('Juice Nanas')),
-                      ],
-                    )),
-                    DataCell(Row(
-                      children: [
-                        IconButton(
-                          onPressed: (){
-                        }, 
-                        icon: const Icon(Icons.add)
-                        ),
-                        const Text('25'),
-                        IconButton(
-                          onPressed: (){
-                        }, 
-                        icon: const Icon(Icons.remove)
-                        ),
-                      ],
-                    )),
-                  ],
-                ),
-              ],
-            ),
-          ],
+                 DataRow(
+                    cells: <DataCell>[
+                      DataCell(
+                        Row(
+                        children: [
+                          const CircleAvatar(
+                          backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
+                          SizedBox(width: 10.w),
+                          const Flexible(child: Text('Sosis Keju')),
+                        ],
+                      )),
+                      DataCell(Row(
+                        children: [
+                          IconButton(
+                            onPressed: (){
+                          }, 
+                          icon: const Icon(Icons.add)
+                          ),
+                          const Text('25'),
+                          IconButton(
+                            onPressed: (){
+                          }, 
+                          icon: const Icon(Icons.remove)
+                          ),
+                        ],
+                      )),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.h),
+              DataTable(
+                border: TableBorder.all(color: Colors.black),
+                columns: const <DataColumn>[
+                  DataColumn(
+                    label: Text(
+                      'Minuman',
+                      style: TextStyle(fontWeight: FontWeight.bold,),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Stock',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+                rows: <DataRow>[
+                  DataRow(
+                    cells: <DataCell>[
+                      DataCell(
+                        Row(
+                        children: [
+                          const CircleAvatar(
+                          backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
+                          SizedBox(width: 10.w),
+                          const Flexible(child: Text('Juice Mangga')),
+                        ],
+                      )),
+                      DataCell(Row(
+                        children: [
+                          IconButton(
+                            onPressed: (){
+                          }, 
+                          icon: const Icon(Icons.add)
+                          ),
+                          const Text('25'),
+                          IconButton(
+                            onPressed: (){
+                          }, 
+                          icon: const Icon(Icons.remove)
+                          ),
+                        ],
+                      )),
+                    ],
+                  ),
+                  DataRow(
+                    cells: <DataCell>[
+                      DataCell(
+                        Row(
+                        children: [
+                          const CircleAvatar(
+                          backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
+                          SizedBox(width: 10.w),
+                          const Flexible(child: Text('Juice Jeruk')),
+                        ],
+                      )),
+                      DataCell(Row(
+                        children: [
+                          IconButton(
+                            onPressed: (){
+                          }, 
+                          icon: const Icon(Icons.add)
+                          ),
+                          const Text('25'),
+                          IconButton(
+                            onPressed: (){
+                          }, 
+                          icon: const Icon(Icons.remove)
+                          ),
+                        ],
+                      )),
+                    ],
+                  ),
+                 DataRow(
+                    cells: <DataCell>[
+                      DataCell(
+                        Row(
+                        children: [
+                          const CircleAvatar(
+                          backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
+                          SizedBox(width: 10.w),
+                          const Flexible(child: Text('Juice Nanas')),
+                        ],
+                      )),
+                      DataCell(Row(
+                        children: [
+                          IconButton(
+                            onPressed: (){
+                          }, 
+                          icon: const Icon(Icons.add)
+                          ),
+                          const Text('25'),
+                          IconButton(
+                            onPressed: (){
+                          }, 
+                          icon: const Icon(Icons.remove)
+                          ),
+                        ],
+                      )),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton:FloatingActionButton(
         onPressed: (){
-
+        controller.tambahBarang();
       },
       child: const Icon(Icons.add),
       ) ,
