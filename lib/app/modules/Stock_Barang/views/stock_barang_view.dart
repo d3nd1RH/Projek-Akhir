@@ -25,217 +25,189 @@ class StockBarangView extends GetView<StockBarangController> {
             ),
         ],
       ),
-      body: SingleChildScrollView(
+       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
-              DataTable(
-                border: TableBorder.all(color: Colors.black),
-                columns: const <DataColumn>[
-                  DataColumn(
-                    label: Text(
-                      'Makanan',
-                      style: TextStyle(fontWeight: FontWeight.bold,),
+              Obx(() {
+                return DataTable(
+                  border: TableBorder.all(color: Colors.black),
+                  columns: const <DataColumn>[
+                    DataColumn(
+                      label: Text(
+                        'Makanan',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Stock',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    DataColumn(
+                      label: Text(
+                        'Stock',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                ],
-                rows: <DataRow>[
-                  DataRow(
-                    cells: <DataCell>[
-                      DataCell(
-                        Row(
-                        children: [
-                          const CircleAvatar(
-                          backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
-                          SizedBox(width: 10.w),
-                          const Flexible(child: Text('Pisang Goreng Crispy')),
-                        ],
-                      )),
-                      DataCell(Row(
-                        children: [
-                          IconButton(
-                            onPressed: (){
-                          }, 
-                          icon: const Icon(Icons.add)
+                  ],
+                  rows: controller.makananList.map((item) {
+                    return DataRow(
+                      cells: <DataCell>[
+                        DataCell(
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: item['imageURL'] != null && item['imageURL'] != ""
+                                  ? NetworkImage(item['imageURL'])
+                                  : const AssetImage("assets/images/Logo_Funtime.jpg") as ImageProvider,
+                              ),
+                              SizedBox(width: 10.w),
+                              Flexible(child: Text(item['nama'])),
+                            ],
                           ),
-                          const Text('25'),
-                          IconButton(
-                            onPressed: (){
-                          }, 
-                          icon: const Icon(Icons.remove)
-                          ),
-                        ],
-                      )),
-                    ],
-                  ),
-                  DataRow(
-                    cells: <DataCell>[
-                      DataCell(
-                        Row(
-                        children: [
-                          const CircleAvatar(
-                          backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
-                          SizedBox(width: 10.w),
-                          const Flexible(child: Text('Kentang Goreng')),
-                        ],
-                      )),
-                      DataCell(Row(
-                        children: [
-                          IconButton(
-                            onPressed: (){
-                          }, 
-                          icon: const Icon(Icons.add)
-                          ),
-                          const Text('25'),
-                          IconButton(
-                            onPressed: (){
-                          }, 
-                          icon: const Icon(Icons.remove)
-                          ),
-                        ],
-                      )),
-                    ],
-                  ),
-                 DataRow(
-                    cells: <DataCell>[
-                      DataCell(
-                        Row(
-                        children: [
-                          const CircleAvatar(
-                          backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
-                          SizedBox(width: 10.w),
-                          const Flexible(child: Text('Sosis Keju')),
-                        ],
-                      )),
-                      DataCell(Row(
-                        children: [
-                          IconButton(
-                            onPressed: (){
-                          }, 
-                          icon: const Icon(Icons.add)
-                          ),
-                          const Text('25'),
-                          IconButton(
-                            onPressed: (){
-                          }, 
-                          icon: const Icon(Icons.remove)
-                          ),
-                        ],
-                      )),
-                    ],
-                  ),
-                ],
-              ),
+                        ),
+                        DataCell(Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                int newStock = item['Banyak'] + 1;
+                                controller.updateStock(item['docId'], newStock);
+                              },
+                              icon: const Icon(Icons.add),
+                            ),
+                            Text(item['Banyak'].toString()),
+                            IconButton(
+                              onPressed: () {
+                                int newStock = item['Banyak'] - 1;
+                                if (newStock >= 0) {
+                                  controller.updateStock(item['docId'], newStock);
+                                }
+                              },
+                              icon: const Icon(Icons.remove),
+                            ),
+                          ],
+                        )),
+                      ],
+                    );
+                  }).toList(),
+                );
+              }),
               SizedBox(height: 20.h),
-              DataTable(
-                border: TableBorder.all(color: Colors.black),
-                columns: const <DataColumn>[
-                  DataColumn(
-                    label: Text(
-                      'Minuman',
-                      style: TextStyle(fontWeight: FontWeight.bold,),
+              Obx(() {
+                return DataTable(
+                  border: TableBorder.all(color: Colors.black),
+                  columns: const <DataColumn>[
+                    DataColumn(
+                      label: Text(
+                        'Minuman',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Stock',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    DataColumn(
+                      label: Text(
+                        'Stock',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                ],
-                rows: <DataRow>[
-                  DataRow(
-                    cells: <DataCell>[
-                      DataCell(
-                        Row(
-                        children: [
-                          const CircleAvatar(
-                          backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
-                          SizedBox(width: 10.w),
-                          const Flexible(child: Text('Juice Mangga')),
-                        ],
-                      )),
-                      DataCell(Row(
-                        children: [
-                          IconButton(
-                            onPressed: (){
-                          }, 
-                          icon: const Icon(Icons.add)
+                  ],
+                  rows: controller.minumanList.map((item) {
+                    return DataRow(
+                      cells: <DataCell>[
+                        DataCell(
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: item['imageURL'] != null && item['imageURL'] != ""
+                                  ? NetworkImage(item['imageURL'])
+                                  : const AssetImage("assets/images/Logo_Funtime.jpg") as ImageProvider,
+                              ),
+                              SizedBox(width: 10.w),
+                              Flexible(child: Text(item['nama'])),
+                            ],
                           ),
-                          const Text('25'),
-                          IconButton(
-                            onPressed: (){
-                          }, 
-                          icon: const Icon(Icons.remove)
+                        ),
+                        DataCell(Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                int newStock = item['Banyak'] + 1;
+                                controller.updateStock(item['docId'], newStock);
+                              },
+                              icon: const Icon(Icons.add),
+                            ),
+                            Text(item['Banyak']),
+                            IconButton(
+                              onPressed: () {
+                                int newStock = item['Banyak'] - 1;
+                                if (newStock >= 0) {
+                                  controller.updateStock(item['docId'], newStock);
+                                }
+                              },
+                              icon: const Icon(Icons.remove),
+                            ),
+                          ],
+                        )),
+                      ],
+                    );
+                  }).toList(),
+                );
+              }),
+              SizedBox(height: 20.h),
+              Obx(() {
+                return DataTable(
+                  border: TableBorder.all(color: Colors.black),
+                  columns: const <DataColumn>[
+                    DataColumn(
+                      label: Text(
+                        'Lainnya',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Text(
+                        'Stock',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                  rows: controller.lainnyaList.map((item) {
+                    return DataRow(
+                      cells: <DataCell>[
+                        DataCell(
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: item['imageURL'] != null && item['imageURL'] != ""
+                                  ? NetworkImage(item['imageURL'])
+                                  : const AssetImage("assets/images/Logo_Funtime.jpg") as ImageProvider,
+                              ),
+                              SizedBox(width: 10.w),
+                              Flexible(child: Text(item['nama'])),
+                            ],
                           ),
-                        ],
-                      )),
-                    ],
-                  ),
-                  DataRow(
-                    cells: <DataCell>[
-                      DataCell(
-                        Row(
-                        children: [
-                          const CircleAvatar(
-                          backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
-                          SizedBox(width: 10.w),
-                          const Flexible(child: Text('Juice Jeruk')),
-                        ],
-                      )),
-                      DataCell(Row(
-                        children: [
-                          IconButton(
-                            onPressed: (){
-                          }, 
-                          icon: const Icon(Icons.add)
-                          ),
-                          const Text('25'),
-                          IconButton(
-                            onPressed: (){
-                          }, 
-                          icon: const Icon(Icons.remove)
-                          ),
-                        ],
-                      )),
-                    ],
-                  ),
-                 DataRow(
-                    cells: <DataCell>[
-                      DataCell(
-                        Row(
-                        children: [
-                          const CircleAvatar(
-                          backgroundImage: AssetImage("assets/images/Logo_Funtime.jpg")),
-                          SizedBox(width: 10.w),
-                          const Flexible(child: Text('Juice Nanas')),
-                        ],
-                      )),
-                      DataCell(Row(
-                        children: [
-                          IconButton(
-                            onPressed: (){
-                          }, 
-                          icon: const Icon(Icons.add)
-                          ),
-                          const Text('25'),
-                          IconButton(
-                            onPressed: (){
-                          }, 
-                          icon: const Icon(Icons.remove)
-                          ),
-                        ],
-                      )),
-                    ],
-                  ),
-                ],
-              ),
+                        ),
+                        DataCell(Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                int newStock = item['Banyak'] + 1;
+                                controller.updateStock(item['docId'], newStock);
+                              },
+                              icon: const Icon(Icons.add),
+                            ),
+                            Text(item['Banyak']),
+                            IconButton(
+                              onPressed: () {
+                                int newStock = item['Banyak'] - 1;
+                                if (newStock >= 0) {
+                                  controller.updateStock(item['docId'], newStock);
+                                }
+                              },
+                              icon: const Icon(Icons.remove),
+                            ),
+                          ],
+                        )),
+                      ],
+                    );
+                  }).toList(),
+                );
+              }),
             ],
           ),
         ),

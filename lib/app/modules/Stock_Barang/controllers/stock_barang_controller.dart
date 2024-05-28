@@ -12,6 +12,10 @@ class StockBarangController extends GetxController {
   var selectedImagePath = ''.obs;
   CollectionReference ref = FirebaseFirestore.instance.collection('Menu');
 
+  var makananList = <Map<String, dynamic>>[].obs;
+  var minumanList = <Map<String, dynamic>>[].obs;
+  var lainnyaList = <Map<String, dynamic>>[].obs;
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
@@ -27,7 +31,13 @@ class StockBarangController extends GetxController {
     }
   }
 
-     Future<void> uploadData() async {
+  @override
+  void onInit() {
+    super.onInit();
+    fetchData();
+  }
+
+  Future<void> uploadData() async {
     if (selectedImagePath.value.isNotEmpty) {
       final file = File(selectedImagePath.value);
       final storageRef = FirebaseStorage.instance
@@ -35,41 +45,161 @@ class StockBarangController extends GetxController {
           .child('menu_images/${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}');
       
       try {
-        // Upload file to Firebase Storage
         final uploadTask = storageRef.putFile(file);
         final snapshot = await uploadTask;
         
-        // Get the download URL
         final downloadURL = await snapshot.ref.getDownloadURL();
-        
-        // Prepare data to be stored in Firestore
+        if(
+          nameController.text.isNotEmpty &&
+          quantityController.text.isNotEmpty &&
+          priceController.text.isNotEmpty
+        ){
         final data = {
           "nama": nameController.text,
           "kategori": selectedCategory.value,
-          "Banyak": quantityController.text,
+          "Banyak": int.parse(quantityController.text),
           "Harga": priceController.text,
-          "imageURL": downloadURL, // Adding image URL to Firestore
+          "imageURL": downloadURL,
         };
-        
-        // Store data in Firestore
         final refDoc = ref.doc();
         await refDoc.set(data);
-        
+        fetchData(); 
+        }else if(
+          nameController.text.isNotEmpty &&
+          quantityController.text.isEmpty &&
+          priceController.text.isNotEmpty
+        ){
+          final data = {
+          "nama": nameController.text,
+          "kategori": selectedCategory.value,
+          "Banyak": 0,
+          "Harga": priceController.text,
+          "imageURL": downloadURL,
+        };
+        final refDoc = ref.doc();
+        await refDoc.set(data);
+        fetchData(); 
+        }else if(
+          nameController.text.isNotEmpty &&
+          quantityController.text.isNotEmpty &&
+          priceController.text.isEmpty
+        ){
+          final data = {
+          "nama": nameController.text,
+          "kategori": selectedCategory.value,
+          "Banyak": int.parse(quantityController.text),
+          "Harga": 0,
+          "imageURL": downloadURL,
+        };
+        final refDoc = ref.doc();
+        await refDoc.set(data);
+        fetchData(); 
+        }else if(
+          nameController.text.isNotEmpty &&
+          quantityController.text.isEmpty &&
+          priceController.text.isEmpty
+        ){
+          final data = {
+          "nama": nameController.text,
+          "kategori": selectedCategory.value,
+          "Banyak": 0,
+          "Harga": 0,
+          "imageURL": downloadURL,
+        };
+        final refDoc = ref.doc();
+        await refDoc.set(data);
+        fetchData(); 
+        }
       } catch (e) {
-        print('Error uploading image: $e');
+        Get.snackbar("Error",'Error uploading image: $e',backgroundColor: Colors.red);
       }
     } else {
-      // Handle case when no image is selected
-      final data = {
-        "nama": nameController.text,
-        "kategori": selectedCategory.value,
-        "Banyak": quantityController.text,
-        "Harga": priceController.text,
-        "imageURL": null, // No image selected
-      };
-      final refDoc = ref.doc();
-      await refDoc.set(data);
+      if(
+          nameController.text.isNotEmpty &&
+          quantityController.text.isNotEmpty &&
+          priceController.text.isNotEmpty
+        ){
+        final data = {
+          "nama": nameController.text,
+          "kategori": selectedCategory.value,
+          "Banyak": int.parse(quantityController.text),
+          "Harga": priceController.text,
+          "imageURL": null,
+        };
+        final refDoc = ref.doc();
+        await refDoc.set(data);
+        fetchData(); 
+        }else if(
+          nameController.text.isNotEmpty &&
+          quantityController.text.isEmpty &&
+          priceController.text.isNotEmpty
+        ){
+          final data = {
+          "nama": nameController.text,
+          "kategori": selectedCategory.value,
+          "Banyak": 0,
+          "Harga": priceController.text,
+          "imageURL": null,
+        };
+        final refDoc = ref.doc();
+        await refDoc.set(data);
+        fetchData(); 
+        }else if(
+          nameController.text.isNotEmpty &&
+          quantityController.text.isNotEmpty &&
+          priceController.text.isEmpty
+        ){
+          final data = {
+          "nama": nameController.text,
+          "kategori": selectedCategory.value,
+          "Banyak": int.parse(quantityController.text),
+          "Harga": 0,
+          "imageURL": null,
+        };
+        final refDoc = ref.doc();
+        await refDoc.set(data);
+        fetchData(); 
+        }else if(
+          nameController.text.isNotEmpty &&
+          quantityController.text.isEmpty &&
+          priceController.text.isEmpty
+        ){
+          final data = {
+          "nama": nameController.text,
+          "kategori": selectedCategory.value,
+          "Banyak": 0,
+          "Harga": 0,
+          "imageURL": null,
+        };
+        final refDoc = ref.doc();
+        await refDoc.set(data);
+        fetchData(); 
+        }
     }
+  }
+
+  void fetchData() async {
+    var makananSnapshot = await ref.where('kategori', isEqualTo: 'Makanan').get();
+    var minumanSnapshot = await ref.where('kategori', isEqualTo: 'Minuman').get();
+    var lainnyaSnapshot = await ref.where('kategori', isEqualTo: 'Lainnya').get();
+
+    makananList.value = makananSnapshot.docs.map((doc) {
+      var data = doc.data() as Map<String, dynamic>;
+      data['docId'] = doc.id;
+      return data;
+    }).toList();
+
+    minumanList.value = minumanSnapshot.docs.map((doc) {
+      var data = doc.data() as Map<String, dynamic>;
+      data['docId'] = doc.id;
+      return data;
+    }).toList();
+
+    lainnyaList.value = lainnyaSnapshot.docs.map((doc) {
+      var data = doc.data() as Map<String, dynamic>;
+      data['docId'] = doc.id;
+      return data;
+    }).toList();
   }
 
   void tambahBarang() {
@@ -176,5 +306,9 @@ class StockBarangController extends GetxController {
         ),
       ),
     );
+  }
+  Future<void> updateStock(String docId, int newStock) async {
+    await ref.doc(docId).update({'Banyak': newStock});
+    fetchData(); 
   }
 }
