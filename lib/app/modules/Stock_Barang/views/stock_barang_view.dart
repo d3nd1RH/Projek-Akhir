@@ -50,16 +50,22 @@ class StockBarangView extends GetView<StockBarangController> {
                     return DataRow(
                       cells: <DataCell>[
                         DataCell(
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundImage: item['imageURL'] != null && item['imageURL'] != ""
-                                  ? NetworkImage(item['imageURL'])
-                                  : const AssetImage("assets/images/Logo_Funtime.jpg") as ImageProvider,
-                              ),
-                              SizedBox(width: 10.w),
-                              Flexible(child: Text(item['nama'])),
-                            ],
+                          GestureDetector(
+                            onTap: (){
+                              controller.editDeleteBarang(item['docId']);
+                            },
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundImage: item['imageURL'] != null && item['imageURL'] != ""
+                                    ? NetworkImage(item['imageURL'])
+                                    : const AssetImage("assets/images/Logo_Funtime.jpg") as ImageProvider,
+                                ),
+                                SizedBox(width: 10.w),
+                                Flexible(child: Text(item['nama'].length <= 15 ? item['nama'] : item['nama'].substring(0, 15) + '...',
+                                )),
+                              ],
+                            ),
                           ),
                         ),
                         DataCell(Row(
@@ -71,7 +77,9 @@ class StockBarangView extends GetView<StockBarangController> {
                               },
                               icon: const Icon(Icons.add),
                             ),
-                            Text(item['Banyak'].toString()),
+                            Text(
+                              item['Banyak'] > 999 ? '999+' : item['Banyak'].toString()
+                            ),
                             IconButton(
                               onPressed: () {
                                 int newStock = item['Banyak'] - 1;
@@ -110,16 +118,22 @@ class StockBarangView extends GetView<StockBarangController> {
                     return DataRow(
                       cells: <DataCell>[
                         DataCell(
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundImage: item['imageURL'] != null && item['imageURL'] != ""
-                                  ? NetworkImage(item['imageURL'])
-                                  : const AssetImage("assets/images/Logo_Funtime.jpg") as ImageProvider,
-                              ),
-                              SizedBox(width: 10.w),
-                              Flexible(child: Text(item['nama'])),
-                            ],
+                          GestureDetector(
+                            onTap: (){
+                              controller.editDeleteBarang(item['docId']);
+                            },
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundImage: item['imageURL'] != null && item['imageURL'] != ""
+                                    ? NetworkImage(item['imageURL'])
+                                    : const AssetImage("assets/images/Logo_Funtime.jpg") as ImageProvider,
+                                ),
+                                SizedBox(width: 10.w),
+                                Flexible(child: Text(item['nama'].length <= 15 ? item['nama'] : item['nama'].substring(0, 15) + '...'
+                                )),
+                              ],
+                            ),
                           ),
                         ),
                         DataCell(Row(
@@ -131,7 +145,7 @@ class StockBarangView extends GetView<StockBarangController> {
                               },
                               icon: const Icon(Icons.add),
                             ),
-                            Text(item['Banyak']),
+                            Text(item['Banyak'] > 999 ? '999+' : item['Banyak'].toString()),
                             IconButton(
                               onPressed: () {
                                 int newStock = item['Banyak'] - 1;
@@ -170,16 +184,22 @@ class StockBarangView extends GetView<StockBarangController> {
                     return DataRow(
                       cells: <DataCell>[
                         DataCell(
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundImage: item['imageURL'] != null && item['imageURL'] != ""
-                                  ? NetworkImage(item['imageURL'])
-                                  : const AssetImage("assets/images/Logo_Funtime.jpg") as ImageProvider,
-                              ),
-                              SizedBox(width: 10.w),
-                              Flexible(child: Text(item['nama'])),
-                            ],
+                          GestureDetector(
+                            onTap: (){
+                              controller.editDeleteBarang(item['docId']);
+                            },
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundImage: item['imageURL'] != null && item['imageURL'] != ""
+                                    ? NetworkImage(item['imageURL'])
+                                    : const AssetImage("assets/images/Logo_Funtime.jpg") as ImageProvider,
+                                ),
+                                SizedBox(width: 10.w),
+                                Flexible(child: Text(item['nama'].length <= 15 ? item['nama'] : item['nama'].substring(0, 15) + '...'
+                                )),
+                              ],
+                            ),
                           ),
                         ),
                         DataCell(Row(
@@ -191,7 +211,7 @@ class StockBarangView extends GetView<StockBarangController> {
                               },
                               icon: const Icon(Icons.add),
                             ),
-                            Text(item['Banyak']),
+                            Text(item['Banyak'] > 999 ? '999+' : item['Banyak'].toString()),
                             IconButton(
                               onPressed: () {
                                 int newStock = item['Banyak'] - 1;

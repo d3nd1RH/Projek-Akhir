@@ -10,7 +10,7 @@ class CostumerView extends GetView<CostumerController> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Customer'),
@@ -25,9 +25,10 @@ class CostumerView extends GetView<CostumerController> {
             tabs: const [
               Tab(text: 'Makanan'),
               Tab(text: 'Minuman'),
+              Tab(text: 'Lainnya'),
             ],
             indicator: const BoxDecoration(
-              color: Color.fromRGBO(217, 217, 217, 1), // Warna latar belakang putih
+              color: Color.fromRGBO(217, 217, 217, 1),
             ),
             indicatorSize: TabBarIndicatorSize.tab,
             indicatorPadding: EdgeInsets.only(right: 30.0.w ,left: 30.0.w,top: 8.0.h,bottom: 8.0.h),
@@ -37,18 +38,9 @@ class CostumerView extends GetView<CostumerController> {
         ),
         body: TabBarView(
           children: [
-            Center(
-              child: Text(
-                'Daftar Makanan',
-                style: TextStyle(fontSize: 20.sp),
-              ),
-            ),
-            Center(
-              child: Text(
-                'Daftar Minuman',
-                style: TextStyle(fontSize: 20.sp),
-              ),
-            ),
+            controller.buildTab(controller.makananList),
+            controller.buildTab(controller.minumanList),
+            controller.buildTab(controller.lainnyaList),
           ],
         ),
       ),
