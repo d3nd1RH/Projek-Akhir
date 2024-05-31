@@ -59,10 +59,10 @@ class StockBarangController extends GetxController {
                 : 0,
             "Harga Reseller": priceAController.text.isNotEmpty
                 ? double.parse(priceAController.text)
-                : 0,
+                : 0.0,
             "Harga Biasa": priceBController.text.isNotEmpty
                 ? double.parse(priceBController.text)
-                : 0,
+                : 0.0,
             "imageURL": downloadURL,
           };
 
@@ -83,10 +83,12 @@ class StockBarangController extends GetxController {
               ? int.parse(quantityController.text)
               : 0,
           "Harga Reseller":
-              priceAController.text.isNotEmpty ? priceAController.text : 0,
+              priceAController.text.isNotEmpty 
+              ? double.parse(priceAController.text)
+              : 0.0,
           "Harga Biasa": priceBController.text.isNotEmpty
               ? double.parse(priceBController.text)
-              : 0,
+              : 0.0,
           "imageURL": null,
         };
 
@@ -117,10 +119,10 @@ class StockBarangController extends GetxController {
               : 0,
           "Harga Reseller": priceAController.text.isNotEmpty
               ? double.parse(priceAController.text)
-              : 0,
+              : 0.0,
           "Harga Biasa": priceBController.text.isNotEmpty
               ? double.parse(priceBController.text)
-              : 0,
+              : 0.0,
           "imageURL": downloadURL,
         };
 
@@ -141,10 +143,11 @@ class StockBarangController extends GetxController {
             ? int.parse(quantityController.text)
             : 0,
         "Harga Reseller":
-            priceAController.text.isNotEmpty ? priceAController.text : 0,
+            priceAController.text.isNotEmpty ? double.parse(priceAController.text)
+            : 0.0,
         "Harga Biasa": priceBController.text.isNotEmpty
             ? double.parse(priceBController.text)
-            : 0,
+            : 0.0,
 
         "imageURL": selectedImagePath.value.isNotEmpty ? selectedImagePath.value : null,
       };

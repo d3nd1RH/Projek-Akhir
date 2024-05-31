@@ -10,6 +10,9 @@ abstract class Routes {
   static const STOCK_BARANG = _Paths.STOCK_BARANG;
   static const COSTUMER = _Paths.COSTUMER;
   static const LIHAT_LAPORAN = _Paths.LIHAT_LAPORAN;
+  static const LOGIN = _Paths.LOGIN;
+  static const REGISTER = _Paths.REGISTER;
+  static const RESET_PASS = _Paths.RESET_PASS;
 }
 
 abstract class _Paths {
@@ -19,4 +22,7 @@ abstract class _Paths {
   static const STOCK_BARANG = '/stock-barang';
   static const COSTUMER = '/costumer';
   static const LIHAT_LAPORAN = '/lihat-laporan';
+  static const LOGIN = '/login';
+  static const REGISTER = '/register';
+  static const RESET_PASS = '/reset-pass';
 }
