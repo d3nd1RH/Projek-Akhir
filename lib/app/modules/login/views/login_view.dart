@@ -119,7 +119,7 @@ class LoginView extends GetView<LoginController> {
                             ),
                             TextButton(
                                 onPressed: () {
-                                  Get.toNamed("/register");
+                                  Get.offNamed("/register");
                                 },
                                 child: const Text(
                                   "Register",

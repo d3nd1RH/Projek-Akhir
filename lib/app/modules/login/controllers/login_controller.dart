@@ -15,7 +15,7 @@ class LoginController extends GetxController {
       UserCredential userlogin = await auth.signInWithEmailAndPassword(email: email, password: password);
       if(userlogin.user!.emailVerified){
         Get.snackbar("Success", "Berhasil login",backgroundColor: Colors.green);
-        Get.toNamed("/home");
+        Get.offNamed("/home");
       }else{
         Get.snackbar("Error", "Tolong Verifikasi Email anda",backgroundColor: Colors.red);
       }

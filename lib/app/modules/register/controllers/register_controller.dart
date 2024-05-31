@@ -33,7 +33,7 @@ class RegisterController extends GetxController {
       doc.set(data);
       Get.snackbar("Catatan", "Tolong cek Email anda",
           backgroundColor: Colors.yellow);
-      Get.back();
+      Get.offNamed("/login");
     } on FirebaseAuthException catch (e) {
       if (e.code == "weak-password") {
         Get.snackbar("Error", "Password Terlalu lemah",
