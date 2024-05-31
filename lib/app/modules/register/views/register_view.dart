@@ -202,7 +202,7 @@ class RegisterView extends GetView<RegisterController> {
                             ),
                             TextButton(
                                 onPressed: () {
-                                  Get.back();
+                                   Get.offNamed("/login");
                                 },
                                 child: const Text(
                                   "Login",
