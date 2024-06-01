@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../controllers/costumer_controller.dart';
 
 class CostumerView extends GetView<CostumerController> {
+  
   const CostumerView({super.key});
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class CostumerView extends GetView<CostumerController> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Customer'),
+          title: Obx(() => Text(controller.isReseller.value ? 'Reseller' : 'Customer')),
           titleTextStyle: TextStyle(
               fontSize: 25.sp,
               fontWeight: FontWeight.bold,
@@ -37,26 +38,42 @@ class CostumerView extends GetView<CostumerController> {
             labelColor: Colors.black,
           ),
         ),
-        body: TabBarView(
-          children: [
-            controller.buildTab(controller.makananList, 0),
-            controller.buildTab(
-                controller.minumanList, controller.makananList.length),
-            controller.buildTab(controller.lainnyaList,
-                controller.makananList.length + controller.minumanList.length),
-          ],
+         body: FutureBuilder<void>(
+          future: controller.fetchData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              return TabBarView(
+                children: [
+                  controller.buildTab(controller.makananList, 0),
+                  controller.buildTab(controller.minumanList, controller.makananList.length),
+                  controller.buildTab(controller.lainnyaList, controller.makananList.length + controller.minumanList.length),
+                ],
+              );
+            }
+          },
         ),
         bottomNavigationBar: Padding(
             padding: EdgeInsets.only(bottom: 8.0.h, top: 8.0.h,right: 30.h,left: 30.h),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                controller.showConfirmationDialog(context, () {
+                controller.savePurchase();
+              });
+              },
+              onLongPress: (){
+                controller.toggleReseller();
+              },
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius:
-                      BorderRadius.circular(10.0), // Atur radius sudut di sini
+                      BorderRadius.circular(10.0),
                 ),
                 backgroundColor:
-                    const Color.fromRGBO(203, 82, 82, 1), // Atur warna latar belakang di sini
+                    const Color.fromRGBO(203, 82, 82, 1),
               ),
               child: Obx(()=>Text("Rp ${controller.selectedPrice.value}",style: const TextStyle(color:Colors.black),)),
             )),

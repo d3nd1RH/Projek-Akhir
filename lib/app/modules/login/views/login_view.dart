@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 
@@ -16,15 +17,15 @@ class LoginView extends GetView<LoginController> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 30,
+                SizedBox(
+                  height: 30.h,
                 ),
-                const Text(
+                Text(
                   'FUNTIME',
-                  style: TextStyle(fontSize: 40, color: Colors.white),
+                  style: TextStyle(fontSize: 40.sp, color: Colors.white),
                 ),
-                const SizedBox(
-                  height: 30,
+                SizedBox(
+                  height: 30.h,
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -33,21 +34,21 @@ class LoginView extends GetView<LoginController> {
                         image: AssetImage("assets/images/Logo_Funtime.jpg"),
                         fit: BoxFit.cover),
                   ),
-                  width: 200,
-                  height: 200,
+                  width: 300.w,
+                  height: 200.h,
                 ),
-                const SizedBox(
-                  height: 30,
+                SizedBox(
+                  height: 30.h,
                 ),
                 Form(
                   key: controller.forum,
                   child: SizedBox(
-                    width: 300,
+                    width: 300.w,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("Email",style: TextStyle(color: Colors.white),),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         TextFormField(
                           controller: controller.email,
                           decoration: const InputDecoration(
@@ -65,9 +66,9 @@ class LoginView extends GetView<LoginController> {
                             }
                           },
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         const Text("Password", style : TextStyle(color: Colors.white)),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         TextFormField(
                           controller: controller.password,
                           obscureText: true,
@@ -89,7 +90,7 @@ class LoginView extends GetView<LoginController> {
                         TextButton(onPressed: (){
                           Get.toNamed("/reset-pass");
                         }, child: const Text("lupa Passwrd?",style: TextStyle(color: Colors.blue),)),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         ElevatedButton(
                             onPressed: () {
                               if (controller.forum.currentState!.validate()) {
@@ -102,8 +103,8 @@ class LoginView extends GetView<LoginController> {
                                     const MaterialStatePropertyAll<Color>(
                                         Colors.black),
                                 minimumSize:
-                                    const MaterialStatePropertyAll<Size>(
-                                        Size(double.infinity, 40)),
+                                    MaterialStatePropertyAll<Size>(
+                                        Size(double.infinity, 40.h)),
                                 shape: MaterialStatePropertyAll<
                                         RoundedRectangleBorder>(
                                     RoundedRectangleBorder(

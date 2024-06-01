@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 
@@ -17,12 +18,12 @@ class ResetPassView extends GetView<ResetPassController> {
               width: 300,
               child: Column(
                 children: [
-                  const Text(
+                  Text(
                     "Reset Password",
-                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold,color:Colors.white),
+                    style: TextStyle(fontSize: 40.sp, fontWeight: FontWeight.bold,color:Colors.white),
                   ),
-                  const SizedBox(
-                    height: 150,
+                  SizedBox(
+                    height: 150.h,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,8 +31,8 @@ class ResetPassView extends GetView<ResetPassController> {
                       const Text(
                         "Email",style: TextStyle(color: Colors.white),
                       ),
-                      const SizedBox(
-                        height: 30,
+                      SizedBox(
+                        height: 30.h,
                       ),
                       TextField(
                         controller: controller.reset,
@@ -42,8 +43,8 @@ class ResetPassView extends GetView<ResetPassController> {
                             filled: true),
                         style: const TextStyle(color:Colors.black),
                       ),
-                      const SizedBox(
-                        height: 30,
+                      SizedBox(
+                        height: 30.h,
                       ),
                       ElevatedButton(onPressed: (){
                         if(controller.reset.text.isEmpty){
@@ -59,7 +60,7 @@ class ResetPassView extends GetView<ResetPassController> {
                           )
                           ),
                         backgroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                        minimumSize: const MaterialStatePropertyAll<Size>(Size(double.infinity, 30))
+                        minimumSize: MaterialStatePropertyAll<Size>(Size(double.infinity, 30.h))
                       ), 
                       child: const Text("Reset Password",style: TextStyle(color:Colors.black),))
                     ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 
@@ -16,15 +17,15 @@ class RegisterView extends GetView<RegisterController> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 30,
+                SizedBox(
+                  height: 30.h,
                 ),
-                const Text(
+                Text(
                   'Register',
-                  style: TextStyle(fontSize: 40, color: Colors.white),
+                  style: TextStyle(fontSize: 40.sp, color: Colors.white),
                 ),
-                const SizedBox(
-                  height: 30,
+                SizedBox(
+                  height: 30.h,
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -33,21 +34,21 @@ class RegisterView extends GetView<RegisterController> {
                         image: AssetImage("assets/images/Logo_Funtime.jpg"),
                         fit: BoxFit.cover),
                   ),
-                  width: 200,
-                  height: 200,
+                  width: 300.w,
+                  height: 200.h,
                 ),
-                const SizedBox(
-                  height: 30,
+                SizedBox(
+                  height: 30.h,
                 ),
                 Form(
                   key: controller.form,
                   child: SizedBox(
-                    width: 300,
+                    width: 300.w,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("Email",style: TextStyle(color: Colors.white)),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         TextFormField(
                           controller: controller.email,
                           decoration: const InputDecoration(
@@ -67,9 +68,9 @@ class RegisterView extends GetView<RegisterController> {
                             }
                           },
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         const Text("Password",style: TextStyle(color: Colors.white),),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         TextFormField(
                             controller: controller.password,
                             obscureText: true,
@@ -88,9 +89,9 @@ class RegisterView extends GetView<RegisterController> {
                                 return null;
                               }
                             }),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         const Text("Password Comfirm",style: TextStyle(color: Colors.white),),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         TextFormField(
                             controller: controller.passwordconfirm,
                             obscureText: true,
@@ -112,9 +113,9 @@ class RegisterView extends GetView<RegisterController> {
                                 return null;
                               }
                             }),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         const Text("Role",style: TextStyle(color: Colors.white),),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         Row(
                           children: [
                             Expanded(
@@ -122,12 +123,12 @@ class RegisterView extends GetView<RegisterController> {
                                 () => Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Row(
+                                    Row(
                                       children: [
                                         SizedBox(
-                                          width: 10,
+                                          width: 10.w,
                                         ),
-                                        Text("Chassir",style: TextStyle(color: Colors.white),),
+                                        const Text("Chassir",style: TextStyle(color: Colors.white),),
                                       ],
                                     ),
                                     ListTile(
@@ -143,20 +144,17 @@ class RegisterView extends GetView<RegisterController> {
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 135,
-                            ),
                             Expanded(
                               child: Obx(() => Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Row(
+                                      Row(
                                         children: [
                                           SizedBox(
-                                            width: 10,
+                                            width: 10.w,
                                           ),
-                                          Text("Owner",style: TextStyle(color: Colors.white),),
+                                          const Text("Owner",style: TextStyle(color: Colors.white),),
                                         ],
                                       ),
                                       RadioListTile(
@@ -185,8 +183,8 @@ class RegisterView extends GetView<RegisterController> {
                                     const MaterialStatePropertyAll<Color>(
                                         Colors.black),
                                 minimumSize:
-                                    const MaterialStatePropertyAll<Size>(
-                                        Size(double.infinity, 40)),
+                                    MaterialStatePropertyAll<Size>(
+                                        Size(double.infinity, 40.h)),
                                 shape: MaterialStatePropertyAll<
                                         RoundedRectangleBorder>(
                                     RoundedRectangleBorder(

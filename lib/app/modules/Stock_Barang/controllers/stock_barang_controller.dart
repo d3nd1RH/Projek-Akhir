@@ -18,6 +18,7 @@ class StockBarangController extends GetxController {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
+  final TextEditingController hargamasukController = TextEditingController();
   final TextEditingController priceAController = TextEditingController();
   final TextEditingController priceBController = TextEditingController();
 
@@ -57,6 +58,8 @@ class StockBarangController extends GetxController {
             "Banyak": quantityController.text.isNotEmpty
                 ? int.parse(quantityController.text)
                 : 0,
+            "Harga Awal": hargamasukController.text.isNotEmpty? double.parse(hargamasukController.text)
+                : 0.0,
             "Harga Reseller": priceAController.text.isNotEmpty
                 ? double.parse(priceAController.text)
                 : 0.0,
@@ -66,7 +69,7 @@ class StockBarangController extends GetxController {
             "imageURL": downloadURL,
           };
 
-          final refDoc = ref.doc();
+          final refDoc = ref.doc(nameController.text);
           await refDoc.set(data);
           fetchData();
         }
@@ -82,6 +85,8 @@ class StockBarangController extends GetxController {
           "Banyak": quantityController.text.isNotEmpty
               ? int.parse(quantityController.text)
               : 0,
+          "Harga Awal": hargamasukController.text.isNotEmpty? double.parse(hargamasukController.text)
+                : 0.0,
           "Harga Reseller":
               priceAController.text.isNotEmpty 
               ? double.parse(priceAController.text)
@@ -117,6 +122,8 @@ class StockBarangController extends GetxController {
           "Banyak": quantityController.text.isNotEmpty
               ? int.parse(quantityController.text)
               : 0,
+          "Harga Awal": hargamasukController.text.isNotEmpty? double.parse(hargamasukController.text)
+                : 0.0,
           "Harga Reseller": priceAController.text.isNotEmpty
               ? double.parse(priceAController.text)
               : 0.0,
@@ -142,6 +149,8 @@ class StockBarangController extends GetxController {
         "Banyak": quantityController.text.isNotEmpty
             ? int.parse(quantityController.text)
             : 0,
+        "Harga Awal": hargamasukController.text.isNotEmpty? double.parse(hargamasukController.text)
+                : 0.0,
         "Harga Reseller":
             priceAController.text.isNotEmpty ? double.parse(priceAController.text)
             : 0.0,
@@ -199,8 +208,8 @@ class StockBarangController extends GetxController {
                 child: Column(
                   children: [
                     const Text("Gambar Barang"),
-                    const SizedBox(
-                      height: 20,
+                    SizedBox(
+                      height: 20.h,
                     ),
                     GestureDetector(
                       onTap: pickImage,
@@ -221,8 +230,8 @@ class StockBarangController extends GetxController {
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: 20.h,
               ),
               Obx(() => DropdownButton<String>(
                     value: selectedCategory.value,
@@ -239,8 +248,8 @@ class StockBarangController extends GetxController {
                       }
                     },
                   )),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: 20.h,
               ),
               TextField(
                 controller: nameController,
@@ -248,8 +257,8 @@ class StockBarangController extends GetxController {
                   labelText: 'Nama Barang',
                 ),
               ),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: 20.h,
               ),
               TextField(
                 controller: quantityController,
@@ -258,8 +267,18 @@ class StockBarangController extends GetxController {
                 ),
                 keyboardType: TextInputType.number,
               ),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: 20.h,
+              ),
+              TextField(
+                controller: hargamasukController,
+                decoration: const InputDecoration(
+                  labelText: 'Harga Masuk',
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              SizedBox(
+                height: 20.h,
               ),
               TextField(
                 controller: priceAController,
@@ -268,7 +287,7 @@ class StockBarangController extends GetxController {
                 ),
                 keyboardType: TextInputType.number,
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
               TextField(
                 controller: priceBController,
                 decoration: const InputDecoration(
@@ -285,6 +304,7 @@ class StockBarangController extends GetxController {
                 selectedImagePath = ''.obs;
                 nameController.clear();
                 quantityController.clear();
+                hargamasukController.clear();
                 priceAController.clear();
                 priceBController.clear();
                 Get.back();
@@ -298,6 +318,7 @@ class StockBarangController extends GetxController {
                 selectedImagePath = ''.obs;
                 nameController.clear();
                 quantityController.clear();
+                hargamasukController.clear();
                 priceAController.clear();
                 priceBController.clear();
                 Get.back();
@@ -321,6 +342,7 @@ class StockBarangController extends GetxController {
 
     nameController.text = item['nama'];
     quantityController.text = item['Banyak'].toString();
+    hargamasukController.text = item['Harga Awal'].toString();
     priceAController.text = item['Harga Reseller'].toString();
     priceBController.text = item['Harga Biasa'].toString();
     selectedCategory.value = item['kategori'];
@@ -338,7 +360,7 @@ class StockBarangController extends GetxController {
                 child: Column(
                   children: [
                     const Text("Gambar Barang"),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
                     GestureDetector(
                       onTap: pickImage,
                       child: Obx(() {
@@ -347,8 +369,8 @@ class StockBarangController extends GetxController {
                           color: Colors.grey,
                           height: 150.h,
                           width: 150.h,
-                          child: const Center(
-                            child: Icon(Icons.add, size: 50),
+                          child: Center(
+                            child: Icon(Icons.add, size: 50.sp),
                           ),
                         );
                       } else {
@@ -408,6 +430,14 @@ class StockBarangController extends GetxController {
               ),
               SizedBox(height: 20.h),
               TextField(
+                controller: hargamasukController,
+                decoration: const InputDecoration(
+                  labelText: 'Harga Masuk',
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              SizedBox(height: 20.h),
+              TextField(
                 controller: priceAController,
                 decoration: const InputDecoration(
                   labelText: 'Harga Reseller',
@@ -431,6 +461,7 @@ class StockBarangController extends GetxController {
                 selectedImagePath = ''.obs;
                 nameController.clear();
                 quantityController.clear();
+                hargamasukController.clear();
                 priceAController.clear();
                 priceBController.clear();
                 Get.back();
@@ -445,6 +476,7 @@ class StockBarangController extends GetxController {
                 selectedImagePath = ''.obs;
                 nameController.clear();
                 quantityController.clear();
+                hargamasukController.clear();
                 priceAController.clear();
                 priceBController.clear();
                 Get.back();
@@ -459,6 +491,7 @@ class StockBarangController extends GetxController {
                 selectedImagePath = ''.obs;
                 nameController.clear();
                 quantityController.clear();
+                hargamasukController.clear();
                 priceAController.clear();
                 priceBController.clear();
                 Get.back();
