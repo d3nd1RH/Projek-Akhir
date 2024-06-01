@@ -53,7 +53,7 @@ class CostumerController extends GetxController {
       clickCountList.value = List<RxInt>.generate(totalItems, (_) => 0.obs);
       totalPriceList.value = List<double>.filled(totalItems, 0.0);
     } catch (error) {
-      print('Error fetching data: $error');
+      Get.snackbar('Error','Error fetching data: $error',backgroundColor: Colors.red);
     }
   }
 
