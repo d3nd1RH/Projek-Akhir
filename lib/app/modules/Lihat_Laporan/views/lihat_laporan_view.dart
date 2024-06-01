@@ -35,81 +35,9 @@ class LihatLaporanView extends GetView<LihatLaporanController> {
         ),
         body: TabBarView(
           children: [
-            Column(
-                children: [
-                  SizedBox(height: 30.h,),
-                  Row(
-                    children: [
-                      const Text('Tanggal :'),
-                      SizedBox(width: 10.w,),
-                      GestureDetector(
-                        onTap: ()async{
-                        },
-                        child: Container(
-                          width: 160.w,height: 40.h,color: const Color.fromRGBO(217, 217, 217, 1),
-                        child: const Row(
-                          children: [
-                            Text(""),
-                            Spacer(),
-                            Icon(Icons.calendar_month_outlined)
-                          ],
-                        ),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            Column(
-                children: [
-                  SizedBox(height: 30.h,),
-                  Row(
-                    children: [
-                      const Text('Tanggal :'),
-                      SizedBox(width: 10.w,),
-                      GestureDetector(
-                        onTap: ()async{
-                        },
-                        child: Container(
-                          width: 160.w,height: 40.h,color: const Color.fromRGBO(217, 217, 217, 1),
-                        child: const Row(
-                          children: [
-                            Text(""),
-                            Spacer(),
-                            Icon(Icons.calendar_month_outlined)
-                          ],
-                        ),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            Column(
-                children: [
-                  SizedBox(height: 30.h,),
-                  Row(
-                    children: [
-                      const Text('Tanggal :'),
-                      SizedBox(width: 10.w,),
-                      GestureDetector(
-                        onTap: ()async{
-                        },
-                        child: Container(
-                          width: 160.w,height: 40.h,color: const Color.fromRGBO(217, 217, 217, 1),
-                        child: const Row(
-                          children: [
-                            Text(""),
-                            Spacer(),
-                            Icon(Icons.calendar_month_outlined)
-                          ],
-                        ),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
+            controller.harianLaporan(),
+            controller.bulananLaporan(),
+            controller.tahunLaporan(),
           ],
         ),
       ),
