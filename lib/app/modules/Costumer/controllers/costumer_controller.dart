@@ -202,9 +202,11 @@ class CostumerController extends GetxController {
   }
 
   Future<void> savePurchase() async {
-    final dateFormat = DateFormat('yyyy/MM/dd');
+    final dateFormat = DateFormat('yyyy-MM-dd');
+    final DateFormat timeFormat = DateFormat('HH:mm:ss.SSS');
     final now = DateTime.now();
     final dateStr = dateFormat.format(now);
+    final timeStr = timeFormat.format(now);
 
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
@@ -228,11 +230,12 @@ class CostumerController extends GetxController {
         }
 
         purchasedItems.add({
-          'harga_awal': data['Harga Awal'],
-          'nama_barang': data['nama'],
-          'banyak_barang': count,
-          'harga_jual': hargaJual,
-          'jenis_barang': data['kategori'],
+          'Harga Awal': data['Harga Awal'],
+          'Nama Barang': data['nama'],
+          'Banyak Barang': count,
+          'Harga Jual': hargaJual,
+          'Jenis Barang': data['kategori'],
+          'Waktu Pemesanan': timeStr
         });
 
         DocumentReference docRef = ref.doc(docId);
@@ -265,11 +268,12 @@ class CostumerController extends GetxController {
           'customer_type': customerType,
           'items': purchasedItems
               .map((item) => {
-                    'Harga Awal': item['harga_awal'],
-                    'Nama Barang': item['nama_barang'],
-                    'Banyak Barang': item['banyak_barang'],
-                    'Harga Jual': item['harga_jual'],
-                    'Jenis Barang': item['jenis_barang'],
+                    'Harga Awal': item['Harga Awal'],
+                    'Nama Barang': item['Nama Barang'],
+                    'Banyak Barang': item['Banyak Barang'],
+                    'Harga Jual': item['Harga Jual'],
+                    'Jenis Barang': item['Jenis Barang'],
+                    'Waktu Pemesanan': timeStr
                   })
               .toList(),
           'Total Harga': selectedPrice.value,
