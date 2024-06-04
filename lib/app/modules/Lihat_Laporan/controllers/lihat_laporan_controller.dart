@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 class LihatLaporanController extends GetxController {
   final Rx<DateTime?> selectedMonth = Rx<DateTime?>(null);
@@ -63,9 +66,11 @@ class LihatLaporanController extends GetxController {
         final dateFormat = DateFormat('yyyy-MM-dd');
 
         final dateDocIdCostumer =
-            '${dateFormat.format(selectedDateValue)}-Customer';
+            '${dateFormat.format(selectedDateValue)}-Costumer';
         final dateDocIdReseller =
             '${dateFormat.format(selectedDateValue)}-Reseller';
+
+        final dateDocIdStock = '${dateFormat.format(selectedDateValue)}-Stock';
 
         DocumentSnapshot costumerDayDoc = await FirebaseFirestore.instance
             .collection('Purchases')
@@ -77,6 +82,11 @@ class LihatLaporanController extends GetxController {
             .doc(dateDocIdReseller)
             .get();
 
+        DocumentSnapshot stocDayDoc = await FirebaseFirestore.instance
+            .collection('Purchases')
+            .doc(dateDocIdStock)
+            .get();
+
         List<Map<String, dynamic>> combinedData = [];
 
         if (costumerDayDoc.exists) {
@@ -86,6 +96,10 @@ class LihatLaporanController extends GetxController {
         if (resellerDayDoc.exists) {
           var resellerData = resellerDayDoc.data() as Map<String, dynamic>;
           combinedData.add(resellerData);
+        }
+        if (stocDayDoc.exists) {
+          var stocData = stocDayDoc.data() as Map<String, dynamic>;
+          combinedData.add(stocData);
         }
 
         purchasesDay.value = combinedData;
@@ -108,8 +122,8 @@ class LihatLaporanController extends GetxController {
 
         QuerySnapshot monthSnapshot = await FirebaseFirestore.instance
             .collection('Purchases')
-            .where('date', isGreaterThanOrEqualTo: selectedMonthString)
-            .where('date', isLessThanOrEqualTo: '$selectedMonthString-31')
+            .where('Date', isGreaterThanOrEqualTo: selectedMonthString)
+            .where('Date', isLessThanOrEqualTo: '$selectedMonthString-31')
             .get();
 
         if (monthSnapshot.docs.isNotEmpty) {
@@ -136,8 +150,8 @@ class LihatLaporanController extends GetxController {
 
         QuerySnapshot yearSnapshot = await FirebaseFirestore.instance
             .collection('Purchases')
-            .where('date', isGreaterThanOrEqualTo: '$year-01-01')
-            .where('date', isLessThanOrEqualTo: '$year-12-31')
+            .where('Date', isGreaterThanOrEqualTo: '$year-01-01')
+            .where('Date', isLessThanOrEqualTo: '$year-12-31')
             .get();
 
         if (yearSnapshot.docs.isNotEmpty) {
@@ -208,11 +222,16 @@ class LihatLaporanController extends GetxController {
               SizedBox(
                 width: 20.w,
               ),
-              Container(
-                  width: 100.w,
-                  height: 40.h,
-                  color: const Color.fromRGBO(217, 217, 217, 1),
-                  child: const Center(child: Text("Print"))),
+              GestureDetector(
+                onTap: () async {
+                  await printPdf(purchasesDay, "Harian");
+                },
+                child: Container(
+                    width: 100.w,
+                    height: 40.h,
+                    color: const Color.fromRGBO(217, 217, 217, 1),
+                    child: const Center(child: Text("Print"))),
+              ),
               const Spacer(),
               GestureDetector(
                 onTap: () async {
@@ -255,7 +274,7 @@ class LihatLaporanController extends GetxController {
                         border: TableBorder.all(color: Colors.black),
                         columns: const [
                           DataColumn(label: Text('Nama')),
-                          DataColumn(label: Text('Pelanggan')),
+                          DataColumn(label: Text('Transaksi')),
                           DataColumn(label: Text('Jenis')),
                           DataColumn(label: Text('Unit')),
                           DataColumn(label: Text('Modal')),
@@ -263,20 +282,24 @@ class LihatLaporanController extends GetxController {
                           DataColumn(label: Text('Total (per item)')),
                         ],
                         rows: purchasesDay.expand((purchase) {
-                          final customerType =
-                              purchase['customer_type'] ?? 'Unknown';
+                          final typeTransaksi =
+                              purchase['Type Transaksi'] ?? 'Unknown';
                           final items = purchase['items'] ?? [];
 
                           Map<String, Map<String, dynamic>> itemMap = {};
 
                           items.forEach((item) {
                             final itemName = item['Nama Barang'] ?? 'Unknown';
-                            final modal = item['Harga Awal'] ?? 0.0;
+                            final modal = (typeTransaksi == 'Stok')
+                                ? item['Harga Modal']
+                                : item['Harga Awal'] ?? 0.0;
                             final unit = item['Banyak Barang'] ?? 0;
                             final jenis = item['Jenis Barang'] ?? 'Unknown';
-                            final price = item['Harga Jual'] ?? 0.0;
+                            final price = (typeTransaksi == 'Stok')
+                                ? modal
+                                : item['Harga Jual'] ?? 0.0;
 
-                            final key = '$itemName-$jenis';
+                            final key = '$itemName-$jenis-$modal-$price';
                             if (itemMap.containsKey(key)) {
                               itemMap[key]!['Unit'] += unit;
                               itemMap[key]!['Total'] =
@@ -284,7 +307,7 @@ class LihatLaporanController extends GetxController {
                             } else {
                               itemMap[key] = {
                                 'Nama Barang': itemName,
-                                'Pelanggan': customerType,
+                                'Transaksi': typeTransaksi,
                                 'Jenis Barang': jenis,
                                 'Unit': unit,
                                 'Modal': modal,
@@ -297,7 +320,7 @@ class LihatLaporanController extends GetxController {
                           List<DataRow> rows = itemMap.values.map((item) {
                             final DataRow row = DataRow(cells: [
                               DataCell(Text(item['Nama Barang'])),
-                              DataCell(Text(item['Pelanggan'])),
+                              DataCell(Text(item['Transaksi'])),
                               DataCell(Text(item['Jenis Barang'])),
                               DataCell(Text(item['Unit'].toString())),
                               DataCell(Text(item['Modal'].toString())),
@@ -321,7 +344,10 @@ class LihatLaporanController extends GetxController {
                           Obx(() {
                             double totalHarga = 0.0;
                             for (var purchase in purchasesDay) {
-                              totalHarga += purchase['Total Harga'] ?? 0.0;
+                              if (purchase['Type Transaksi'] != 'Stok') {
+                                totalHarga +=
+                                    (purchase['Total Harga'] ?? 0.0) as double;
+                              }
                             }
                             return Text(totalHarga.toString(),
                                 textAlign: TextAlign.right);
@@ -338,7 +364,10 @@ class LihatLaporanController extends GetxController {
                               final items = purchase['items'] ?? [];
                               items.forEach((item) {
                                 final unit = item['Banyak Barang'] ?? 0;
-                                final modal = item['Harga Awal'] ?? 0.0;
+                                final modal =
+                                    (purchase['Type Transaksi'] == 'Stok')
+                                        ? item['Harga Modal']
+                                        : item['Harga Awal'] ?? 0.0;
                                 totalCapital += unit * modal;
                               });
                             }
@@ -381,7 +410,10 @@ class LihatLaporanController extends GetxController {
                               final items = purchase['items'] ?? [];
                               items.forEach((item) {
                                 final unit = item['Banyak Barang'] ?? 0;
-                                final modal = item['Harga Awal'] ?? 0.0;
+                                final modal =
+                                    (purchase['Type Transaksi'] == 'Stok')
+                                        ? item['Harga Modal']
+                                        : item['Harga Awal'] ?? 0.0;
                                 totalCapital += unit * modal;
                               });
                             }
@@ -453,11 +485,16 @@ class LihatLaporanController extends GetxController {
               SizedBox(
                 width: 20.w,
               ),
-              Container(
-                  width: 100.w,
-                  height: 40.h,
-                  color: const Color.fromRGBO(217, 217, 217, 1),
-                  child: const Center(child: Text("Print"))),
+              GestureDetector(
+                onTap: () async {
+                  await printPdf(purchasesMount, "Bulanan");
+                },
+                child: Container(
+                    width: 100.w,
+                    height: 40.h,
+                    color: const Color.fromRGBO(217, 217, 217, 1),
+                    child: const Center(child: Text("Print"))),
+              ),
               const Spacer(),
               GestureDetector(
                 onTap: () async {
@@ -500,7 +537,7 @@ class LihatLaporanController extends GetxController {
                         border: TableBorder.all(color: Colors.black),
                         columns: const [
                           DataColumn(label: Text('Nama')),
-                          DataColumn(label: Text('Pelanggan')),
+                          DataColumn(label: Text('Transaksi')),
                           DataColumn(label: Text('Jenis')),
                           DataColumn(label: Text('Unit')),
                           DataColumn(label: Text('Modal')),
@@ -508,20 +545,24 @@ class LihatLaporanController extends GetxController {
                           DataColumn(label: Text('Total (per item)')),
                         ],
                         rows: purchasesMount.expand((purchase) {
-                          final customerType =
-                              purchase['customer_type'] ?? 'Unknown';
+                          final typeTransaksi =
+                              purchase['Type Transaksi'] ?? 'Unknown';
                           final items = purchase['items'] ?? [];
 
                           Map<String, Map<String, dynamic>> itemMap = {};
 
                           items.forEach((item) {
                             final itemName = item['Nama Barang'] ?? 'Unknown';
-                            final modal = item['Harga Awal'] ?? 0.0;
+                            final modal = (typeTransaksi == 'Stok')
+                                ? item['Harga Modal']
+                                : item['Harga Awal'] ?? 0.0;
                             final unit = item['Banyak Barang'] ?? 0;
                             final jenis = item['Jenis Barang'] ?? 'Unknown';
-                            final price = item['Harga Jual'] ?? 0.0;
+                            final price = (typeTransaksi == 'Stok')
+                                ? modal
+                                : item['Harga Jual'] ?? 0.0;
 
-                            final key = '$itemName-$jenis';
+                            final key = '$itemName-$jenis-$modal-$price';
                             if (itemMap.containsKey(key)) {
                               itemMap[key]!['Unit'] += unit;
                               itemMap[key]!['Total'] =
@@ -529,7 +570,7 @@ class LihatLaporanController extends GetxController {
                             } else {
                               itemMap[key] = {
                                 'Nama Barang': itemName,
-                                'Pelanggan': customerType,
+                                'Transaksi': typeTransaksi,
                                 'Jenis Barang': jenis,
                                 'Unit': unit,
                                 'Modal': modal,
@@ -542,7 +583,7 @@ class LihatLaporanController extends GetxController {
                           List<DataRow> rows = itemMap.values.map((item) {
                             final DataRow row = DataRow(cells: [
                               DataCell(Text(item['Nama Barang'])),
-                              DataCell(Text(item['Pelanggan'])),
+                              DataCell(Text(item['Transaksi'])),
                               DataCell(Text(item['Jenis Barang'])),
                               DataCell(Text(item['Unit'].toString())),
                               DataCell(Text(item['Modal'].toString())),
@@ -565,7 +606,10 @@ class LihatLaporanController extends GetxController {
                           Obx(() {
                             double totalHarga = 0.0;
                             for (var purchase in purchasesMount) {
-                              totalHarga += purchase['Total Harga'] ?? 0.0;
+                              if (purchase['Type Transaksi'] != 'Stok') {
+                                totalHarga +=
+                                    (purchase['Total Harga'] ?? 0.0) as double;
+                              }
                             }
                             return Text(totalHarga.toString(),
                                 textAlign: TextAlign.right);
@@ -582,7 +626,10 @@ class LihatLaporanController extends GetxController {
                               final items = purchase['items'] ?? [];
                               items.forEach((item) {
                                 final unit = item['Banyak Barang'] ?? 0;
-                                final modal = item['Harga Awal'] ?? 0.0;
+                                final modal =
+                                    (purchase['Type Transaksi'] == 'Stok')
+                                        ? item['Harga Modal']
+                                        : item['Harga Awal'] ?? 0.0;
                                 totalCapital += unit * modal;
                               });
                             }
@@ -625,7 +672,10 @@ class LihatLaporanController extends GetxController {
                               final items = purchase['items'] ?? [];
                               items.forEach((item) {
                                 final unit = item['Banyak Barang'] ?? 0;
-                                final modal = item['Harga Awal'] ?? 0.0;
+                                final modal =
+                                    (purchase['Type Transaksi'] == 'Stok')
+                                        ? item['Harga Modal']
+                                        : item['Harga Awal'] ?? 0.0;
                                 totalCapital += unit * modal;
                               });
                             }
@@ -700,11 +750,16 @@ class LihatLaporanController extends GetxController {
               SizedBox(
                 width: 20.w,
               ),
-              Container(
-                  width: 100.w,
-                  height: 40.h,
-                  color: const Color.fromRGBO(217, 217, 217, 1),
-                  child: const Center(child: Text("Print"))),
+              GestureDetector(
+                onTap: () async {
+                  await printPdf(purchasesYearly, "Tahunan");
+                },
+                child: Container(
+                    width: 100.w,
+                    height: 40.h,
+                    color: const Color.fromRGBO(217, 217, 217, 1),
+                    child: const Center(child: Text("Print"))),
+              ),
               const Spacer(),
               GestureDetector(
                 onTap: () async {
@@ -747,7 +802,7 @@ class LihatLaporanController extends GetxController {
                         border: TableBorder.all(color: Colors.black),
                         columns: const [
                           DataColumn(label: Text('Nama')),
-                          DataColumn(label: Text('Pelanggan')),
+                          DataColumn(label: Text('Transaksi')),
                           DataColumn(label: Text('Jenis')),
                           DataColumn(label: Text('Unit')),
                           DataColumn(label: Text('Modal')),
@@ -755,20 +810,24 @@ class LihatLaporanController extends GetxController {
                           DataColumn(label: Text('Total (per item)')),
                         ],
                         rows: purchasesYearly.expand((purchase) {
-                          final customerType =
-                              purchase['customer_type'] ?? 'Unknown';
+                          final typeTransaksi =
+                              purchase['Type Transaksi'] ?? 'Unknown';
                           final items = purchase['items'] ?? [];
 
                           Map<String, Map<String, dynamic>> itemMap = {};
 
                           items.forEach((item) {
                             final itemName = item['Nama Barang'] ?? 'Unknown';
-                            final modal = item['Harga Awal'] ?? 0.0;
+                            final modal = (typeTransaksi == 'Stok')
+                                ? item['Harga Modal']
+                                : item['Harga Awal'] ?? 0.0;
                             final unit = item['Banyak Barang'] ?? 0;
                             final jenis = item['Jenis Barang'] ?? 'Unknown';
-                            final price = item['Harga Jual'] ?? 0.0;
+                            final price = (typeTransaksi == 'Stok')
+                                ? modal
+                                : item['Harga Jual'] ?? 0.0;
 
-                            final key = '$itemName-$jenis';
+                            final key = '$itemName-$jenis-$modal-$price';
                             if (itemMap.containsKey(key)) {
                               itemMap[key]!['Unit'] += unit;
                               itemMap[key]!['Total'] =
@@ -776,7 +835,7 @@ class LihatLaporanController extends GetxController {
                             } else {
                               itemMap[key] = {
                                 'Nama Barang': itemName,
-                                'Pelanggan': customerType,
+                                'Transaksi': typeTransaksi,
                                 'Jenis Barang': jenis,
                                 'Unit': unit,
                                 'Modal': modal,
@@ -789,7 +848,7 @@ class LihatLaporanController extends GetxController {
                           List<DataRow> rows = itemMap.values.map((item) {
                             final DataRow row = DataRow(cells: [
                               DataCell(Text(item['Nama Barang'])),
-                              DataCell(Text(item['Pelanggan'])),
+                              DataCell(Text(item['Transaksi'])),
                               DataCell(Text(item['Jenis Barang'])),
                               DataCell(Text(item['Unit'].toString())),
                               DataCell(Text(item['Modal'].toString())),
@@ -812,7 +871,10 @@ class LihatLaporanController extends GetxController {
                           Obx(() {
                             double totalHarga = 0.0;
                             for (var purchase in purchasesYearly) {
-                              totalHarga += purchase['Total Harga'] ?? 0.0;
+                              if (purchase['Type Transaksi'] != 'Stok') {
+                                totalHarga +=
+                                    (purchase['Total Harga'] ?? 0.0) as double;
+                              }
                             }
                             return Text(totalHarga.toString(),
                                 textAlign: TextAlign.right);
@@ -829,7 +891,10 @@ class LihatLaporanController extends GetxController {
                               final items = purchase['items'] ?? [];
                               items.forEach((item) {
                                 final unit = item['Banyak Barang'] ?? 0;
-                                final modal = item['Harga Awal'] ?? 0.0;
+                                final modal =
+                                    (purchase['Type Transaksi'] == 'Stok')
+                                        ? item['Harga Modal']
+                                        : item['Harga Awal'] ?? 0.0;
                                 totalCapital += unit * modal;
                               });
                             }
@@ -872,7 +937,10 @@ class LihatLaporanController extends GetxController {
                               final items = purchase['items'] ?? [];
                               items.forEach((item) {
                                 final unit = item['Banyak Barang'] ?? 0;
-                                final modal = item['Harga Awal'] ?? 0.0;
+                                final modal =
+                                    (purchase['Type Transaksi'] == 'Stok')
+                                        ? item['Harga Modal']
+                                        : item['Harga Awal'] ?? 0.0;
                                 totalCapital += unit * modal;
                               });
                             }
@@ -890,6 +958,259 @@ class LihatLaporanController extends GetxController {
           }),
         ],
       ),
+    );
+  }
+
+  Future<void> printPdf(
+      List<Map<String, dynamic>> purchasinData, String jenis) async {
+    final pdf = pw.Document();
+    final List<Map<String, dynamic>> rows = [];
+    double totalHarga = 0.0;
+    for (var purchase in purchasinData) {
+      if (purchase['Type Transaksi'] != 'Stok') {
+        totalHarga += (purchase['Total Harga'] ?? 0.0) as double;
+      }
+    }
+    double totalCapital = 0.0;
+    for (var purchase in purchasinData) {
+      final items = purchase['items'] ?? [];
+      items.forEach((item) {
+        final unit = item['Banyak Barang'] ?? 0;
+        final modal = (purchase['Type Transaksi'] == 'Stok')
+            ? item['Harga Modal']
+            : item['Harga Awal'] ?? 0.0;
+        totalCapital += unit * modal;
+      });
+    }
+    final netIncome = totalHarga - totalCapital;
+    for (var purchase in purchasinData) {
+      final typeTransaksi = purchase['Type Transaksi'] ?? 'Unknown';
+      final items = purchase['items'] ?? [];
+
+      for (var item in items) {
+        final itemName = item['Nama Barang'] ?? 'Unknown';
+        final modal = (typeTransaksi == 'Stok')
+            ? item['Harga Modal']
+            : item['Harga Awal'] ?? 0.0;
+        final unit = item['Banyak Barang'] ?? 0;
+        final jenis = item['Jenis Barang'] ?? 'Unknown';
+        final price =
+            (typeTransaksi == 'Stok') ? modal : item['Harga Jual'] ?? 0.0;
+        final total = unit * price;
+
+        final existingItemIndex = rows.indexWhere((row) =>
+            row['Nama Barang'] == itemName &&
+            row['Jenis Barang'] == jenis &&
+            row['Modal'] == modal &&
+            row['Harga'] == price);
+
+        if (existingItemIndex != -1) {
+          rows[existingItemIndex]['Unit'] += unit;
+          rows[existingItemIndex]['Total'] += total;
+        } else {
+          rows.add({
+            'Nama Barang': itemName,
+            'Transaksi': typeTransaksi,
+            'Jenis Barang': jenis,
+            'Unit': unit,
+            'Modal': modal,
+            'Harga': price,
+            'Total': total,
+          });
+        }
+      }
+    }
+    pdf.addPage(
+      pw.MultiPage(
+        build: (pw.Context context) {
+          return [
+            pw.Container(
+              alignment: pw.Alignment.center,
+              margin: const pw.EdgeInsets.only(bottom: 10),
+              child: pw.Text(
+                'Laporan $jenis',
+                style:
+                    pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold),
+              ),
+            ),
+            pw.Row(
+              children: [
+                pw.Expanded(
+                  flex: 1,
+                  child: pw.Text(
+                    'Tanggal : ${purchasinData.isNotEmpty ? purchasinData[0]['Date'] ?? '' : ''}',
+                    textAlign: pw.TextAlign.left,
+                  ),
+                ),
+              ],
+            ),
+            pw.SizedBox(
+              height: 10.h,
+            ),
+            pw.Table(
+              border: pw.TableBorder.all(color: PdfColors.grey300),
+              columnWidths: {0: const pw.FlexColumnWidth(1)},
+              children: [
+                pw.TableRow(
+                  children: [
+                    pw.Container(
+                      color: PdfColors
+                          .grey300, // Warna latar belakang untuk baris tabel
+                      child: pw.Padding(
+                        padding: const pw.EdgeInsets.all(5),
+                        child: pw.Text('Nama',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      ),
+                    ),
+                    pw.Container(
+                      color: PdfColors
+                          .grey300, // Warna latar belakang untuk baris tabel
+                      child: pw.Padding(
+                        padding: const pw.EdgeInsets.all(5),
+                        child: pw.Text('Transaksi',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      ),
+                    ),
+                    pw.Container(
+                      color: PdfColors.grey300,
+                      child: pw.Padding(
+                        padding: const pw.EdgeInsets.all(5),
+                        child: pw.Text('Jenis',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      ),
+                    ),
+                    pw.Container(
+                      color: PdfColors.grey300,
+                      child: pw.Padding(
+                        padding: const pw.EdgeInsets.all(5),
+                        child: pw.Text('Unit',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      ),
+                    ),
+                    pw.Container(
+                      color: PdfColors.grey300,
+                      child: pw.Padding(
+                        padding: const pw.EdgeInsets.all(5),
+                        child: pw.Text('Modal',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      ),
+                    ),
+                    pw.Container(
+                      color: PdfColors.grey300,
+                      child: pw.Padding(
+                        padding: const pw.EdgeInsets.all(5),
+                        child: pw.Text('Harga',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      ),
+                    ),
+                    pw.Container(
+                      color: PdfColors.grey300,
+                      child: pw.Padding(
+                        padding: const pw.EdgeInsets.all(5),
+                        child: pw.Text('Total (per item)',
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      ),
+                    ),
+                  ],
+                ),
+                ...rows.map((row) {
+                  return pw.TableRow(
+                    children: [
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(5),
+                        child: pw.Text(row['Nama Barang'].toString()),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(5),
+                        child: pw.Text(row['Transaksi'].toString()),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(5),
+                        child: pw.Text(row['Jenis Barang'].toString()),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(5),
+                        child: pw.Text(row['Unit'].toString()),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(5),
+                        child: pw.Text(row['Modal'].toString()),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(5),
+                        child: pw.Text(row['Harga'].toString()),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(5),
+                        child: pw.Text(row['Total'].toString()),
+                      ),
+                    ],
+                  );
+                }),
+              ],
+            ),
+            pw.SizedBox(
+              height: 10.h,
+            ),
+            pw.Row(
+              children: [
+                pw.Expanded(
+                  flex: 1,
+                  child: pw.Text(
+                    'Total Income :     ${totalHarga.toString()}',
+                    textAlign: pw.TextAlign.left,
+                  ),
+                ),
+              ],
+            ),
+            pw.Row(
+              children: [
+                pw.Expanded(
+                  flex: 1,
+                  child: pw.Text(
+                    'Capital :               ${totalCapital.toString()}',
+                    textAlign: pw.TextAlign.left,
+                  ),
+                ),
+              ],
+            ),
+            pw.Row(
+              children: [
+                pw.SizedBox(
+                  width: 200.w,
+                  child: pw.Divider(thickness: 1, color: PdfColors.black),
+                ),
+                pw.SizedBox(width: 10.w),
+                pw.SizedBox(
+                  width: 10.w,
+                  child: pw.Divider(thickness: 1, color: PdfColors.black),
+                ),
+              ],
+            ),
+            pw.Row(
+              children: [
+                pw.Expanded(
+                  flex: 1,
+                  child: pw.Text(
+                    'Net Income :        ${netIncome.toString()}',
+                    textAlign: pw.TextAlign.left,
+                  ),
+                ),
+              ],
+            ),
+          ];
+        },
+      ),
+    );
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.save(),
     );
   }
 }

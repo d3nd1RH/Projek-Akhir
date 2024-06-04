@@ -25,7 +25,7 @@ class LihatLaporanView extends GetView<LihatLaporanController> {
               Tab(text: 'Tahunan'),
             ],
             indicator: const BoxDecoration(
-              color: Color.fromRGBO(217, 217, 217, 1), // Warna latar belakang putih
+              color: Color.fromRGBO(217, 217, 217, 1),
             ),
             indicatorSize: TabBarIndicatorSize.tab,
             indicatorPadding: EdgeInsets.only(right: 30.0.w ,left: 30.0.w,top: 8.0.h,bottom: 8.0.h),

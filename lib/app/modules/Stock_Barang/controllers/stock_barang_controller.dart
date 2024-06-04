@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class StockBarangController extends GetxController {
   var selectedCategory = 'Makanan'.obs;
@@ -51,14 +52,18 @@ class StockBarangController extends GetxController {
         final snapshot = await uploadTask;
 
         final downloadURL = await snapshot.ref.getDownloadURL();
+        final int quantity = quantityController.text.isNotEmpty
+            ? int.parse(quantityController.text)
+            : 0;
+
         if (nameController.text.isNotEmpty) {
           final data = {
+            "docid": nameController.text,
             "nama": nameController.text,
             "kategori": selectedCategory.value,
-            "Banyak": quantityController.text.isNotEmpty
-                ? int.parse(quantityController.text)
-                : 0,
-            "Harga Awal": hargamasukController.text.isNotEmpty? double.parse(hargamasukController.text)
+            "Banyak": quantity,
+            "Harga Awal": hargamasukController.text.isNotEmpty
+                ? double.parse(hargamasukController.text)
                 : 0.0,
             "Harga Reseller": priceAController.text.isNotEmpty
                 ? double.parse(priceAController.text)
@@ -72,6 +77,74 @@ class StockBarangController extends GetxController {
           final refDoc = ref.doc(nameController.text);
           await refDoc.set(data);
           fetchData();
+          await saveStock(nameController.text, quantity);
+        } else {
+          Get.snackbar("Error", 'Name is empty', backgroundColor: Colors.red);
+        }
+      } catch (e) {
+        Get.snackbar("Error", 'Error uploading image: $e',
+            backgroundColor: Colors.red);
+      }
+    } else {
+      if (nameController.text.isNotEmpty) {
+        final int quantity = quantityController.text.isNotEmpty
+            ? int.parse(quantityController.text)
+            : 0;
+        final data = {
+          "docid": nameController.text,
+          "nama": nameController.text,
+          "kategori": selectedCategory.value,
+          "Banyak": quantity,
+          "Harga Awal": hargamasukController.text.isNotEmpty
+              ? double.parse(hargamasukController.text)
+              : 0.0,
+          "Harga Reseller": priceAController.text.isNotEmpty
+              ? double.parse(priceAController.text)
+              : 0.0,
+          "Harga Biasa": priceBController.text.isNotEmpty
+              ? double.parse(priceBController.text)
+              : 0.0,
+          "imageURL": null,
+        };
+
+        final refDoc = ref.doc(nameController.text);
+        await refDoc.set(data);
+        fetchData();
+        await saveStock(nameController.text, quantity);
+      } else {
+        Get.snackbar("Error", 'Name is empty', backgroundColor: Colors.red);
+      }
+    }
+  }
+
+  Future<void> updatedData(String docId, int previousStock) async {
+    if (selectedImagePath.value.isNotEmpty &&
+        !selectedImagePath.value.startsWith('http')) {
+      final file = File(selectedImagePath.value);
+      FirebaseStorage.instance.ref().child(
+          'menu_images/${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}');
+      try {
+        final downloadURL = await uploadAndRetrieveImageURL(file);
+        if (nameController.text.isNotEmpty) {
+          final data = {
+            "nama": nameController.text,
+            "kategori": selectedCategory.value,
+            "Banyak": quantityController.text.isNotEmpty
+                ? int.parse(quantityController.text)
+                : 0,
+            "Harga Awal": hargamasukController.text.isNotEmpty
+                ? double.parse(hargamasukController.text)
+                : 0.0,
+            "Harga Reseller": priceAController.text.isNotEmpty
+                ? double.parse(priceAController.text)
+                : 0.0,
+            "Harga Biasa": priceBController.text.isNotEmpty
+                ? double.parse(priceBController.text)
+                : 0.0,
+            "imageURL": downloadURL,
+          };
+
+          await updateDocumentAndStock(docId, data, previousStock);
         }
       } catch (e) {
         Get.snackbar("Error", 'Error uploading image: $e',
@@ -85,88 +158,46 @@ class StockBarangController extends GetxController {
           "Banyak": quantityController.text.isNotEmpty
               ? int.parse(quantityController.text)
               : 0,
-          "Harga Awal": hargamasukController.text.isNotEmpty? double.parse(hargamasukController.text)
-                : 0.0,
-          "Harga Reseller":
-              priceAController.text.isNotEmpty 
-              ? double.parse(priceAController.text)
+          "Harga Awal": hargamasukController.text.isNotEmpty
+              ? double.parse(hargamasukController.text)
               : 0.0,
-          "Harga Biasa": priceBController.text.isNotEmpty
-              ? double.parse(priceBController.text)
-              : 0.0,
-          "imageURL": null,
-        };
-
-        final refDoc = ref.doc();
-        await refDoc.set(data);
-        fetchData();
-      }
-    }
-  }
-
-  Future<void> updatedData(String docId) async {
-  if (selectedImagePath.value.isNotEmpty && !selectedImagePath.value.startsWith('http')) {
-    final file = File(selectedImagePath.value);
-    final storageRef = FirebaseStorage.instance.ref().child(
-        'menu_images/${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}');
-
-    try {
-      final uploadTask = storageRef.putFile(file);
-      final snapshot = await uploadTask;
-
-      final downloadURL = await snapshot.ref.getDownloadURL();
-      if (nameController.text.isNotEmpty) {
-        final data = {
-          "nama": nameController.text,
-          "kategori": selectedCategory.value,
-          "Banyak": quantityController.text.isNotEmpty
-              ? int.parse(quantityController.text)
-              : 0,
-          "Harga Awal": hargamasukController.text.isNotEmpty? double.parse(hargamasukController.text)
-                : 0.0,
           "Harga Reseller": priceAController.text.isNotEmpty
               ? double.parse(priceAController.text)
               : 0.0,
           "Harga Biasa": priceBController.text.isNotEmpty
               ? double.parse(priceBController.text)
               : 0.0,
-          "imageURL": downloadURL,
+          "imageURL": selectedImagePath.value.isNotEmpty
+              ? selectedImagePath.value
+              : null,
         };
 
-        await ref.doc(docId).update(data);
-        fetchData();
+        await updateDocumentAndStock(docId, data, previousStock);
       }
-    } catch (e) {
-      Get.snackbar("Error", 'Error uploading image: $e',
-          backgroundColor: Colors.red);
-    }
-  } else {
-
-    if (nameController.text.isNotEmpty) {
-      final data = {
-        "nama": nameController.text,
-        "kategori": selectedCategory.value,
-        "Banyak": quantityController.text.isNotEmpty
-            ? int.parse(quantityController.text)
-            : 0,
-        "Harga Awal": hargamasukController.text.isNotEmpty? double.parse(hargamasukController.text)
-                : 0.0,
-        "Harga Reseller":
-            priceAController.text.isNotEmpty ? double.parse(priceAController.text)
-            : 0.0,
-        "Harga Biasa": priceBController.text.isNotEmpty
-            ? double.parse(priceBController.text)
-            : 0.0,
-
-        "imageURL": selectedImagePath.value.isNotEmpty ? selectedImagePath.value : null,
-      };
-
-      await ref.doc(docId).update(data);
-      fetchData();
     }
   }
-}
 
+  Future<void> updateDocumentAndStock(
+      String docId, Map<String, dynamic> data, int previousStock) async {
+    await ref.doc(docId).update(data);
+
+    int newStock = int.parse(data['Banyak'].toString()) - previousStock;
+
+    await saveStock(docId, newStock);
+
+    fetchData();
+  }
+
+  Future<String> uploadAndRetrieveImageURL(File imageFile) async {
+    final storageRef = FirebaseStorage.instance.ref().child(
+        'menu_images/${DateTime.now().millisecondsSinceEpoch}_${imageFile.path.split('/').last}');
+
+    final uploadTask = storageRef.putFile(imageFile);
+    final snapshot = await uploadTask;
+
+    final downloadURL = await snapshot.ref.getDownloadURL();
+    return downloadURL;
+  }
 
   void fetchData() async {
     var makananSnapshot =
@@ -331,9 +362,151 @@ class StockBarangController extends GetxController {
     );
   }
 
-  Future<void> updateStock(String docId, int newStock) async {
-    await ref.doc(docId).update({'Banyak': newStock});
+  Future<void> updateStock(String docId, int changeInStock) async {
+    final docRef = ref.doc(docId);
+    final purchaseRef = FirebaseFirestore.instance.collection('Purchases');
+
+    final menuDoc = await docRef.get();
+    int lastMenuStock = 0;
+
+    if (menuDoc.exists) {
+      final Map<String, dynamic>? menuData =
+          menuDoc.data() as Map<String, dynamic>?;
+
+      if (menuData != null && menuData['Banyak'] != null) {
+        lastMenuStock = menuData['Banyak'];
+      }
+    }
+
+    int newMenuStock = lastMenuStock + changeInStock;
+
+    if (newMenuStock < 0) {
+      Get.snackbar("Maaf", 'Persediaan tidak dapat menjadi negatif.',
+          backgroundColor: Colors.red);
+      return;
+    }
+
+    final formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final purchaseSnapshot =
+        await purchaseRef.doc('$formattedDate-Stock').get();
+    List<Map<String, dynamic>> updatedItems = [];
+    bool itemFound = false;
+
+    if (purchaseSnapshot.exists) {
+      final menuData = menuDoc.data() as Map<String, dynamic>?;
+      List<dynamic> items = purchaseSnapshot.data()?['items'] ?? [];
+      for (var item in items) {
+        if (item['Nama Barang'] == menuData?['nama'] &&
+            item['Harga Modal'] == menuData?['Harga Awal']) {
+          itemFound = true;
+          item['Banyak Barang'] += changeInStock;
+          item['Last Update'] = Timestamp.now();
+          item['Waktu Stock'] = Timestamp.now();
+        }
+        updatedItems.add(item);
+      }
+    }
+
+    if (!itemFound) {
+      final menuData = menuDoc.data() as Map<String, dynamic>?;
+      updatedItems.add({
+        'Nama Barang': menuData?['nama'],
+        'Jenis Barang': menuData?['kategori'] ?? '',
+        'Harga Modal': menuData?['Harga Awal'] ?? 0.0,
+        'Banyak Barang': changeInStock,
+        'Waktu Stock': Timestamp.now(),
+      });
+    }
+
+    await purchaseRef.doc('$formattedDate-Stock').set({
+      'Date': formattedDate,
+      'Type Transaksi': 'Stok',
+      'Last Update': Timestamp.now(),
+      'items': updatedItems,
+    });
+    await docRef.update({'Banyak': newMenuStock});
+    await saveTotalTransaction(docId, changeInStock);
     fetchData();
+  }
+
+  Future<void> saveStock(String docId, int changeInStock) async {
+    final docRef = ref.doc(docId);
+    final menuDoc = await docRef.get();
+    final purchaseRef = FirebaseFirestore.instance.collection('Purchases');
+
+    final formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final purchaseSnapshot =
+        await purchaseRef.doc('$formattedDate-Stock').get();
+    List<Map<String, dynamic>> updatedItems = [];
+    bool itemFound = false;
+
+    if (purchaseSnapshot.exists) {
+      final menuData = menuDoc.data() as Map<String, dynamic>?;
+      List<dynamic> items = purchaseSnapshot.data()?['items'] ?? [];
+      for (var item in items) {
+        if (item['Nama Barang'] == menuData?['nama'] &&
+            item['Harga Modal'] == menuData?['Harga Awal']) {
+          itemFound = true;
+          item['Banyak Barang'] += changeInStock;
+          item['Waktu Stock'] = Timestamp.now();
+        }
+        updatedItems.add(item);
+      }
+    }
+
+    if (!itemFound) {
+      final menuData = menuDoc.data() as Map<String, dynamic>?;
+      updatedItems.add({
+        'Nama Barang': menuData?['nama'],
+        'Jenis Barang': menuData?['kategori'] ?? '',
+        'Harga Modal': menuData?['Harga Awal'] ?? 0.0,
+        'Banyak Barang': changeInStock,
+        'Waktu Stock': Timestamp.now(),
+      });
+    }
+    await purchaseRef.doc('$formattedDate-Stock').set({
+      'Date': formattedDate,
+      'Type Transaksi': 'Stok',
+      'Last Update': Timestamp.now(),
+      'items': updatedItems,
+    });
+    await saveTotalTransaction(docId, changeInStock);
+    fetchData();
+  }
+
+  Future<void> saveTotalTransaction(String docId, int changeInStock) async {
+    final docRef = FirebaseFirestore.instance.collection('Menu').doc(docId);
+    final menuDoc = await docRef.get();
+    final double hargaAwal = menuDoc.data()?['Harga Awal'] ?? 0.0;
+
+    final double totalTransaction = hargaAwal * changeInStock;
+
+    final existingTotalTransaction = await getTotalTransaction();
+
+    final newTotalTransaction = existingTotalTransaction - totalTransaction;
+
+    final totalTransactionsRef = FirebaseFirestore.instance
+        .collection('TotalTransactions')
+        .doc('Transaksi');
+    await totalTransactionsRef.set({
+      'Date': DateTime.now(),
+      'Total Transaksi': newTotalTransaction,
+    });
+  }
+
+  Future<double> getTotalTransaction() async {
+    final totalTransactionsRef = FirebaseFirestore.instance
+        .collection('TotalTransactions')
+        .doc('Transaksi');
+
+    final snapshot = await totalTransactionsRef.get();
+    double totalTransaction = 0.0;
+
+    if (snapshot.exists) {
+      totalTransaction = snapshot['Total Transaksi'];
+    }
+
+    return totalTransaction;
   }
 
   Future<void> editDeleteBarang(String docId) async {
@@ -362,38 +535,36 @@ class StockBarangController extends GetxController {
                     const Text("Gambar Barang"),
                     SizedBox(height: 20.h),
                     GestureDetector(
-                      onTap: pickImage,
-                      child: Obx(() {
-                      if (selectedImagePath.value.isEmpty) {
-                        return Container(
-                          color: Colors.grey,
-                          height: 150.h,
-                          width: 150.h,
-                          child: Center(
-                            child: Icon(Icons.add, size: 50.sp),
-                          ),
-                        );
-                      } else {
-                        final String imagePath = selectedImagePath.value;
-                        if (imagePath.startsWith('http')) {
-                          return Image.network(
-                            imagePath,
-                            fit: BoxFit.cover,
-                            height: 150.h,
-                            width: 150.h,
-                          );
-                        } else {
-                          return Image.file(
-                            File(imagePath),
-                            fit: BoxFit.cover,
-                            height: 150.h,
-                            width: 150.h,
-                          );
-                        }
-                      }
-                      }
-                      )
-                    ),
+                        onTap: pickImage,
+                        child: Obx(() {
+                          if (selectedImagePath.value.isEmpty) {
+                            return Container(
+                              color: Colors.grey,
+                              height: 150.h,
+                              width: 150.h,
+                              child: Center(
+                                child: Icon(Icons.add, size: 50.sp),
+                              ),
+                            );
+                          } else {
+                            final String imagePath = selectedImagePath.value;
+                            if (imagePath.startsWith('http')) {
+                              return Image.network(
+                                imagePath,
+                                fit: BoxFit.cover,
+                                height: 150.h,
+                                width: 150.h,
+                              );
+                            } else {
+                              return Image.file(
+                                File(imagePath),
+                                fit: BoxFit.cover,
+                                height: 150.h,
+                                width: 150.h,
+                              );
+                            }
+                          }
+                        })),
                   ],
                 ),
               ),
@@ -470,7 +641,7 @@ class StockBarangController extends GetxController {
             ),
             TextButton(
               onPressed: () async {
-                await updatedData(docId);
+                await updatedData(docId, item['Banyak']);
                 fetchData();
                 selectedCategory = 'Makanan'.obs;
                 selectedImagePath = ''.obs;
@@ -501,6 +672,83 @@ class StockBarangController extends GetxController {
           ],
         ),
       ),
+    );
+  }
+}
+
+class HomeSearchDelegate extends SearchDelegate<Map<String, dynamic>> {
+  final StockBarangController controller;
+
+  HomeSearchDelegate(this.controller);
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+          showResults(context);
+        },
+        tooltip: 'Clear search query',
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, {'action': 'back'}); // Example map with a key-value pair
+      },
+      tooltip: 'Go back',
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    var filteredItems = <Map<String, dynamic>>[];
+    final allItems = [
+      ...controller.makananList,
+      ...controller.minumanList,
+      ...controller.lainnyaList
+    ];
+
+    filteredItems = allItems
+        .where(
+            (item) => item['nama'].toLowerCase().contains(query.toLowerCase()))
+        .toList();
+
+    return ListView.builder(
+      itemCount: filteredItems.length,
+      itemBuilder: (context, index) {
+        final item = filteredItems[index];
+        return ListTile(
+          leading: SizedBox(
+            height: 50.h,
+            width: 50.w,
+            child: item['imageURL'] == null
+                ? Image.asset('assets/images/Logo_Funtime.jpg')
+                : Image.network(
+                    item['imageURL'],
+                    fit: BoxFit.cover,
+                  ),
+          ),
+          title: Text(item['nama']),
+          onTap: () {
+            close(context, item);
+            controller.editDeleteBarang(item['docid']);
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return const Center(
+      child: Text('No suggestions yet'),
     );
   }
 }

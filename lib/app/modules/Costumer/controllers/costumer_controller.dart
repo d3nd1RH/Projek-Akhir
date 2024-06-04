@@ -244,10 +244,10 @@ class CostumerController extends GetxController {
         });
       }
     }
-    String customerType = isReseller.value ? 'Reseller' : 'Customer';
+    String typeTransaksi = isReseller.value ? 'Reseller' : 'Costumer';
     final purchaseRef = FirebaseFirestore.instance
         .collection('Purchases')
-        .doc('$dateStr-$customerType');
+        .doc('$dateStr-$typeTransaksi');
     final purchaseSnapshot = await purchaseRef.get();
 
     if (purchaseSnapshot.exists) {
@@ -258,14 +258,15 @@ class CostumerController extends GetxController {
           'Total Harga': FieldValue.increment(selectedPrice.value),
         },
       );
+      await saveTotalTransaction();
       fetchData();
       selectedPrice.value = 0;
     } else {
       batch.set(
         purchaseRef,
         {
-          'date': dateStr,
-          'customer_type': customerType,
+          'Date': dateStr,
+          'Type Transaksi': typeTransaksi,
           'items': purchasedItems
               .map((item) => {
                     'Harga Awal': item['Harga Awal'],
@@ -279,11 +280,40 @@ class CostumerController extends GetxController {
           'Total Harga': selectedPrice.value,
         },
       );
+      await saveTotalTransaction();
       fetchData();
       selectedPrice.value = 0;
     }
 
     await batch.commit();
+  }
+
+  Future<void> saveTotalTransaction() async {
+    final existingTotalTransaction = await getTotalTransaction();
+
+    final newTotalTransaction = existingTotalTransaction + selectedPrice.value;
+
+  final totalTransactionsRef = FirebaseFirestore.instance
+      .collection('TotalTransactions')
+      .doc('Transaksi');
+  await totalTransactionsRef.set({
+    'Date': DateTime.now(),
+    'Total Transaksi': newTotalTransaction,
+  });
+}
+  Future<double> getTotalTransaction() async {
+    final totalTransactionsRef = FirebaseFirestore.instance
+        .collection('TotalTransactions')
+        .doc('Transaksi');
+
+    final snapshot = await totalTransactionsRef.get();
+    double totalTransaction = 0.0;
+
+    if (snapshot.exists) {
+      totalTransaction = snapshot['Total Transaksi'];
+    }
+
+    return totalTransaction;
   }
 
   Future<void> showConfirmationDialog(

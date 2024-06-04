@@ -20,7 +20,10 @@ class StockBarangView extends GetView<StockBarangController> {
             IconButton(
               icon: const Icon(Icons.search,color: Colors.black,),
               onPressed: () {
-              
+                showSearch(
+                          context: context,
+                          delegate: HomeSearchDelegate(
+                              controller));
               },
             ),
         ],
@@ -72,8 +75,7 @@ class StockBarangView extends GetView<StockBarangController> {
                           children: [
                             IconButton(
                               onPressed: () {
-                                int newStock = item['Banyak'] + 1;
-                                controller.updateStock(item['docId'], newStock);
+                                controller.updateStock(item['docId'], 1);
                               },
                               icon: const Icon(Icons.add),
                             ),
@@ -82,10 +84,7 @@ class StockBarangView extends GetView<StockBarangController> {
                             ),
                             IconButton(
                               onPressed: () {
-                                int newStock = item['Banyak'] - 1;
-                                if (newStock >= 0) {
-                                  controller.updateStock(item['docId'], newStock);
-                                }
+                                controller.updateStock(item['docId'],-1);
                               },
                               icon: const Icon(Icons.remove),
                             ),
@@ -140,18 +139,14 @@ class StockBarangView extends GetView<StockBarangController> {
                           children: [
                             IconButton(
                               onPressed: () {
-                                int newStock = item['Banyak'] + 1;
-                                controller.updateStock(item['docId'], newStock);
+                                controller.updateStock(item['docId'],1);
                               },
                               icon: const Icon(Icons.add),
                             ),
                             Text(item['Banyak'] > 999 ? '999+' : item['Banyak'].toString()),
                             IconButton(
                               onPressed: () {
-                                int newStock = item['Banyak'] - 1;
-                                if (newStock >= 0) {
-                                  controller.updateStock(item['docId'], newStock);
-                                }
+                                controller.updateStock(item['docId'],-1);
                               },
                               icon: const Icon(Icons.remove),
                             ),
@@ -206,18 +201,14 @@ class StockBarangView extends GetView<StockBarangController> {
                           children: [
                             IconButton(
                               onPressed: () {
-                                int newStock = item['Banyak'] + 1;
-                                controller.updateStock(item['docId'], newStock);
+                                controller.updateStock(item['docId'],1);
                               },
                               icon: const Icon(Icons.add),
                             ),
                             Text(item['Banyak'] > 999 ? '999+' : item['Banyak'].toString()),
                             IconButton(
                               onPressed: () {
-                                int newStock = item['Banyak'] - 1;
-                                if (newStock >= 0) {
-                                  controller.updateStock(item['docId'], newStock);
-                                }
+                                controller.updateStock(item['docId'],-1);
                               },
                               icon: const Icon(Icons.remove),
                             ),
