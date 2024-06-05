@@ -1,8 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-class HomeController extends GetxController {
+class WorkhomeController extends GetxController {
   final FirebaseAuth auth = FirebaseAuth.instance;
    Future<void> logout() async {
     try {

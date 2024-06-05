@@ -18,6 +18,14 @@ class HomeView extends GetView<HomeController> {
             fontSize: 25.sp, fontWeight: FontWeight.bold, color: Colors.black),
         centerTitle: true,
         backgroundColor: const Color.fromRGBO(233, 107, 107, 1),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              controller.logout();
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Padding(

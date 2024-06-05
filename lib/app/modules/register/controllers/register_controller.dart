@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterController extends GetxController {
-  RxString role = "Chassir".obs;
   final form = GlobalKey<FormState>();
   final auth = FirebaseAuth.instance;
   final user = FirebaseFirestore.instance.collection("userdata");
@@ -12,13 +11,8 @@ class RegisterController extends GetxController {
   final TextEditingController password = TextEditingController();
   final TextEditingController passwordconfirm = TextEditingController();
 
-  void grup(String gennow) {
-    role.value = gennow;
-  }
-
   Future<void> register(
     String email,
-    String peran,
     String password,
   ) async {
     try {
@@ -28,7 +22,7 @@ class RegisterController extends GetxController {
       akun.user!.sendEmailVerification();
       final doc = user.doc(uidname);
       final data = {
-        "peran": peran,
+        "peran": "Pegawai",
       };
       doc.set(data);
       Get.snackbar("Catatan", "Tolong cek Email anda",

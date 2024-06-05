@@ -15,6 +15,8 @@ import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/reset_pass/bindings/reset_pass_binding.dart';
 import '../modules/reset_pass/views/reset_pass_view.dart';
+import '../modules/workhome/bindings/workhome_binding.dart';
+import '../modules/workhome/views/workhome_view.dart';
 
 // ignore_for_file: constant_identifier_names
 
@@ -28,7 +30,7 @@ class AppPages {
   static final routes = [
     GetPage(
       name: _Paths.SPLASH,
-      page: () => const Splash(),
+      page: () => Splash(),
     ),
     GetPage(
       name: _Paths.HOME,
@@ -64,6 +66,11 @@ class AppPages {
       name: _Paths.RESET_PASS,
       page: () => const ResetPassView(),
       binding: ResetPassBinding(),
+    ),
+    GetPage(
+      name: _Paths.WORKHOME,
+      page: () => const WorkhomeView(),
+      binding: WorkhomeBinding(),
     ),
   ];
 }

@@ -113,67 +113,12 @@ class RegisterView extends GetView<RegisterController> {
                                 return null;
                               }
                             }),
-                        SizedBox(height: 20.h),
-                        const Text("Role",style: TextStyle(color: Colors.white),),
-                        SizedBox(height: 20.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Obx(
-                                () => Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 10.w,
-                                        ),
-                                        const Text("Chassir",style: TextStyle(color: Colors.white),),
-                                      ],
-                                    ),
-                                    ListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      leading: Radio(
-                                          value: "Chassir",
-                                          groupValue: controller.role.value,
-                                          onChanged: (value) {
-                                            controller.grup(value.toString());
-                                          }),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Obx(() => Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 10.w,
-                                          ),
-                                          const Text("Owner",style: TextStyle(color: Colors.white),),
-                                        ],
-                                      ),
-                                      RadioListTile(
-                                          value: "Owner",
-                                          groupValue: controller.role.value,
-                                          onChanged: (value) {
-                                            controller.grup(value.toString());
-                                          }),
-                                    ],
-                                  )),
-                            ),
-                          ],
-                        ),
+                        SizedBox(height: 40.h),
                         ElevatedButton(
                             onPressed: () {
                               if (controller.form.currentState!.validate()) {
                                 controller.register(
                                   controller.email.text,
-                                  controller.role.value,
                                   controller.password.text,
                                 );
                               }

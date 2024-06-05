@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,17 +8,48 @@ class LoginController extends GetxController {
   final TextEditingController email = TextEditingController();
   final TextEditingController password= TextEditingController();
   final auth = FirebaseAuth.instance;
+  Stream<User?> get streamAuthStatus =>
+      FirebaseAuth.instance.authStateChanges();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<String?> getUserRole(String uid) async {
+    try {
+      DocumentSnapshot userDoc = await _firestore.collection('userdata').doc(uid).get();
+      if (userDoc.exists) {
+        return userDoc.get('peran');
+      }
+    } catch (e) {
+      Get.snackbar('Error','Error getting user role: $e',backgroundColor: Colors.red);
+    }
+    return null;
+  }
+
   Future<void> login(
     String email ,
     String password
     )async{
     try{
       UserCredential userlogin = await auth.signInWithEmailAndPassword(email: email, password: password);
-      if(userlogin.user!.emailVerified){
-        Get.snackbar("Success", "Berhasil login",backgroundColor: Colors.green);
-        Get.offNamed("/home");
-      }else{
-        Get.snackbar("Error", "Tolong Verifikasi Email anda",backgroundColor: Colors.red);
+      User? user = userlogin.user;
+      if (user != null && user.emailVerified) {
+        String uid = user.uid;
+        String? role = await getUserRole(uid);
+
+        if (role != null) {
+          Get.snackbar("Success", "Berhasil login", backgroundColor: Colors.green);
+
+          if (role == 'Owner') {
+            Get.offNamed("/home");
+          } else if (role == 'Pegawai') {
+            Get.offNamed("/workhome");
+          } else {
+            Get.snackbar("Error", "Peran tidak dikenali", backgroundColor: Colors.red);
+          }
+        } else {
+          Get.snackbar("Error", "Tidak dapat mengambil peran pengguna", backgroundColor: Colors.red);
+        }
+      } else {
+        Get.snackbar("Error", "Tolong verifikasi email Anda", backgroundColor: Colors.red);
       }
     }on FirebaseAuthException catch(e){
       if(e.code=="user-not-found"){
