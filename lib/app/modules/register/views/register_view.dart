@@ -47,6 +47,26 @@ class RegisterView extends GetView<RegisterController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const Text("Nama",style: TextStyle(color: Colors.white)),
+                        SizedBox(height: 20.h),
+                        TextFormField(
+                          controller: controller.nama,
+                          decoration: const InputDecoration(
+                              filled: true,
+                              fillColor: Color.fromRGBO(217, 217, 217, 1),
+                              hintText: "Please Enter Your Name..",
+                              hintStyle: TextStyle(color: Colors.black),
+                              border: OutlineInputBorder()),
+                          style: const TextStyle(color: Colors.black),
+                          validator: (namastate) {
+                            if (namastate == null || namastate.isEmpty) {
+                              return "Tolong isi bagian ini";
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
+                        SizedBox(height: 20.h),
                         const Text("Email",style: TextStyle(color: Colors.white)),
                         SizedBox(height: 20.h),
                         TextFormField(
@@ -71,15 +91,24 @@ class RegisterView extends GetView<RegisterController> {
                         SizedBox(height: 20.h),
                         const Text("Password",style: TextStyle(color: Colors.white),),
                         SizedBox(height: 20.h),
-                        TextFormField(
+                        Obx(()=>TextFormField(
                             controller: controller.password,
-                            obscureText: true,
-                            decoration: const InputDecoration(
+                            obscureText: controller.obscurePassText.value,
+                            decoration: InputDecoration(
                                 filled: true,
-                                fillColor: Color.fromRGBO(217, 217, 217, 1),
+                                fillColor: const Color.fromRGBO(217, 217, 217, 1),
                                 hintText: "Please Enter Your Password..",
-                                hintStyle: TextStyle(color: Colors.black),
-                                border: OutlineInputBorder()),
+                                hintStyle: const TextStyle(color: Colors.black),
+                                suffixIcon: IconButton(
+                                onPressed:
+                                    controller.togglePasswordVisibility,
+                                icon: Icon(
+                                      controller.obscurePassText.value
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                    ),
+                              ),
+                                border: const OutlineInputBorder()),
                             style: const TextStyle(color: Colors.black),
                             validator: (passwordstate) {
                               if (passwordstate == null ||
@@ -88,19 +117,28 @@ class RegisterView extends GetView<RegisterController> {
                               } else {
                                 return null;
                               }
-                            }),
+                            })),
                         SizedBox(height: 20.h),
                         const Text("Password Comfirm",style: TextStyle(color: Colors.white),),
                         SizedBox(height: 20.h),
-                        TextFormField(
+                        Obx(()=>TextFormField(
                             controller: controller.passwordconfirm,
-                            obscureText: true,
-                            decoration: const InputDecoration(
+                            obscureText: controller.obscureCoritmText.value,
+                            decoration: InputDecoration(
                                 filled: true,
-                                fillColor: Color.fromRGBO(217, 217, 217, 1),
+                                fillColor: const Color.fromRGBO(217, 217, 217, 1),
                                 hintText: "Please Confirm Your Password..",
-                                hintStyle: TextStyle(color: Colors.black),
-                                border: OutlineInputBorder()),
+                                hintStyle: const TextStyle(color: Colors.black),
+                                suffixIcon: IconButton(
+                                onPressed:
+                                    controller.togglePasswordconfirmVisibility,
+                                icon: Icon(
+                                      controller.obscureCoritmText.value
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                    ),
+                              ),
+                                border: const OutlineInputBorder()),
                             style: const TextStyle(color: Colors.black),
                             validator: (passwordconfirmstate) {
                               if (passwordconfirmstate == null ||
@@ -112,7 +150,7 @@ class RegisterView extends GetView<RegisterController> {
                               } else {
                                 return null;
                               }
-                            }),
+                            })),
                         SizedBox(height: 40.h),
                         ElevatedButton(
                             onPressed: () {
@@ -120,6 +158,7 @@ class RegisterView extends GetView<RegisterController> {
                                 controller.register(
                                   controller.email.text,
                                   controller.password.text,
+                                  controller.nama.text,
                                 );
                               }
                             },

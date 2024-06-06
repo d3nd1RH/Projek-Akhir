@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../login/controllers/login_controller.dart';
 
@@ -38,7 +39,7 @@ class ScurityController extends GetxController {
         }).toList();
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to fetch users: $e');
+      Get.snackbar('Error', 'Failed to fetch users: $e',backgroundColor: Colors.red);
     }
   }
 
@@ -48,9 +49,9 @@ class ScurityController extends GetxController {
           .collection('userdata')
           .doc(userId)
           .update({'peran': isKnown ? 'Pegawai' : 'Lainnya'});
-      Get.snackbar('Success', 'Role updated successfully');
+      Get.snackbar('Success', 'Role updated successfully',backgroundColor: Colors.green);
     } catch (e) {
-      Get.snackbar('Error', 'Failed to update role: $e');
+      Get.snackbar('Error', 'Failed to update role: $e',backgroundColor: Colors.red);
     }
   }
 }

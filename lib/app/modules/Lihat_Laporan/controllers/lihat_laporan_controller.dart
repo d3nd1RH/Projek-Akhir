@@ -279,7 +279,6 @@ class LihatLaporanController extends GetxController {
                           DataColumn(label: Text('Transaksi')),
                           DataColumn(label: Text('Jenis')),
                           DataColumn(label: Text('Unit')),
-                          DataColumn(label: Text('Modal')),
                           DataColumn(label: Text('Harga')),
                           DataColumn(label: Text('Total (per item)')),
                         ],
@@ -313,7 +312,6 @@ class LihatLaporanController extends GetxController {
                                 'Transaksi': typeTransaksi,
                                 'Jenis Barang': jenis,
                                 'Unit': unit,
-                                'Modal': modal,
                                 'Harga': price,
                                 'Total': unit * price,
                               };
@@ -326,7 +324,6 @@ class LihatLaporanController extends GetxController {
                               DataCell(Text(item['Transaksi'])),
                               DataCell(Text(item['Jenis Barang'])),
                               DataCell(Text(item['Unit'].toString())),
-                              DataCell(Text(formatRupiah(item['Modal']))),
                               DataCell(Text(formatRupiah(item['Harga']))),
                               DataCell(Text(formatRupiah(item['Total']))),
                             ]);
@@ -534,7 +531,6 @@ class LihatLaporanController extends GetxController {
                           DataColumn(label: Text('Transaksi')),
                           DataColumn(label: Text('Jenis')),
                           DataColumn(label: Text('Unit')),
-                          DataColumn(label: Text('Modal')),
                           DataColumn(label: Text('Harga')),
                           DataColumn(label: Text('Total (per item)')),
                         ],
@@ -568,7 +564,6 @@ class LihatLaporanController extends GetxController {
                                 'Transaksi': typeTransaksi,
                                 'Jenis Barang': jenis,
                                 'Unit': unit,
-                                'Modal': modal,
                                 'Harga': price,
                                 'Total': unit * price,
                               };
@@ -581,7 +576,6 @@ class LihatLaporanController extends GetxController {
                               DataCell(Text(item['Transaksi'])),
                               DataCell(Text(item['Jenis Barang'])),
                               DataCell(Text(item['Unit'].toString())),
-                              DataCell(Text(formatRupiah(item['Modal']))),
                               DataCell(Text(formatRupiah(item['Harga']))),
                               DataCell(Text(formatRupiah(item['Total']))),
                             ]);
@@ -791,7 +785,6 @@ class LihatLaporanController extends GetxController {
                           DataColumn(label: Text('Transaksi')),
                           DataColumn(label: Text('Jenis')),
                           DataColumn(label: Text('Unit')),
-                          DataColumn(label: Text('Modal')),
                           DataColumn(label: Text('Harga')),
                           DataColumn(label: Text('Total (per item)')),
                         ],
@@ -825,7 +818,6 @@ class LihatLaporanController extends GetxController {
                                 'Transaksi': typeTransaksi,
                                 'Jenis Barang': jenis,
                                 'Unit': unit,
-                                'Modal': modal,
                                 'Harga': price,
                                 'Total': unit * price,
                               };
@@ -838,7 +830,6 @@ class LihatLaporanController extends GetxController {
                               DataCell(Text(item['Transaksi'])),
                               DataCell(Text(item['Jenis Barang'])),
                               DataCell(Text(item['Unit'].toString())),
-                              DataCell(Text(formatRupiah(item['Modal']))),
                               DataCell(Text(formatRupiah(item['Harga']))),
                               DataCell(Text(formatRupiah(item['Total']))),
                             ]);
@@ -1073,15 +1064,6 @@ class LihatLaporanController extends GetxController {
                       color: PdfColors.grey300,
                       child: pw.Padding(
                         padding: const pw.EdgeInsets.all(5),
-                        child: pw.Text('Modal',
-                            style:
-                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                      ),
-                    ),
-                    pw.Container(
-                      color: PdfColors.grey300,
-                      child: pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
                         child: pw.Text('Harga',
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
@@ -1116,10 +1098,6 @@ class LihatLaporanController extends GetxController {
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(5),
                         child: pw.Text(row['Unit'].toString()),
-                      ),
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
-                        child: pw.Text(formatRupiah(row['Modal'] as int)),
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(5),

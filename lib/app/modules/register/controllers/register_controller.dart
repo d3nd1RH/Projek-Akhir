@@ -7,13 +7,25 @@ class RegisterController extends GetxController {
   final form = GlobalKey<FormState>();
   final auth = FirebaseAuth.instance;
   final user = FirebaseFirestore.instance.collection("userdata");
+  final TextEditingController nama = TextEditingController();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController passwordconfirm = TextEditingController();
+   var obscurePassText = true.obs;
+   var obscureCoritmText = true.obs;
+
+   void togglePasswordconfirmVisibility() {
+    obscureCoritmText.value = !obscureCoritmText.value;
+  }
+
+  void togglePasswordVisibility() {
+    obscurePassText.value = !obscurePassText.value;
+  }
 
   Future<void> register(
     String email,
     String password,
+    String nama,
   ) async {
     try {
       final akun = await auth.createUserWithEmailAndPassword(
@@ -24,6 +36,7 @@ class RegisterController extends GetxController {
       final data = {
         "peran": "Pegawai",
         "uid": uidname,
+        "nama": nama
       };
       doc.set(data);
       Get.snackbar("Catatan", "Tolong cek Email anda",
@@ -44,9 +57,9 @@ class RegisterController extends GetxController {
 
   @override
   void onClose() {
-    email.dispose();
-    password.dispose();
-    passwordconfirm.dispose();
+    email.clear();
+    password.clear();
+    passwordconfirm.clear();
     super.onClose();
   }
 }

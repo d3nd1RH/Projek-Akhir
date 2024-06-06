@@ -210,12 +210,6 @@ class HomeView extends GetView<HomeController> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20.h),
-                Container(
-                  width: double.infinity,
-                  height: 100.h,
-                  color: const Color.fromRGBO(217, 217, 217, 1),
-                ),
               ],
             ),
           ),

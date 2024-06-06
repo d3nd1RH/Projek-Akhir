@@ -69,15 +69,24 @@ class LoginView extends GetView<LoginController> {
                         SizedBox(height: 20.h),
                         const Text("Password", style : TextStyle(color: Colors.white)),
                         SizedBox(height: 20.h),
-                        TextFormField(
+                        Obx(()=>TextFormField(
                           controller: controller.password,
-                          obscureText: true,
-                          decoration: const InputDecoration(
+                          obscureText: controller.obscurePassText.value,
+                          decoration: InputDecoration(
                               filled: true,
-                              fillColor: Color.fromRGBO(217, 217, 217, 1),
+                              fillColor: const Color.fromRGBO(217, 217, 217, 1),
                               hintText: "Please Enter Your Password..",
-                              hintStyle: TextStyle(color: Colors.black),
-                              border: OutlineInputBorder()),
+                              hintStyle: const TextStyle(color: Colors.black),
+                              suffixIcon: IconButton(
+                                onPressed:
+                                    controller.togglePasswordVisibility,
+                                icon: Icon(
+                                      controller.obscurePassText.value
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                    ),
+                              ),
+                              border: const OutlineInputBorder()),
                           style: const TextStyle(color: Colors.black),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -86,7 +95,7 @@ class LoginView extends GetView<LoginController> {
                               return null;
                             }
                           },
-                        ),
+                        )),
                         TextButton(onPressed: (){
                           Get.toNamed("/reset-pass");
                         }, child: const Text("lupa Passwrd?",style: TextStyle(color: Colors.blue),)),

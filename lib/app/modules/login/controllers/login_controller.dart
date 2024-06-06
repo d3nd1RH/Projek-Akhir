@@ -11,6 +11,12 @@ class LoginController extends GetxController {
   Stream<User?> get streamAuthStatus =>
       FirebaseAuth.instance.authStateChanges();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+   var obscurePassText = true.obs;
+
+   void togglePasswordVisibility() {
+    obscurePassText.value = !obscurePassText.value;
+  }
+
 
   Future<String?> getUserRole(String uid) async {
     try {
@@ -40,8 +46,12 @@ class LoginController extends GetxController {
 
           if (role == 'Owner') {
             Get.offNamed("/home");
+            this.email.clear();
+            this.password.clear();
           } else if (role == 'Pegawai') {
             Get.offNamed("/workhome");
+            this.email.clear();
+            this.password.clear();
           } else {
             Get.snackbar("Error", "Peran tidak dikenali", backgroundColor: Colors.red);
           }
@@ -62,5 +72,11 @@ class LoginController extends GetxController {
         Get.snackbar("Error", "$e",backgroundColor: Colors.red);
       }
     }
+  }
+  @override
+  void onClose() {
+    email.clear();
+    password.clear();
+    super.onClose();
   }
 }

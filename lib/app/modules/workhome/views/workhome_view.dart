@@ -18,9 +18,9 @@ class WorkhomeView extends GetView<WorkhomeController> {
         backgroundColor: const Color.fromRGBO(233, 107, 107, 1),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.menu),
             onPressed: () {
-              controller.logout();
+              controller.showPopupMenu(context);
             },
           ),
         ],
