@@ -14,6 +14,8 @@ abstract class Routes {
   static const REGISTER = _Paths.REGISTER;
   static const RESET_PASS = _Paths.RESET_PASS;
   static const WORKHOME = _Paths.WORKHOME;
+  static const SCURITY = _Paths.SCURITY;
+  static const PROFILE = _Paths.PROFILE;
 }
 
 abstract class _Paths {
@@ -27,4 +29,6 @@ abstract class _Paths {
   static const REGISTER = '/register';
   static const RESET_PASS = '/reset-pass';
   static const WORKHOME = '/workhome';
+  static const SCURITY = '/scurity';
+  static const PROFILE = '/profile';
 }

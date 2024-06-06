@@ -11,10 +11,14 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/profile/bindings/profile_binding.dart';
+import '../modules/profile/views/profile_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/reset_pass/bindings/reset_pass_binding.dart';
 import '../modules/reset_pass/views/reset_pass_view.dart';
+import '../modules/scurity/bindings/scurity_binding.dart';
+import '../modules/scurity/views/scurity_view.dart';
 import '../modules/workhome/bindings/workhome_binding.dart';
 import '../modules/workhome/views/workhome_view.dart';
 
@@ -71,6 +75,16 @@ class AppPages {
       name: _Paths.WORKHOME,
       page: () => const WorkhomeView(),
       binding: WorkhomeBinding(),
+    ),
+    GetPage(
+      name: _Paths.SCURITY,
+      page: () => const ScurityView(),
+      binding: ScurityBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE,
+      page: () => const ProfileView(),
+      binding: ProfileBinding(),
     ),
   ];
 }

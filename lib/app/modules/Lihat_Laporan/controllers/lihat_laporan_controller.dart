@@ -226,7 +226,7 @@ class LihatLaporanController extends GetxController {
               ),
               GestureDetector(
                 onTap: () async {
-                  await printPdf(purchasesDay, "Harian");
+                  await printPdf(purchasesDay, "Harian",10);
                 },
                 child: Container(
                     width: 100.w,
@@ -481,7 +481,7 @@ class LihatLaporanController extends GetxController {
               ),
               GestureDetector(
                 onTap: () async {
-                  await printPdf(purchasesMount, "Bulanan");
+                  await printPdf(purchasesMount, "Bulanan",7);
                 },
                 child: Container(
                     width: 100.w,
@@ -738,7 +738,7 @@ class LihatLaporanController extends GetxController {
               ),
               GestureDetector(
                 onTap: () async {
-                  await printPdf(purchasesYearly, "Tahunan");
+                  await printPdf(purchasesYearly, "Tahunan",4);
                 },
                 child: Container(
                     width: 100.w,
@@ -941,7 +941,7 @@ class LihatLaporanController extends GetxController {
   }
 
   Future<void> printPdf(
-      List<Map<String, dynamic>> purchasinData, String jenis) async {
+      List<Map<String, dynamic>> purchasinData, String jenis,int datecut) async {
     final pdf = pw.Document();
     final List<Map<String, dynamic>> rows = [];
     int totalHarga = 0;
@@ -1016,7 +1016,7 @@ class LihatLaporanController extends GetxController {
                 pw.Expanded(
                   flex: 1,
                   child: pw.Text(
-                    'Tanggal : ${purchasinData.isNotEmpty ? purchasinData[0]['Date'] ?? '' : ''}',
+                    'Tanggal : ${purchasinData.isNotEmpty ? purchasinData[0]['Date'].toString().substring(0, datecut) : ''}',
                     textAlign: pw.TextAlign.left,
                   ),
                 ),
