@@ -23,6 +23,7 @@ class RegisterController extends GetxController {
       final doc = user.doc(uidname);
       final data = {
         "peran": "Pegawai",
+        "uid": uidname,
       };
       doc.set(data);
       Get.snackbar("Catatan", "Tolong cek Email anda",
