@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 
+import '../../../../formatindo.dart';
 import '../controllers/costumer_controller.dart';
 
 class CostumerView extends GetView<CostumerController> {
@@ -75,7 +76,7 @@ class CostumerView extends GetView<CostumerController> {
                 backgroundColor:
                     const Color.fromRGBO(203, 82, 82, 1),
               ),
-              child: Obx(()=>Text("Rp ${controller.selectedPrice.value}",style: const TextStyle(color:Colors.black),)),
+              child: Obx(()=>Text(formatRupiah(controller.selectedPrice.value),style: const TextStyle(color:Colors.black),)),
             )),
       ),
     );

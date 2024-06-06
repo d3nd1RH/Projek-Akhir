@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeController extends GetxController {
+  RxBool isTextHidden = false.obs;
+
   final FirebaseAuth auth = FirebaseAuth.instance;
    Future<void> logout() async {
     try {
@@ -12,4 +14,7 @@ class HomeController extends GetxController {
       Get.snackbar("Error", "Error during logout: $e", backgroundColor: Colors.red);
     }
   }
+   void toggleTextVisibility() {
+  isTextHidden.value = !isTextHidden.value; // Mengubah nilai isTextHidden menjadi kebalikannya
+}
 }

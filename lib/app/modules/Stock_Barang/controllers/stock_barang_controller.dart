@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class StockBarangController extends GetxController {
+  bool isUpdating = false;
   var selectedCategory = 'Makanan'.obs;
   var selectedImagePath = ''.obs;
   CollectionReference ref = FirebaseFirestore.instance.collection('Menu');
@@ -63,14 +64,14 @@ class StockBarangController extends GetxController {
             "kategori": selectedCategory.value,
             "Banyak": quantity,
             "Harga Awal": hargamasukController.text.isNotEmpty
-                ? double.parse(hargamasukController.text)
-                : 0.0,
+                ? int.parse(hargamasukController.text)
+                : 0,
             "Harga Reseller": priceAController.text.isNotEmpty
-                ? double.parse(priceAController.text)
-                : 0.0,
+                ? int.parse(priceAController.text)
+                : 0,
             "Harga Biasa": priceBController.text.isNotEmpty
-                ? double.parse(priceBController.text)
-                : 0.0,
+                ? int.parse(priceBController.text)
+                : 0,
             "imageURL": downloadURL,
           };
 
@@ -96,14 +97,14 @@ class StockBarangController extends GetxController {
           "kategori": selectedCategory.value,
           "Banyak": quantity,
           "Harga Awal": hargamasukController.text.isNotEmpty
-              ? double.parse(hargamasukController.text)
-              : 0.0,
+              ? int.parse(hargamasukController.text)
+              : 0,
           "Harga Reseller": priceAController.text.isNotEmpty
-              ? double.parse(priceAController.text)
-              : 0.0,
+              ? int.parse(priceAController.text)
+              : 0,
           "Harga Biasa": priceBController.text.isNotEmpty
-              ? double.parse(priceBController.text)
-              : 0.0,
+              ? int.parse(priceBController.text)
+              : 0,
           "imageURL": null,
         };
 
@@ -133,14 +134,14 @@ class StockBarangController extends GetxController {
                 ? int.parse(quantityController.text)
                 : 0,
             "Harga Awal": hargamasukController.text.isNotEmpty
-                ? double.parse(hargamasukController.text)
-                : 0.0,
+                ? int.parse(hargamasukController.text)
+                : 0,
             "Harga Reseller": priceAController.text.isNotEmpty
-                ? double.parse(priceAController.text)
-                : 0.0,
+                ? int.parse(priceAController.text)
+                : 0,
             "Harga Biasa": priceBController.text.isNotEmpty
-                ? double.parse(priceBController.text)
-                : 0.0,
+                ? int.parse(priceBController.text)
+                : 0,
             "imageURL": downloadURL,
           };
 
@@ -159,14 +160,14 @@ class StockBarangController extends GetxController {
               ? int.parse(quantityController.text)
               : 0,
           "Harga Awal": hargamasukController.text.isNotEmpty
-              ? double.parse(hargamasukController.text)
-              : 0.0,
+              ? int.parse(hargamasukController.text)
+              : 0,
           "Harga Reseller": priceAController.text.isNotEmpty
-              ? double.parse(priceAController.text)
-              : 0.0,
+              ? int.parse(priceAController.text)
+              : 0,
           "Harga Biasa": priceBController.text.isNotEmpty
-              ? double.parse(priceBController.text)
-              : 0.0,
+              ? int.parse(priceBController.text)
+              : 0,
           "imageURL": selectedImagePath.value.isNotEmpty
               ? selectedImagePath.value
               : null,
@@ -363,9 +364,14 @@ class StockBarangController extends GetxController {
   }
 
   Future<void> updateStock(String docId, int changeInStock) async {
+    if(isUpdating){
+      return;
+    }
+    isUpdating = true;
     final docRef = ref.doc(docId);
     final purchaseRef = FirebaseFirestore.instance.collection('Purchases');
 
+    try {
     final menuDoc = await docRef.get();
     int lastMenuStock = 0;
 
@@ -412,7 +418,7 @@ class StockBarangController extends GetxController {
       updatedItems.add({
         'Nama Barang': menuData?['nama'],
         'Jenis Barang': menuData?['kategori'] ?? '',
-        'Harga Modal': menuData?['Harga Awal'] ?? 0.0,
+        'Harga Modal': menuData?['Harga Awal'] ?? 0,
         'Banyak Barang': changeInStock,
         'Waktu Stock': Timestamp.now(),
       });
@@ -426,14 +432,19 @@ class StockBarangController extends GetxController {
     });
     await docRef.update({'Banyak': newMenuStock});
     await saveTotalTransaction(docId, changeInStock);
-    fetchData();
+    }finally {
+      isUpdating = false;
+    }
   }
 
   Future<void> saveStock(String docId, int changeInStock) async {
+    if(isUpdating){
+      return;
+    }
     final docRef = ref.doc(docId);
     final menuDoc = await docRef.get();
     final purchaseRef = FirebaseFirestore.instance.collection('Purchases');
-
+    try {
     final formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final purchaseSnapshot =
         await purchaseRef.doc('$formattedDate-Stock').get();
@@ -459,7 +470,7 @@ class StockBarangController extends GetxController {
       updatedItems.add({
         'Nama Barang': menuData?['nama'],
         'Jenis Barang': menuData?['kategori'] ?? '',
-        'Harga Modal': menuData?['Harga Awal'] ?? 0.0,
+        'Harga Modal': menuData?['Harga Awal'] ?? 0,
         'Banyak Barang': changeInStock,
         'Waktu Stock': Timestamp.now(),
       });
@@ -472,14 +483,17 @@ class StockBarangController extends GetxController {
     });
     await saveTotalTransaction(docId, changeInStock);
     fetchData();
+    }finally {
+       isUpdating = false;
+    }
   }
 
   Future<void> saveTotalTransaction(String docId, int changeInStock) async {
     final docRef = FirebaseFirestore.instance.collection('Menu').doc(docId);
     final menuDoc = await docRef.get();
-    final double hargaAwal = menuDoc.data()?['Harga Awal'] ?? 0.0;
+    final int hargaAwal = menuDoc.data()?['Harga Awal'] ?? 0;
 
-    final double totalTransaction = hargaAwal * changeInStock;
+    final int totalTransaction = hargaAwal * changeInStock;
 
     final existingTotalTransaction = await getTotalTransaction();
 
@@ -492,15 +506,16 @@ class StockBarangController extends GetxController {
       'Date': DateTime.now(),
       'Total Transaksi': newTotalTransaction,
     });
+    fetchData();
   }
 
-  Future<double> getTotalTransaction() async {
+  Future<int> getTotalTransaction() async {
     final totalTransactionsRef = FirebaseFirestore.instance
         .collection('TotalTransactions')
         .doc('Transaksi');
 
     final snapshot = await totalTransactionsRef.get();
-    double totalTransaction = 0.0;
+    int totalTransaction = 0;
 
     if (snapshot.exists) {
       totalTransaction = snapshot['Total Transaksi'];
@@ -700,7 +715,7 @@ class HomeSearchDelegate extends SearchDelegate<Map<String, dynamic>> {
     return IconButton(
       icon: const Icon(Icons.arrow_back),
       onPressed: () {
-        close(context, {'action': 'back'}); // Example map with a key-value pair
+        close(context, {'action': 'back'});
       },
       tooltip: 'Go back',
     );

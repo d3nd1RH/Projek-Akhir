@@ -74,8 +74,8 @@ class StockBarangView extends GetView<StockBarangController> {
                         DataCell(Row(
                           children: [
                             IconButton(
-                              onPressed: () {
-                                controller.updateStock(item['docId'], 1);
+                              onPressed: () async{
+                                await controller.updateStock(item['docId'], 1);
                               },
                               icon: const Icon(Icons.add),
                             ),
@@ -83,8 +83,8 @@ class StockBarangView extends GetView<StockBarangController> {
                               item['Banyak'] > 999 ? '999+' : item['Banyak'].toString()
                             ),
                             IconButton(
-                              onPressed: () {
-                                controller.updateStock(item['docId'],-1);
+                              onPressed: () async{
+                                await controller.updateStock(item['docId'],- 1);
                               },
                               icon: const Icon(Icons.remove),
                             ),

@@ -13,8 +13,8 @@ class CostumerController extends GetxController {
 
   var isCheckedList = <RxBool>[].obs;
   var clickCountList = <RxInt>[].obs;
-  var totalPriceList = <double>[].obs;
-  var selectedPrice = 0.0.obs;
+  var totalPriceList = <int>[].obs;
+  var selectedPrice = 0.obs;
   var isReseller = false.obs;
 
   @override
@@ -51,7 +51,7 @@ class CostumerController extends GetxController {
           makananList.length + minumanList.length + lainnyaList.length;
       isCheckedList.value = List<RxBool>.generate(totalItems, (_) => false.obs);
       clickCountList.value = List<RxInt>.generate(totalItems, (_) => 0.obs);
-      totalPriceList.value = List<double>.filled(totalItems, 0.0);
+      totalPriceList.value = List<int>.filled(totalItems, 0);
     } catch (error) {
       Get.snackbar('Error','Error fetching data: $error',backgroundColor: Colors.red);
     }
@@ -171,12 +171,12 @@ class CostumerController extends GetxController {
     });
   }
 
-  double calculateTotalPrice(double pricePerItem, int clickCount) {
+  int calculateTotalPrice(int pricePerItem, int clickCount) {
     return pricePerItem * clickCount;
   }
 
   void updateTotalPrice() {
-    double totalPrice = 0.0;
+    int totalPrice = 0;
     for (int i = 0; i < isCheckedList.length; i++) {
       if (isCheckedList[i].value) {
         Map<String, dynamic> data;
@@ -188,7 +188,7 @@ class CostumerController extends GetxController {
           data = lainnyaList[i - makananList.length - minumanList.length];
         }
         var clickCount = clickCountList[i].value;
-        double pricePerItem =
+        int pricePerItem =
             isReseller.value ? data['Harga Reseller'] : data['Harga Biasa'];
         totalPrice += (clickCount * pricePerItem);
       }
@@ -222,7 +222,7 @@ class CostumerController extends GetxController {
         final docId = data['docId'] as String;
         final count = clickCountList[i].value;
 
-        double hargaJual;
+        int hargaJual;
         if (isReseller.value) {
           hargaJual = data['Harga Reseller'];
         } else {
@@ -301,13 +301,13 @@ class CostumerController extends GetxController {
     'Total Transaksi': newTotalTransaction,
   });
 }
-  Future<double> getTotalTransaction() async {
+  Future<int> getTotalTransaction() async {
     final totalTransactionsRef = FirebaseFirestore.instance
         .collection('TotalTransactions')
         .doc('Transaksi');
 
     final snapshot = await totalTransactionsRef.get();
-    double totalTransaction = 0.0;
+    int totalTransaction = 0;
 
     if (snapshot.exists) {
       totalTransaction = snapshot['Total Transaksi'];

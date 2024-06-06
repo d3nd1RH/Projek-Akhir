@@ -7,6 +7,8 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
+import '../../../../formatindo.dart';
+
 class LihatLaporanController extends GetxController {
   final Rx<DateTime?> selectedMonth = Rx<DateTime?>(null);
   final Rx<DateTime?> selectedDate = Rx<DateTime?>(null);
@@ -292,12 +294,13 @@ class LihatLaporanController extends GetxController {
                             final itemName = item['Nama Barang'] ?? 'Unknown';
                             final modal = (typeTransaksi == 'Stok')
                                 ? item['Harga Modal']
-                                : item['Harga Awal'] ?? 0.0;
+                                : item['Harga Awal'] ?? 0;
                             final unit = item['Banyak Barang'] ?? 0;
+                            if (unit == 0) return;
                             final jenis = item['Jenis Barang'] ?? 'Unknown';
                             final price = (typeTransaksi == 'Stok')
                                 ? modal
-                                : item['Harga Jual'] ?? 0.0;
+                                : item['Harga Jual'] ?? 0;
 
                             final key = '$itemName-$jenis-$modal-$price';
                             if (itemMap.containsKey(key)) {
@@ -323,9 +326,9 @@ class LihatLaporanController extends GetxController {
                               DataCell(Text(item['Transaksi'])),
                               DataCell(Text(item['Jenis Barang'])),
                               DataCell(Text(item['Unit'].toString())),
-                              DataCell(Text(item['Modal'].toString())),
-                              DataCell(Text(item['Harga'].toString())),
-                              DataCell(Text(item['Total'].toString())),
+                              DataCell(Text(formatRupiah(item['Modal']))),
+                              DataCell(Text(formatRupiah(item['Harga']))),
+                              DataCell(Text(formatRupiah(item['Total']))),
                             ]);
                             return row;
                           }).toList();
@@ -342,14 +345,14 @@ class LihatLaporanController extends GetxController {
                             width: 100.w,
                           ),
                           Obx(() {
-                            double totalHarga = 0.0;
+                            int totalHarga = 0;
                             for (var purchase in purchasesDay) {
                               if (purchase['Type Transaksi'] != 'Stok') {
                                 totalHarga +=
-                                    (purchase['Total Harga'] ?? 0.0) as double;
+                                    (purchase['Total Harga'] ?? 0) as int;
                               }
                             }
-                            return Text(totalHarga.toString(),
+                            return Text(formatRupiah(totalHarga),
                                 textAlign: TextAlign.right);
                           }),
                         ],
@@ -359,21 +362,16 @@ class LihatLaporanController extends GetxController {
                           const Text("Capital :", textAlign: TextAlign.left),
                           SizedBox(width: 140.w),
                           Obx(() {
-                            double totalCapital = 0.0;
+                            num totalCapital = 0;
                             for (var purchase in purchasesDay) {
                               final items = purchase['items'] ?? [];
                               items.forEach((item) {
                                 final unit = item['Banyak Barang'] ?? 0;
-                                final modal =
-                                    (purchase['Type Transaksi'] == 'Stok')
-                                        ? item['Harga Modal']
-                                        : item['Harga Awal'] ?? 0.0;
+                                final modal = item['Harga Modal'] ?? 0;
                                 totalCapital += unit * modal;
                               });
                             }
-                            return Text(
-                              totalCapital.toString(),
-                            );
+                            return Text(formatRupiah(totalCapital as int));
                           }),
                         ],
                       ),
@@ -403,23 +401,19 @@ class LihatLaporanController extends GetxController {
                           const Text("Net Income :", textAlign: TextAlign.left),
                           SizedBox(width: 115.w),
                           Obx(() {
-                            double totalHarga = 0.0;
-                            double totalCapital = 0.0;
+                            num totalHarga = 0;
+                            num totalCapital = 0;
                             for (var purchase in purchasesDay) {
-                              totalHarga += purchase['Total Harga'] ?? 0.0;
+                              totalHarga += purchase['Total Harga'] ?? 0;
                               final items = purchase['items'] ?? [];
                               items.forEach((item) {
                                 final unit = item['Banyak Barang'] ?? 0;
-                                final modal =
-                                    (purchase['Type Transaksi'] == 'Stok')
-                                        ? item['Harga Modal']
-                                        : item['Harga Awal'] ?? 0.0;
+                                final modal = item['Harga Modal'] ?? 0;
                                 totalCapital += unit * modal;
                               });
                             }
                             final netIncome = totalHarga - totalCapital;
-                            return Text(netIncome.toString(),
-                                textAlign: TextAlign.right);
+                            return Text(formatRupiah(netIncome as int), textAlign: TextAlign.right);
                           }),
                         ],
                       ),
@@ -555,12 +549,13 @@ class LihatLaporanController extends GetxController {
                             final itemName = item['Nama Barang'] ?? 'Unknown';
                             final modal = (typeTransaksi == 'Stok')
                                 ? item['Harga Modal']
-                                : item['Harga Awal'] ?? 0.0;
+                                : item['Harga Awal'] ?? 0;
                             final unit = item['Banyak Barang'] ?? 0;
+                            if (unit == 0) return;
                             final jenis = item['Jenis Barang'] ?? 'Unknown';
                             final price = (typeTransaksi == 'Stok')
                                 ? modal
-                                : item['Harga Jual'] ?? 0.0;
+                                : item['Harga Jual'] ?? 0;
 
                             final key = '$itemName-$jenis-$modal-$price';
                             if (itemMap.containsKey(key)) {
@@ -586,9 +581,9 @@ class LihatLaporanController extends GetxController {
                               DataCell(Text(item['Transaksi'])),
                               DataCell(Text(item['Jenis Barang'])),
                               DataCell(Text(item['Unit'].toString())),
-                              DataCell(Text(item['Modal'].toString())),
-                              DataCell(Text(item['Harga'].toString())),
-                              DataCell(Text(item['Total'].toString())),
+                              DataCell(Text(formatRupiah(item['Modal']))),
+                              DataCell(Text(formatRupiah(item['Harga']))),
+                              DataCell(Text(formatRupiah(item['Total']))),
                             ]);
                             return row;
                           }).toList();
@@ -604,14 +599,14 @@ class LihatLaporanController extends GetxController {
                             width: 100.w,
                           ),
                           Obx(() {
-                            double totalHarga = 0.0;
+                            int totalHarga = 0;
                             for (var purchase in purchasesMount) {
                               if (purchase['Type Transaksi'] != 'Stok') {
                                 totalHarga +=
-                                    (purchase['Total Harga'] ?? 0.0) as double;
+                                    (purchase['Total Harga'] ?? 0) as int;
                               }
                             }
-                            return Text(totalHarga.toString(),
+                            return Text(formatRupiah(totalHarga),
                                 textAlign: TextAlign.right);
                           }),
                         ],
@@ -621,21 +616,16 @@ class LihatLaporanController extends GetxController {
                           const Text("Capital :", textAlign: TextAlign.left),
                           SizedBox(width: 140.w),
                           Obx(() {
-                            double totalCapital = 0.0;
+                            num totalCapital = 0;
                             for (var purchase in purchasesMount) {
                               final items = purchase['items'] ?? [];
                               items.forEach((item) {
                                 final unit = item['Banyak Barang'] ?? 0;
-                                final modal =
-                                    (purchase['Type Transaksi'] == 'Stok')
-                                        ? item['Harga Modal']
-                                        : item['Harga Awal'] ?? 0.0;
+                                final modal = item['Harga Modal'] ?? 0;
                                 totalCapital += unit * modal;
                               });
                             }
-                            return Text(
-                              totalCapital.toString(),
-                            );
+                            return Text(formatRupiah(totalCapital as int));
                           }),
                         ],
                       ),
@@ -665,23 +655,19 @@ class LihatLaporanController extends GetxController {
                           const Text("Net Income :", textAlign: TextAlign.left),
                           SizedBox(width: 115.w),
                           Obx(() {
-                            double totalHarga = 0.0;
-                            double totalCapital = 0.0;
+                            num totalHarga = 0;
+                            num totalCapital = 0;
                             for (var purchase in purchasesMount) {
-                              totalHarga += purchase['Total Harga'] ?? 0.0;
+                              totalHarga += purchase['Total Harga'] ?? 0;
                               final items = purchase['items'] ?? [];
                               items.forEach((item) {
                                 final unit = item['Banyak Barang'] ?? 0;
-                                final modal =
-                                    (purchase['Type Transaksi'] == 'Stok')
-                                        ? item['Harga Modal']
-                                        : item['Harga Awal'] ?? 0.0;
+                                final modal = item['Harga Modal'] ?? 0;
                                 totalCapital += unit * modal;
                               });
                             }
                             final netIncome = totalHarga - totalCapital;
-                            return Text(netIncome.toString(),
-                                textAlign: TextAlign.right);
+                            return Text(formatRupiah(netIncome as int), textAlign: TextAlign.right);
                           }),
                         ],
                       ),
@@ -820,12 +806,13 @@ class LihatLaporanController extends GetxController {
                             final itemName = item['Nama Barang'] ?? 'Unknown';
                             final modal = (typeTransaksi == 'Stok')
                                 ? item['Harga Modal']
-                                : item['Harga Awal'] ?? 0.0;
+                                : item['Harga Awal'] ?? 0;
                             final unit = item['Banyak Barang'] ?? 0;
+                            if (unit == 0) return;
                             final jenis = item['Jenis Barang'] ?? 'Unknown';
                             final price = (typeTransaksi == 'Stok')
                                 ? modal
-                                : item['Harga Jual'] ?? 0.0;
+                                : item['Harga Jual'] ?? 0;
 
                             final key = '$itemName-$jenis-$modal-$price';
                             if (itemMap.containsKey(key)) {
@@ -851,9 +838,9 @@ class LihatLaporanController extends GetxController {
                               DataCell(Text(item['Transaksi'])),
                               DataCell(Text(item['Jenis Barang'])),
                               DataCell(Text(item['Unit'].toString())),
-                              DataCell(Text(item['Modal'].toString())),
-                              DataCell(Text(item['Harga'].toString())),
-                              DataCell(Text(item['Total'].toString())),
+                              DataCell(Text(formatRupiah(item['Modal']))),
+                              DataCell(Text(formatRupiah(item['Harga']))),
+                              DataCell(Text(formatRupiah(item['Total']))),
                             ]);
                             return row;
                           }).toList();
@@ -869,14 +856,14 @@ class LihatLaporanController extends GetxController {
                             width: 100.w,
                           ),
                           Obx(() {
-                            double totalHarga = 0.0;
+                            int totalHarga = 0;
                             for (var purchase in purchasesYearly) {
                               if (purchase['Type Transaksi'] != 'Stok') {
                                 totalHarga +=
-                                    (purchase['Total Harga'] ?? 0.0) as double;
+                                    (purchase['Total Harga'] ?? 0) as int;
                               }
                             }
-                            return Text(totalHarga.toString(),
+                            return Text(formatRupiah(totalHarga),
                                 textAlign: TextAlign.right);
                           }),
                         ],
@@ -886,21 +873,16 @@ class LihatLaporanController extends GetxController {
                           const Text("Capital :", textAlign: TextAlign.left),
                           SizedBox(width: 140.w),
                           Obx(() {
-                            double totalCapital = 0.0;
+                            num totalCapital = 0;
                             for (var purchase in purchasesYearly) {
                               final items = purchase['items'] ?? [];
                               items.forEach((item) {
                                 final unit = item['Banyak Barang'] ?? 0;
-                                final modal =
-                                    (purchase['Type Transaksi'] == 'Stok')
-                                        ? item['Harga Modal']
-                                        : item['Harga Awal'] ?? 0.0;
+                                final modal = item['Harga Modal'] ?? 0;
                                 totalCapital += unit * modal;
                               });
                             }
-                            return Text(
-                              totalCapital.toString(),
-                            );
+                            return Text(formatRupiah(totalCapital as int));
                           }),
                         ],
                       ),
@@ -930,23 +912,20 @@ class LihatLaporanController extends GetxController {
                           const Text("Net Income :", textAlign: TextAlign.left),
                           SizedBox(width: 115.w),
                           Obx(() {
-                            double totalHarga = 0.0;
-                            double totalCapital = 0.0;
+                            num totalHarga = 0;
+                            num totalCapital = 0;
                             for (var purchase in purchasesYearly) {
-                              totalHarga += purchase['Total Harga'] ?? 0.0;
+                              totalHarga += purchase['Total Harga'] ?? 0;
                               final items = purchase['items'] ?? [];
                               items.forEach((item) {
                                 final unit = item['Banyak Barang'] ?? 0;
-                                final modal =
-                                    (purchase['Type Transaksi'] == 'Stok')
-                                        ? item['Harga Modal']
-                                        : item['Harga Awal'] ?? 0.0;
+                                final modal = item['Harga Modal'] ?? 0;
                                 totalCapital += unit * modal;
                               });
                             }
                             final netIncome = totalHarga - totalCapital;
-                            return Text(netIncome.toString(),
-                                textAlign: TextAlign.right);
+                            return Text(formatRupiah(netIncome as int), textAlign: TextAlign.right);
+
                           }),
                         ],
                       ),
@@ -965,20 +944,18 @@ class LihatLaporanController extends GetxController {
       List<Map<String, dynamic>> purchasinData, String jenis) async {
     final pdf = pw.Document();
     final List<Map<String, dynamic>> rows = [];
-    double totalHarga = 0.0;
+    int totalHarga = 0;
     for (var purchase in purchasinData) {
       if (purchase['Type Transaksi'] != 'Stok') {
-        totalHarga += (purchase['Total Harga'] ?? 0.0) as double;
+        totalHarga += (purchase['Total Harga'] ?? 0) as int;
       }
     }
-    double totalCapital = 0.0;
+    num  totalCapital = 0;
     for (var purchase in purchasinData) {
       final items = purchase['items'] ?? [];
       items.forEach((item) {
         final unit = item['Banyak Barang'] ?? 0;
-        final modal = (purchase['Type Transaksi'] == 'Stok')
-            ? item['Harga Modal']
-            : item['Harga Awal'] ?? 0.0;
+        final modal = item['Harga Modal'] ?? 0;
         totalCapital += unit * modal;
       });
     }
@@ -991,11 +968,12 @@ class LihatLaporanController extends GetxController {
         final itemName = item['Nama Barang'] ?? 'Unknown';
         final modal = (typeTransaksi == 'Stok')
             ? item['Harga Modal']
-            : item['Harga Awal'] ?? 0.0;
+            : item['Harga Awal'] ?? 0;
         final unit = item['Banyak Barang'] ?? 0;
+        if (unit == 0) continue;
         final jenis = item['Jenis Barang'] ?? 'Unknown';
         final price =
-            (typeTransaksi == 'Stok') ? modal : item['Harga Jual'] ?? 0.0;
+            (typeTransaksi == 'Stok') ? modal : item['Harga Jual'] ?? 0;
         final total = unit * price;
 
         final existingItemIndex = rows.indexWhere((row) =>
@@ -1141,15 +1119,15 @@ class LihatLaporanController extends GetxController {
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(5),
-                        child: pw.Text(row['Modal'].toString()),
+                        child: pw.Text(formatRupiah(row['Modal'] as int)),
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(5),
-                        child: pw.Text(row['Harga'].toString()),
+                        child: pw.Text(formatRupiah(row['Harga'] as int)),
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(5),
-                        child: pw.Text(row['Total'].toString()),
+                        child: pw.Text(formatRupiah(row['Total'] as int)),
                       ),
                     ],
                   );
@@ -1164,7 +1142,7 @@ class LihatLaporanController extends GetxController {
                 pw.Expanded(
                   flex: 1,
                   child: pw.Text(
-                    'Total Income :     ${totalHarga.toString()}',
+                    'Total Income :     ${formatRupiah(totalHarga)}',
                     textAlign: pw.TextAlign.left,
                   ),
                 ),
@@ -1175,7 +1153,7 @@ class LihatLaporanController extends GetxController {
                 pw.Expanded(
                   flex: 1,
                   child: pw.Text(
-                    'Capital :               ${totalCapital.toString()}',
+                    'Capital :               ${formatRupiah(totalCapital as int)}',
                     textAlign: pw.TextAlign.left,
                   ),
                 ),
@@ -1199,7 +1177,7 @@ class LihatLaporanController extends GetxController {
                 pw.Expanded(
                   flex: 1,
                   child: pw.Text(
-                    'Net Income :        ${netIncome.toString()}',
+                    'Net Income :        ${formatRupiah(netIncome as int)}',
                     textAlign: pw.TextAlign.left,
                   ),
                 ),
