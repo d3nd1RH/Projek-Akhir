@@ -17,7 +17,12 @@ class Splash extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             body: Container(
-              color: Colors.white,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/bg-splash.png"), // Gambar latar belakang
+                  fit: BoxFit.cover,
+                ),
+              ),
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -50,7 +55,12 @@ class Splash extends StatelessWidget {
           });
           return Scaffold(
             body: Container(
-              color: Colors.white,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/bg-splash.png"), // Gambar latar belakang
+                  fit: BoxFit.cover,
+                ),
+              ),
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
