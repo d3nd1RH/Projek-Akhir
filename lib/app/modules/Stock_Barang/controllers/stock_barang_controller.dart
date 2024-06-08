@@ -29,7 +29,9 @@ class StockBarangController extends GetxController {
   void setSelectedCategory(String value) {
     selectedCategory.value = value;
   }
-   void sortData(String title, bool ascending, List<Map<String, dynamic>> dataList) {
+
+  void sortData(
+      String title, bool ascending, List<Map<String, dynamic>> dataList) {
     dataList.sort((a, b) {
       if (title == 'Stock') {
         if (a['Banyak'] == b['Banyak']) {
@@ -39,7 +41,9 @@ class StockBarangController extends GetxController {
         } else {
           return b['Banyak'].compareTo(a['Banyak']);
         }
-      }else if(title == "Makanan"||title == "Minuman"||title == "Lainnya") {
+      } else if (title == "Makanan" ||
+          title == "Minuman" ||
+          title == "Lainnya") {
         if (a["nama"] == b["nama"]) {
           return 0;
         } else if (sortAscending.value) {
@@ -47,8 +51,7 @@ class StockBarangController extends GetxController {
         } else {
           return b["nama"].compareTo(a["nama"]);
         }
-      } 
-      else {
+      } else {
         if (a[title] == b[title]) {
           return 0;
         } else if (sortAscending.value) {
@@ -61,11 +64,14 @@ class StockBarangController extends GetxController {
     update();
   }
 
-   void toggleSort() {
+  void toggleSort() {
     sortAscending.value = !sortAscending.value;
   }
 
   Widget buildDataTable(String title, List<Map<String, dynamic>> dataList) {
+     if (dataList.isEmpty) {
+    return Container(); 
+  }
     return Column(
       children: [
         SizedBox(height: 20.h),
@@ -79,7 +85,7 @@ class StockBarangController extends GetxController {
                 title,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-               onSort: (columnIndex, ascending) {
+              onSort: (columnIndex, ascending) {
                 sortColumnIndex.value = columnIndex;
                 sortData(title, ascending, dataList);
                 toggleSort();
@@ -327,41 +333,45 @@ class StockBarangController extends GetxController {
   }
 
   Future<void> fetchData() async {
-  try {
-    var makananSnapshot =
-        await ref.where('kategori', isEqualTo: 'Makanan').get();
-    var minumanSnapshot =
-        await ref.where('kategori', isEqualTo: 'Minuman').get();
-    var lainnyaSnapshot =
-        await ref.where('kategori', isEqualTo: 'Lainnya').get();
+    try {
+      var makananSnapshot =
+          await ref.where('kategori', isEqualTo: 'Makanan').get();
+      var minumanSnapshot =
+          await ref.where('kategori', isEqualTo: 'Minuman').get();
+      var lainnyaSnapshot =
+          await ref.where('kategori', isEqualTo: 'Lainnya').get();
 
-    makananList.value = makananSnapshot.docs.map((doc) {
-      var data = doc.data() as Map<String, dynamic>;
-      data['docId'] = doc.id;
-      return data;
-    }).toList();
+      makananList.value = makananSnapshot.docs.map((doc) {
+        var data = doc.data() as Map<String, dynamic>;
+        data['docId'] = doc.id;
+        return data;
+      }).toList();
 
-    minumanList.value = minumanSnapshot.docs.map((doc) {
-      var data = doc.data() as Map<String, dynamic>;
-      data['docId'] = doc.id;
-      return data;
-    }).toList();
+      minumanList.value = minumanSnapshot.docs.map((doc) {
+        var data = doc.data() as Map<String, dynamic>;
+        data['docId'] = doc.id;
+        return data;
+      }).toList();
 
-    lainnyaList.value = lainnyaSnapshot.docs.map((doc) {
-      var data = doc.data() as Map<String, dynamic>;
-      data['docId'] = doc.id;
-      return data;
-    }).toList();
-  } on FirebaseException catch (e) {
-    if (e.code == 'permission-denied') {
-      Get.snackbar('Maaf','Anda Mencurigakan!!\nBeritahu Pemilik Toko apabila ini kesalahan',backgroundColor :Colors.red);
-    } else {
-      Get.snackbar('Error','Error Tidak di ketahui: $e',backgroundColor :Colors.red);
+      lainnyaList.value = lainnyaSnapshot.docs.map((doc) {
+        var data = doc.data() as Map<String, dynamic>;
+        data['docId'] = doc.id;
+        return data;
+      }).toList();
+    } on FirebaseException catch (e) {
+      if (e.code == 'permission-denied') {
+        Get.snackbar('Maaf',
+            'Anda Mencurigakan!!\nBeritahu Pemilik Toko apabila ini kesalahan',
+            backgroundColor: Colors.red);
+      } else {
+        Get.snackbar('Error', 'Error Tidak di ketahui: $e',
+            backgroundColor: Colors.red);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Error Tidak di ketahui: $e',
+          backgroundColor: Colors.red);
     }
-  } catch (e) {
-    Get.snackbar('Error','Error Tidak di ketahui: $e',backgroundColor :Colors.red);
   }
-}
 
   void tambahBarang() {
     Get.dialog(

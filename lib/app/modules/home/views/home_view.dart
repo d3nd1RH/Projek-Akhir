@@ -27,7 +27,7 @@ class HomeView extends GetView<HomeController> {
         backgroundColor: const Color.fromRGBO(41, 128, 185, 1),
         actions: [
           IconButton(
-            icon: const Icon(Icons.menu),
+            icon: const Icon(Icons.menu,color: Colors.black,),
             onPressed: () {
               controller.showPopupMenu(context);
             },

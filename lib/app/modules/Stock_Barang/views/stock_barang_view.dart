@@ -13,61 +13,70 @@ class StockBarangView extends GetView<StockBarangController> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Stock Barang'),
-        titleTextStyle: TextStyle(
-            fontSize: 25.sp, fontWeight: FontWeight.bold, color: Colors.black),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        backgroundColor: const Color.fromRGBO(172, 69, 150, 1),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.search,
-              color: Colors.black,
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Stock Barang'),
+          titleTextStyle: TextStyle(
+              fontSize: 25.sp, fontWeight: FontWeight.bold, color: Colors.black),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          backgroundColor: const Color.fromRGBO(41, 128, 185, 1),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.search,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                showSearch(
+                    context: context, delegate: HomeSearchDelegate(controller));
+              },
             ),
-            onPressed: () {
-              showSearch(
-                  context: context, delegate: HomeSearchDelegate(controller));
-            },
-          ),
-        ],
-      ),
-      body: FutureBuilder(
-        future: controller.fetchData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return SingleChildScrollView(
-              child: Center(
-                  child: Obx(
-                () => Column(
-                  children: [
-                    if (controller.makananList.isNotEmpty)
-                      controller.buildDataTable(
-                          'Makanan', controller.makananList),
-                    if (controller.minumanList.isNotEmpty)
-                      controller.buildDataTable(
-                          'Minuman', controller.minumanList),
-                    if (controller.lainnyaList.isNotEmpty)
-                      controller.buildDataTable(
-                          'Lainnya', controller.lainnyaList),
-                  ],
-                ),
-              )),
-            );
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          controller.tambahBarang();
-        },
-        child: const Icon(Icons.add),
+          ],
+          bottom: TabBar(
+              tabs: const [
+                Tab(text: 'Makanan'),
+                Tab(text: 'Minuman'),
+                Tab(text: 'Lainnya'),
+              ],
+              indicator: const BoxDecoration(
+                color: Color.fromRGBO(217, 217, 217, 1),
+              ),
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorPadding: EdgeInsets.only(
+                  right: 30.0.w, left: 30.0.w, top: 8.0.h, bottom: 8.0.h),
+              unselectedLabelColor: Colors.white,
+              labelColor: Colors.black,
+            ),
+        ),
+        body: FutureBuilder(
+          future: controller.fetchData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              return Expanded(
+              child: TabBarView(
+                children: [
+                    Obx(() => controller.buildDataTable('Makanan', controller.makananList)),
+                    Obx(() =>controller.buildDataTable('Minuman', controller.minumanList)),
+                    Obx(() =>controller.buildDataTable('Lainnya', controller.lainnyaList)),
+                ],
+              ),
+              );
+            }
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            controller.tambahBarang();
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }

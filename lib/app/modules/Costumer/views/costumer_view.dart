@@ -24,7 +24,7 @@ class CostumerView extends GetView<CostumerController> {
               fontSize: 25.sp,
               fontWeight: FontWeight.bold,
               color: Colors.black),
-          backgroundColor: const Color.fromRGBO(172, 69, 150, 1),
+          backgroundColor: const Color.fromRGBO(41, 128, 185, 1),
           centerTitle: true,
           automaticallyImplyLeading: false,
           bottom: TabBar(
