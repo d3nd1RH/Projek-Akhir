@@ -17,21 +17,14 @@ class Splash extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             body: Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/images/bg-splash.png"), // Gambar latar belakang
-                  fit: BoxFit.cover,
-                ),
-              ),
+              color: const Color.fromRGBO(41, 128, 185, 1),
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "assets/images/Logo_Funtime.jpg",
-                      width: 350.sp,
-                      height: 350.sp,
-                    ),
+                    Text("FUNTIME JUICE",style: TextStyle(fontFamily: 'Pattaya',fontSize: 60.w),),
+                    SizedBox(height: 20.h,),
+                    Text("Health is wealth",style: TextStyle(fontFamily: 'Pattaya',fontSize: 24.w),)
                   ],
                 ),
               ),
@@ -55,21 +48,14 @@ class Splash extends StatelessWidget {
           });
           return Scaffold(
             body: Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/images/bg-splash.png"), // Gambar latar belakang
-                  fit: BoxFit.cover,
-                ),
-              ),
+              color: const Color.fromRGBO(41, 128, 185, 1),
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "assets/images/Logo_Funtime.jpg",
-                      width: 350.sp,
-                      height: 350.sp,
-                    ),
+                    Text("FUNTIME JUICE",style: TextStyle(fontFamily: 'Pattaya',fontSize: 60.w),),
+                    SizedBox(height: 20.h,),
+                    Text("Health is wealth",style: TextStyle(fontFamily: 'Pattaya',fontSize: 24.w),)
                   ],
                 ),
               ),

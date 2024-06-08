@@ -36,5 +36,10 @@ flutter_launcher_icons:
 flutter: 
   assets: 
     - assets/images/
+
+  fonts: 
+    - family: Pattaya
+      fonts: 
+        - asset: assets/fonts/Pattaya-Regular.ttf
   uses-material-design: true
 

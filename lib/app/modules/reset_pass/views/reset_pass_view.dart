@@ -11,7 +11,7 @@ class ResetPassView extends GetView<ResetPassController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/bg-login.png"),
             fit: BoxFit.cover,
@@ -33,7 +33,7 @@ class ResetPassView extends GetView<ResetPassController> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Email",
                         style: TextStyle(color: Colors.white),
                       ),
@@ -41,16 +41,16 @@ class ResetPassView extends GetView<ResetPassController> {
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10.w),
                         decoration: BoxDecoration(
-                          color: Color.fromRGBO(217, 217, 217, 1),
+                          color: const Color.fromRGBO(217, 217, 217, 1),
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                         child: TextFormField(
                           controller: controller.reset,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: "Masukkan Email Anda",
                             border: InputBorder.none,
                           ),
-                          style: TextStyle(color: Colors.black),
+                          style: const TextStyle(color: Colors.black),
                         ),
                       ),
                       SizedBox(height: 30.h),
@@ -72,7 +72,7 @@ class ResetPassView extends GetView<ResetPassController> {
                               ),
                             ),
                           ),
-                        child: Text("Reset Password", style: TextStyle(color: Colors.black)),
+                        child: const Text("Reset Password", style: TextStyle(color: Colors.black)),
                       ),
                     ],
                   ),

@@ -5,14 +5,14 @@ import 'package:get/get.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
-  const LoginView({Key? key});
+  const LoginView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         // Tambahkan background image
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/bg-login.png"),
             fit: BoxFit.cover,
@@ -51,20 +51,20 @@ class LoginView extends GetView<LoginController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Email", style: TextStyle(color: Colors.white)),
+                      const Text("Email", style: TextStyle(color: Colors.white)),
                       SizedBox(height: 10.h),
                       TextFormField(
                         controller: controller.email,
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: Color.fromRGBO(217, 217, 217, 1),
+                          fillColor: const Color.fromRGBO(217, 217, 217, 1),
                           hintText: "Masukkan Email Anda",
-                          hintStyle: TextStyle(color: Colors.black),
+                          hintStyle: const TextStyle(color: Colors.black),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                         validator: (emailstate) {
                           if (emailstate == null || emailstate.isEmpty) {
                             return "Tolong isi Email anda";
@@ -74,16 +74,16 @@ class LoginView extends GetView<LoginController> {
                         },
                       ),
                       SizedBox(height: 20.h),
-                      Text("Password", style: TextStyle(color: Colors.white)),
+                      const Text("Password", style: TextStyle(color: Colors.white)),
                       SizedBox(height: 10.h),
                       Obx(() => TextFormField(
                         controller: controller.password,
                         obscureText: controller.obscurePassText.value,
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: Color.fromRGBO(217, 217, 217, 1),
+                          fillColor: const Color.fromRGBO(217, 217, 217, 1),
                           hintText: "Masukkan Password Anda",
-                          hintStyle: TextStyle(color: Colors.black),
+                          hintStyle: const TextStyle(color: Colors.black),
                           suffixIcon: IconButton(
                             onPressed: controller.togglePasswordVisibility,
                             icon: Icon(
@@ -94,7 +94,7 @@ class LoginView extends GetView<LoginController> {
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Tolong isi Password anda";
@@ -108,7 +108,7 @@ class LoginView extends GetView<LoginController> {
                         onPressed: () {
                           Get.toNamed("/reset-pass");
                         },
-                        child: Text("Lupa Password?", style: TextStyle(color: Color.fromARGB(255, 23, 2, 255))),
+                        child: const Text("Lupa Password?", style: TextStyle(color: Color.fromARGB(255, 23, 2, 255))),
                       ),
                       SizedBox(height: 20.h),
                       ElevatedButton(
@@ -131,14 +131,14 @@ class LoginView extends GetView<LoginController> {
                         ),
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.h), // Tambahkan padding vertikal
-                          child: Text("Login"), // Ubah teks menjadi "Login"
+                          child: const Text("Login"), // Ubah teks menjadi "Login"
                         ),
                       ),
                       SizedBox(height: 20.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             "Belum punya akun? ",
                             style: TextStyle(color: Colors.white),
                           ),
@@ -146,7 +146,7 @@ class LoginView extends GetView<LoginController> {
                             onPressed: () {
                               Get.offNamed("/register");
                             },
-                            child: Text(
+                            child: const Text(
                               "Register",
                               style: TextStyle(color: Color.fromARGB(255, 23, 2, 255)),
                             ),
