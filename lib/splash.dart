@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'app/modules/login/controllers/login_controller.dart';
@@ -11,6 +12,9 @@ class Splash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return StreamBuilder<User?>(
       stream: loginController.streamAuthStatus,
       builder: (context, snapshot) {
@@ -22,9 +26,12 @@ class Splash extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("FUNTIME JUICE",style: TextStyle(fontFamily: 'Pattaya',fontSize: 60.w),),
+                    SizedBox(height: 100.h,),
+                    Text("FUNTIME",style: TextStyle(fontFamily: 'Pattaya',fontSize: 60.w,color: Colors.white),),
+                    Text("JUICE",style: TextStyle(fontFamily: 'Pattaya',fontSize: 60.w,color: Colors.white),),
+                    SizedBox(height: 150.h,),
+                    Text("Health is wealth",style: TextStyle(fontFamily: 'Pattaya',fontSize: 24.w,color: Colors.white),),
                     SizedBox(height: 20.h,),
-                    Text("Health is wealth",style: TextStyle(fontFamily: 'Pattaya',fontSize: 24.w),)
                   ],
                 ),
               ),
@@ -53,9 +60,12 @@ class Splash extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("FUNTIME JUICE",style: TextStyle(fontFamily: 'Pattaya',fontSize: 60.w),),
+                    SizedBox(height: 100.h,),
+                    Text("FUNTIME",style: TextStyle(fontFamily: 'Pattaya',fontSize: 60.w,color: Colors.white),),
+                    Text("JUICE",style: TextStyle(fontFamily: 'Pattaya',fontSize: 60.w,color: Colors.white),),
+                    SizedBox(height: 150.h,),
+                    Text("Health is wealth",style: TextStyle(fontFamily: 'Pattaya',fontSize: 24.w,color: Colors.white),),
                     SizedBox(height: 20.h,),
-                    Text("Health is wealth",style: TextStyle(fontFamily: 'Pattaya',fontSize: 24.w),)
                   ],
                 ),
               ),

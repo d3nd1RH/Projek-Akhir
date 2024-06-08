@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
@@ -9,6 +10,9 @@ class StockBarangView extends GetView<StockBarangController> {
   const StockBarangView({super.key});
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Stock Barang'),

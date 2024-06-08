@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -9,6 +10,9 @@ class LoginView extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return Scaffold(
       body: Container(
         // Tambahkan background image
@@ -27,7 +31,7 @@ class LoginView extends GetView<LoginController> {
                 SizedBox(height: 30.h),
                 Text(
                   'FUNTIME',
-                  style: TextStyle(fontSize: 40.sp, color: Colors.white),
+                  style: TextStyle(fontSize: 40.sp, color: Colors.white,fontFamily: "Pattaya"),
                 ),
                 SizedBox(height: 30.h),
                 Container(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../controllers/scurity_controller.dart';
 
@@ -7,6 +8,9 @@ class ScurityView extends GetView<ScurityController> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Keamanan'),

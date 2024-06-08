@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -9,6 +10,9 @@ class RegisterView extends GetView<RegisterController> {
   
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -25,7 +29,7 @@ class RegisterView extends GetView<RegisterController> {
                 SizedBox(height: 30.h),
                 Text(
                   'Register',
-                  style: TextStyle(fontSize: 40.sp, color: Colors.white),
+                  style: TextStyle(fontSize: 40.sp, color: Colors.white,fontFamily: "Pattaya"),
                 ),
                 SizedBox(height: 30.h),
                 Container(
