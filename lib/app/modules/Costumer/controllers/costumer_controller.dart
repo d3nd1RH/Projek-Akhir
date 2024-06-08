@@ -52,8 +52,18 @@ class CostumerController extends GetxController {
       isCheckedList.value = List<RxBool>.generate(totalItems, (_) => false.obs);
       clickCountList.value = List<RxInt>.generate(totalItems, (_) => 0.obs);
       totalPriceList.value = List<int>.filled(totalItems, 0);
-    } catch (error) {
-      Get.snackbar('Error','Error fetching data: $error',backgroundColor: Colors.red);
+    } on FirebaseException catch (e) {
+      if (e.code == 'permission-denied') {
+        Get.snackbar('Maaf',
+            'Anda Mencurigakan!!\nBeritahu Pemilik Toko apabila ini kesalahan',
+            backgroundColor: Colors.red);
+      } else {
+        Get.snackbar('Error', 'Error Tidak di ketahui: $e',
+            backgroundColor: Colors.red);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Error Tidak di ketahui: $e',
+          backgroundColor: Colors.red);
     }
   }
 
@@ -293,14 +303,15 @@ class CostumerController extends GetxController {
 
     final newTotalTransaction = existingTotalTransaction + selectedPrice.value;
 
-  final totalTransactionsRef = FirebaseFirestore.instance
-      .collection('TotalTransactions')
-      .doc('Transaksi');
-  await totalTransactionsRef.set({
-    'Date': DateTime.now(),
-    'Total Transaksi': newTotalTransaction,
-  });
-}
+    final totalTransactionsRef = FirebaseFirestore.instance
+        .collection('TotalTransactions')
+        .doc('Transaksi');
+    await totalTransactionsRef.set({
+      'Date': DateTime.now(),
+      'Total Transaksi': newTotalTransaction,
+    });
+  }
+
   Future<int> getTotalTransaction() async {
     final totalTransactionsRef = FirebaseFirestore.instance
         .collection('TotalTransactions')

@@ -34,7 +34,7 @@ class RegisterController extends GetxController {
       akun.user!.sendEmailVerification();
       final doc = user.doc(uidname);
       final data = {
-        "peran": "Pegawai",
+        "peran": "Lainnya",
         "uid": uidname,
         "nama": nama
       };

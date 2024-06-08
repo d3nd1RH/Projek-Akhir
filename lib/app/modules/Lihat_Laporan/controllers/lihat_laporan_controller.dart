@@ -106,10 +106,18 @@ class LihatLaporanController extends GetxController {
 
         purchasesDay.value = combinedData;
       }
+    } on FirebaseException catch (e) {
+      if (e.code == 'permission-denied') {
+        Get.snackbar('Maaf',
+            'Anda Mencurigakan!!\nBeritahu Pemilik Toko apabila ini kesalahan',
+            backgroundColor: Colors.red);
+      } else {
+        Get.snackbar('Error', 'Error saat mengambil Data: $e',
+            backgroundColor: Colors.red);
+      }
     } catch (e) {
-      Get.snackbar('Error', 'Error saat mengambil data: $e',
+      Get.snackbar('Error', 'Error saat mengambil Data: $e',
           backgroundColor: Colors.red);
-      purchasesDay.value = [];
     }
   }
 
@@ -138,10 +146,18 @@ class LihatLaporanController extends GetxController {
           purchasesMount.value = [];
         }
       }
+    } on FirebaseException catch (e) {
+      if (e.code == 'permission-denied') {
+        Get.snackbar('Maaf',
+            'Anda Mencurigakan!!\nBeritahu Pemilik Toko apabila ini kesalahan',
+            backgroundColor: Colors.red);
+      } else {
+        Get.snackbar('Error', 'Error saat mengambil Data: $e',
+            backgroundColor: Colors.red);
+      }
     } catch (e) {
-      Get.snackbar('Error', 'Error saat mengambil data: $e',
+      Get.snackbar('Error', 'Error saat mengambil Data: $e',
           backgroundColor: Colors.red);
-      purchasesMount.value = [];
     }
   }
 
@@ -166,10 +182,18 @@ class LihatLaporanController extends GetxController {
           purchasesYearly.value = [];
         }
       }
+    } on FirebaseException catch (e) {
+      if (e.code == 'permission-denied') {
+        Get.snackbar('Maaf',
+            'Anda Mencurigakan!!\nBeritahu Pemilik Toko apabila ini kesalahan',
+            backgroundColor: Colors.red);
+      } else {
+        Get.snackbar('Error', 'Error saat mengambil Data: $e',
+            backgroundColor: Colors.red);
+      }
     } catch (e) {
-      Get.snackbar('Error', 'Error saat mengambil data: $e',
+      Get.snackbar('Error', 'Error saat mengambil Data: $e',
           backgroundColor: Colors.red);
-      purchasesYearly.value = [];
     }
   }
 
@@ -226,7 +250,7 @@ class LihatLaporanController extends GetxController {
               ),
               GestureDetector(
                 onTap: () async {
-                  await printPdf(purchasesDay, "Harian",10);
+                  await printPdf(purchasesDay, "Harian", 10);
                 },
                 child: Container(
                     width: 100.w,
@@ -410,7 +434,8 @@ class LihatLaporanController extends GetxController {
                               });
                             }
                             final netIncome = totalHarga - totalCapital;
-                            return Text(formatRupiah(netIncome as int), textAlign: TextAlign.right);
+                            return Text(formatRupiah(netIncome as int),
+                                textAlign: TextAlign.right);
                           }),
                         ],
                       ),
@@ -478,7 +503,7 @@ class LihatLaporanController extends GetxController {
               ),
               GestureDetector(
                 onTap: () async {
-                  await printPdf(purchasesMount, "Bulanan",7);
+                  await printPdf(purchasesMount, "Bulanan", 7);
                 },
                 child: Container(
                     width: 100.w,
@@ -661,7 +686,8 @@ class LihatLaporanController extends GetxController {
                               });
                             }
                             final netIncome = totalHarga - totalCapital;
-                            return Text(formatRupiah(netIncome as int), textAlign: TextAlign.right);
+                            return Text(formatRupiah(netIncome as int),
+                                textAlign: TextAlign.right);
                           }),
                         ],
                       ),
@@ -732,7 +758,7 @@ class LihatLaporanController extends GetxController {
               ),
               GestureDetector(
                 onTap: () async {
-                  await printPdf(purchasesYearly, "Tahunan",4);
+                  await printPdf(purchasesYearly, "Tahunan", 4);
                 },
                 child: Container(
                     width: 100.w,
@@ -915,8 +941,8 @@ class LihatLaporanController extends GetxController {
                               });
                             }
                             final netIncome = totalHarga - totalCapital;
-                            return Text(formatRupiah(netIncome as int), textAlign: TextAlign.right);
-
+                            return Text(formatRupiah(netIncome as int),
+                                textAlign: TextAlign.right);
                           }),
                         ],
                       ),
@@ -931,8 +957,8 @@ class LihatLaporanController extends GetxController {
     );
   }
 
-  Future<void> printPdf(
-      List<Map<String, dynamic>> purchasinData, String jenis,int datecut) async {
+  Future<void> printPdf(List<Map<String, dynamic>> purchasinData, String jenis,
+      int datecut) async {
     final pdf = pw.Document();
     final List<Map<String, dynamic>> rows = [];
     int totalHarga = 0;
@@ -941,7 +967,7 @@ class LihatLaporanController extends GetxController {
         totalHarga += (purchase['Total Harga'] ?? 0) as int;
       }
     }
-    num  totalCapital = 0;
+    num totalCapital = 0;
     for (var purchase in purchasinData) {
       final items = purchase['items'] ?? [];
       items.forEach((item) {

@@ -7,6 +7,8 @@ class HomeController extends GetxController {
   RxBool isTextHidden = false.obs;
 
   final FirebaseAuth auth = FirebaseAuth.instance;
+
+
   Future<void> logout() async {
     try {
       await auth.signOut();
