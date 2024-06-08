@@ -24,7 +24,7 @@ class HomeView extends GetView<HomeController> {
         titleTextStyle: TextStyle(
             fontSize: 25.sp, fontWeight: FontWeight.bold, color: Colors.black),
         centerTitle: true,
-        backgroundColor: const Color.fromRGBO(233, 107, 107, 1),
+        backgroundColor: const Color.fromRGBO(41, 128, 185, 1),
         actions: [
           IconButton(
             icon: const Icon(Icons.menu),
@@ -50,14 +50,17 @@ class HomeView extends GetView<HomeController> {
                       return const CircularProgressIndicator();
                     }
                     if (!snapshot.hasData || !snapshot.data!.exists) {
-                      return Container(
-                        width: double.infinity,
-                        height: 100.h,
-                        color: const Color.fromRGBO(217, 217, 217, 1),
-                        child: const Center(
-                          child: Text(
-                            "Tidak ada transaksi",
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: Container(
+                          width: double.infinity,
+                          height: 100.h,
+                          color: const Color.fromRGBO(41, 128, 185, 1),
+                          child: const Center(
+                            child: Text(
+                              "Tidak ada transaksi",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                       );
@@ -116,40 +119,49 @@ class HomeView extends GetView<HomeController> {
                           },
                         );
                       },
-                      child: Container(
-                        width: double.infinity,
-                        height: 100.h,
-                        color: const Color.fromRGBO(217, 217, 217, 1),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              SizedBox(height: 10.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  const Text(
-                                    "Total Penjualan",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(DateFormat('dd/MM/yyyy')
-                                      .format(transactionDate)),
-                                ],
-                              ),
-                              Obx(
-                                () => controller.isTextHidden.value
-                                    ? Container()
-                                    : Text(
-                                        formattedTotalSales,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 32.sp,
-                                          color: salesColor,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: Container(
+                          width: double.infinity,
+                          height: 100.h,
+                          color: const Color.fromRGBO(41, 128, 185, 1),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                SizedBox(height: 10.h),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    SizedBox(width: 50.w,),
+                                    const Text(
+                                      "Total Penjualan",
+                                      style:
+                                          TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                                    ),
+                                    Obx(() => controller.isTextHidden.value 
+                                    ?const Icon(Icons.visibility_off,color: Colors.white,)
+                                    : const Icon(Icons.visibility,color: Colors.white,)),
+                                    SizedBox(width: 50.w,),
+                                    Text(DateFormat('dd/MM/yyyy')
+                                        .format(transactionDate),style: const TextStyle(color: Colors.white),),
+                                    SizedBox(width: 50.w,),
+                                  ],
+                                ),
+                                Obx(
+                                  () => controller.isTextHidden.value
+                                      ? Container()
+                                      : Text(
+                                          formattedTotalSales,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 32.sp,
+                                            color: salesColor,
+                                          ),
                                         ),
-                                      ),
-                              ),
-                            ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -164,17 +176,26 @@ class HomeView extends GetView<HomeController> {
                       onTap: () {
                         Get.toNamed("/lihat-laporan");
                       },
-                      child: Container(
-                        width: 175.w,
-                        height: 175.h,
-                        color: const Color.fromRGBO(217, 217, 217, 1),
-                        child: Center(
-                          child: Text(
-                            "Lihat Laporan",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20.sp),
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(37.0),
+                            child: Container(
+                              width: 175.w,
+                              height: 175.h,
+                              color: const Color.fromRGBO(41, 128, 185, 1),
+                              child: Center(
+                                child: Icon(
+                              Icons.file_present_outlined,
+                              color: Colors.black,
+                              size: 120.sp,
+                            ),
+                              ),
+                            ),
                           ),
-                        ),
+                          SizedBox(height: 20.h,),
+                          const Text("Lihat Laporan")
+                        ],
                       ),
                     ),
                     SizedBox(width: 20.w),
@@ -182,16 +203,24 @@ class HomeView extends GetView<HomeController> {
                       onTap: () {
                         Get.toNamed("/costumer");
                       },
-                      child: Container(
-                        width: 175.w,
-                        height: 175.h,
-                        color: const Color.fromRGBO(217, 217, 217, 1),
-                        child: Center(
-                            child: Text(
-                          "Customer",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20.sp),
-                        )),
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(37.0),
+                            child: Container(
+                              width: 175.w,
+                              height: 175.h,
+                              color: const Color.fromRGBO(41, 128, 185, 1),
+                              child: Icon(
+                              Icons.group_outlined,
+                              color: Colors.black,
+                              size: 120.sp,
+                            ),
+                            ),
+                          ),
+                          SizedBox(height: 20.h,),
+                          const Text("Consumer")
+                        ],
                       ),
                     ),
                   ],
@@ -201,17 +230,26 @@ class HomeView extends GetView<HomeController> {
                   onTap: () {
                     Get.toNamed("/stock-barang");
                   },
-                  child: Container(
-                    width: double.infinity,
-                    height: 175.h,
-                    color: const Color.fromRGBO(217, 217, 217, 1),
-                    child: Center(
-                      child: Text(
-                        "Stock Barang",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20.sp),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(37.0),
+                        child: Container(
+                          width: double.infinity,
+                          height: 175.h,
+                          color: const Color.fromRGBO(41, 128, 185, 1),
+                          child: Center(
+                            child: Icon(
+                              Icons.fastfood,
+                              color: Colors.black,
+                              size: 120.sp,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(height: 20.h,),
+                      const Text("Stock Barang")
+                    ],
                   ),
                 ),
               ],
