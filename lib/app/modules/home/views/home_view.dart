@@ -20,14 +20,17 @@ class HomeView extends GetView<HomeController> {
     ]);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Funtime Juice'),
+        title: const Text('Funtime Juice',),
         titleTextStyle: TextStyle(
-            fontSize: 25.sp, fontWeight: FontWeight.bold, color: Colors.black),
+            fontSize: 25.sp, fontWeight: FontWeight.bold, color: Colors.black,fontFamily: "Pattaya"),
         centerTitle: true,
         backgroundColor: const Color.fromRGBO(41, 128, 185, 1),
         actions: [
           IconButton(
-            icon: const Icon(Icons.menu,color: Colors.black,),
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.black,
+            ),
             onPressed: () {
               controller.showPopupMenu(context);
             },
@@ -133,19 +136,36 @@ class HomeView extends GetView<HomeController> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    SizedBox(width: 50.w,),
+                                    SizedBox(
+                                      width: 50.w,
+                                    ),
                                     const Text(
                                       "Total Penjualan",
-                                      style:
-                                          TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
                                     ),
-                                    Obx(() => controller.isTextHidden.value 
-                                    ?const Icon(Icons.visibility_off,color: Colors.white,)
-                                    : const Icon(Icons.visibility,color: Colors.white,)),
-                                    SizedBox(width: 50.w,),
-                                    Text(DateFormat('dd/MM/yyyy')
-                                        .format(transactionDate),style: const TextStyle(color: Colors.white),),
-                                    SizedBox(width: 50.w,),
+                                    Obx(() => controller.isTextHidden.value
+                                        ? const Icon(
+                                            Icons.visibility_off,
+                                            color: Colors.white,
+                                          )
+                                        : const Icon(
+                                            Icons.visibility,
+                                            color: Colors.white,
+                                          )),
+                                    SizedBox(
+                                      width: 50.w,
+                                    ),
+                                    Text(
+                                      DateFormat('dd/MM/yyyy')
+                                          .format(transactionDate),
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                    SizedBox(
+                                      width: 50.w,
+                                    ),
                                   ],
                                 ),
                                 Obx(
@@ -186,14 +206,16 @@ class HomeView extends GetView<HomeController> {
                               color: const Color.fromRGBO(41, 128, 185, 1),
                               child: Center(
                                 child: Icon(
-                              Icons.file_present_outlined,
-                              color: Colors.black,
-                              size: 120.sp,
-                            ),
+                                  Icons.file_present_outlined,
+                                  color: Colors.black,
+                                  size: 120.sp,
+                                ),
                               ),
                             ),
                           ),
-                          SizedBox(height: 20.h,),
+                          SizedBox(
+                            height: 20.h,
+                          ),
                           const Text("Lihat Laporan")
                         ],
                       ),
@@ -212,13 +234,15 @@ class HomeView extends GetView<HomeController> {
                               height: 175.h,
                               color: const Color.fromRGBO(41, 128, 185, 1),
                               child: Icon(
-                              Icons.group_outlined,
-                              color: Colors.black,
-                              size: 120.sp,
-                            ),
+                                Icons.group_outlined,
+                                color: Colors.black,
+                                size: 120.sp,
+                              ),
                             ),
                           ),
-                          SizedBox(height: 20.h,),
+                          SizedBox(
+                            height: 20.h,
+                          ),
                           const Text("Consumer")
                         ],
                       ),
@@ -247,7 +271,9 @@ class HomeView extends GetView<HomeController> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20.h,),
+                      SizedBox(
+                        height: 20.h,
+                      ),
                       const Text("Stock Barang")
                     ],
                   ),
