@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../formatindo.dart';
+
 class StockBarangController extends GetxController {
   var sortColumnIndex = 0.obs;
   var sortAscending = true.obs;
@@ -69,9 +71,9 @@ class StockBarangController extends GetxController {
   }
 
   Widget buildDataTable(String title, List<Map<String, dynamic>> dataList) {
-     if (dataList.isEmpty) {
-    return Container(); 
-  }
+    if (dataList.isEmpty) {
+      return Container();
+    }
     return Column(
       children: [
         SizedBox(height: 20.h),
@@ -105,50 +107,115 @@ class StockBarangController extends GetxController {
           ],
           rows: dataList.map((item) {
             return DataRow(
+              color: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                return Colors.blue;
+              }),
               cells: <DataCell>[
                 DataCell(
-                  GestureDetector(
-                    onTap: () {
-                      editDeleteBarang(item['docId']);
-                    },
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage:
-                              item['imageURL'] != null && item['imageURL'] != ""
-                                  ? NetworkImage(item['imageURL'])
-                                  : const AssetImage(
-                                          "assets/images/Logo_Funtime.jpg")
-                                      as ImageProvider,
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: item['imageURL'] != null &&
+                                item['imageURL'] != ""
+                            ? NetworkImage(item['imageURL'])
+                            : const AssetImage("assets/images/Logo_Funtime.jpg")
+                                as ImageProvider,
+                      ),
+                      SizedBox(width: 10.w),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item['nama'].length <= 15
+                                  ? item['nama']
+                                  : item['nama'].substring(0, 15) + '...',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  formatRupiah(item['Harga Awal']).length <= 10
+                                      ? formatRupiah(item['Harga Awal'])
+                                      : '${formatRupiah(item['Harga Awal']).substring(0, 9)}...',
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    editDeleteBarang(item['docId']);
+                                  },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Container(
+                                      width: 40,
+                                      height: 20,
+                                      color: Colors.orange,
+                                      child: const Center(
+                                          child: Text(
+                                        "Edit",
+                                        style: TextStyle(color: Colors.black),
+                                      )),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 10.w),
-                        Flexible(
-                          child: Text(
-                            item['nama'].length <= 15
-                                ? item['nama']
-                                : item['nama'].substring(0, 15) + '...',
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 DataCell(Row(
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        updateStock(item['docId'], 1);
+                    GestureDetector(
+                      onTap: () {
+                        updateStock(item['docId'], -1);
                       },
-                      icon: const Icon(Icons.add),
+                      child: Container(
+                        height: 30.h,
+                        width: 30.w,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.black,
+                        ),
+                        child: Icon(
+                          Icons.remove,
+                          size: 20.sp,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10.w,
                     ),
                     Text(item['Banyak'] > 999
                         ? '999+'
                         : item['Banyak'].toString()),
-                    IconButton(
-                      onPressed: () {
-                        updateStock(item['docId'], -1);
+                    SizedBox(
+                      width: 10.w,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        updateStock(item['docId'], 1);
                       },
-                      icon: const Icon(Icons.remove),
+                      child: Container(
+                        height: 30.h,
+                        width: 30.w,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.black,
+                        ),
+                        child: Icon(
+                          Icons.add,
+                          size: 20.sp,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ],
                 )),

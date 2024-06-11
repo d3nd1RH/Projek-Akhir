@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -16,6 +17,7 @@ class LihatLaporanController extends GetxController {
   var purchasesDay = <Map<String, dynamic>>[].obs;
   var purchasesMount = <Map<String, dynamic>>[].obs;
   var purchasesYearly = <Map<String, dynamic>>[].obs;
+  var purchases = <Map<String, dynamic>>[];
 
   Future<void> selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -32,33 +34,111 @@ class LihatLaporanController extends GetxController {
   }
 
   Future<void> selectMonth(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2018),
-      lastDate: DateTime.now(),
-      initialDatePickerMode: DatePickerMode.year,
-    );
+    int selectedYear = DateTime.now().year;
+    int selectedMonthop = DateTime.now().month;
 
-    if (pickedDate != null) {
-      selectedMonth.value = DateTime(pickedDate.year, pickedDate.month, 1);
-    }
+    await showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 200.0,
+          color: CupertinoColors.white,
+          child: Column(
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: CupertinoPicker(
+                        scrollController: FixedExtentScrollController(
+                          initialItem: selectedYear - DateTime.now().year,
+                        ),
+                        itemExtent: 32.0,
+                        onSelectedItemChanged: (int index) {
+                          selectedYear = DateTime.now().year + index;
+                        },
+                        children: List.generate(
+                          DateTime.now().year - 2022,
+                          (index) => Center(
+                            child: Text(
+                              '${DateTime.now().year - index}',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: CupertinoPicker(
+                        scrollController: FixedExtentScrollController(
+                          initialItem: selectedMonthop - 1,
+                        ),
+                        itemExtent: 32.0,
+                        onSelectedItemChanged: (int index) {
+                          selectedMonthop = index + 1;
+                        },
+                        children: List.generate(
+                          12,
+                          (index) => Center(
+                            child: Text(
+                              '${index + 1}',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              CupertinoButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  selectedMonth.value =
+                      DateTime(selectedYear, selectedMonthop, 1);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<int?> selectyear(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2018),
-      lastDate: DateTime.now(),
-      initialDatePickerMode: DatePickerMode.year,
-    );
+    final List<String> years = List.generate(DateTime.now().year - 2022,
+        (index) => (DateTime.now().year - index).toString());
+    String selectedYear = years.first;
 
-    if (pickedDate != null) {
-      return pickedDate.year;
-    } else {
-      return null;
-    }
+    final selectedValue = await showCupertinoModalPopup<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 200.0,
+          color: Colors.grey[300],
+          child: Column(
+            children: [
+              Expanded(
+                child: CupertinoPicker(
+                  itemExtent: 30.0,
+                  onSelectedItemChanged: (index) {
+                    selectedYear = years[index];
+                  },
+                  children: years.map((year) => Text(year)).toList(),
+                ),
+              ),
+              CupertinoButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.pop(context, int.parse(selectedYear));
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    
+    return selectedValue;
   }
 
   Future<void> fetchDailyPurchases() async {
@@ -71,9 +151,7 @@ class LihatLaporanController extends GetxController {
             '${dateFormat.format(selectedDateValue)}-Costumer';
         final dateDocIdReseller =
             '${dateFormat.format(selectedDateValue)}-Reseller';
-
         final dateDocIdStock = '${dateFormat.format(selectedDateValue)}-Stock';
-
         DocumentSnapshot costumerDayDoc = await FirebaseFirestore.instance
             .collection('Purchases')
             .doc(dateDocIdCostumer)
@@ -197,7 +275,15 @@ class LihatLaporanController extends GetxController {
     }
   }
 
-  Widget harianLaporan() {
+  Widget laporan(
+      String title,
+      Function selectDateFunction,
+      Function fetchFunction,
+      List<Map<String, dynamic>> purchases,
+      int pdfType) {
+    bool sortAscending = true;
+    int sortColumnIndex = 0;
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -215,8 +301,8 @@ class LihatLaporanController extends GetxController {
               ),
               GestureDetector(
                 onTap: () async {
-                  await selectDate(Get.context!);
-                  await fetchDailyPurchases();
+                  await selectDateFunction();
+                  await fetchFunction();
                 },
                 child: Container(
                   width: 160.w,
@@ -228,9 +314,17 @@ class LihatLaporanController extends GetxController {
                         width: 8.h,
                       ),
                       Obx(() => Text(
-                            selectedDate.value != null
-                                ? '${selectedDate.value!.year}/${selectedDate.value!.month.toString().padLeft(2, '0')}/${selectedDate.value!.day.toString().padLeft(2, '0')}'
-                                : 'Pilih Tanggal',
+                            title == "Harian"
+                                ? (selectedDate.value != null
+                                    ? '${selectedDate.value!.year}/${selectedDate.value!.month.toString().padLeft(2, '0')}/${selectedDate.value!.day.toString().padLeft(2, '0')}'
+                                    : 'Pilih Tanggal')
+                                : title == "Bulanan"
+                                    ? (selectedMonth.value != null
+                                        ? '${selectedMonth.value!.year}/${selectedMonth.value!.month.toString().padLeft(2, '0')}'
+                                        : 'Pilih Bulan')
+                                    : (pilihyear.value != 0
+                                        ? pilihyear.value.toString()
+                                        : 'Pilih Tahun'),
                           )),
                       const Spacer(),
                       const Icon(Icons.calendar_month_outlined)
@@ -250,7 +344,7 @@ class LihatLaporanController extends GetxController {
               ),
               GestureDetector(
                 onTap: () async {
-                  await printPdf(purchasesDay, "Harian", 10);
+                  await printPdf(purchases, title, pdfType);
                 },
                 child: Container(
                     width: 100.w,
@@ -261,7 +355,7 @@ class LihatLaporanController extends GetxController {
               const Spacer(),
               GestureDetector(
                 onTap: () async {
-                  await fetchDailyPurchases();
+                  await fetchFunction();
                 },
                 child: Container(
                   width: 100.w,
@@ -279,13 +373,13 @@ class LihatLaporanController extends GetxController {
             height: 20.h,
           ),
           Obx(() {
-            if (purchasesDay.isEmpty) {
+            if (purchases.isEmpty) {
               return Column(
                 children: [
                   SizedBox(
                     height: 150.h,
                   ),
-                  const Text('Tidak ada data pembelian untuk tanggal ini.'),
+                  const Text('Tidak ada data pembelian untuk periode ini.'),
                 ],
               );
             } else {
@@ -298,64 +392,32 @@ class LihatLaporanController extends GetxController {
                     children: [
                       DataTable(
                         border: TableBorder.all(color: Colors.black),
+                        sortAscending: sortAscending,
+                        sortColumnIndex: sortColumnIndex,
                         columns: const [
-                          DataColumn(label: Text('Nama')),
-                          DataColumn(label: Text('Transaksi')),
-                          DataColumn(label: Text('Jenis')),
-                          DataColumn(label: Text('Unit')),
-                          DataColumn(label: Text('Harga')),
-                          DataColumn(label: Text('Total (per item)')),
+                          DataColumn(
+                            label: Text('Nama'),
+                          ),
+                          DataColumn(
+                            label: Text('Transaksi'),
+                          ),
+                          DataColumn(
+                            label: Text('Jenis'),
+                          ),
+                          DataColumn(
+                            label: Text('Unit'),
+                            numeric: true,
+                          ),
+                          DataColumn(
+                            label: Text('Harga'),
+                            numeric: true,
+                          ),
+                          DataColumn(
+                            label: Text('Total (per item)'),
+                            numeric: true,
+                          ),
                         ],
-                        rows: purchasesDay.expand((purchase) {
-                          final typeTransaksi =
-                              purchase['Type Transaksi'] ?? 'Unknown';
-                          final items = purchase['items'] ?? [];
-
-                          Map<String, Map<String, dynamic>> itemMap = {};
-
-                          items.forEach((item) {
-                            final itemName = item['Nama Barang'] ?? 'Unknown';
-                            final modal = (typeTransaksi == 'Stok')
-                                ? item['Harga Modal']
-                                : item['Harga Awal'] ?? 0;
-                            final unit = item['Banyak Barang'] ?? 0;
-                            if (unit == 0) return;
-                            final jenis = item['Jenis Barang'] ?? 'Unknown';
-                            final price = (typeTransaksi == 'Stok')
-                                ? modal
-                                : item['Harga Jual'] ?? 0;
-
-                            final key = '$itemName-$jenis-$modal-$price';
-                            if (itemMap.containsKey(key)) {
-                              itemMap[key]!['Unit'] += unit;
-                              itemMap[key]!['Total'] =
-                                  itemMap[key]!['Unit'] * price;
-                            } else {
-                              itemMap[key] = {
-                                'Nama Barang': itemName,
-                                'Transaksi': typeTransaksi,
-                                'Jenis Barang': jenis,
-                                'Unit': unit,
-                                'Harga': price,
-                                'Total': unit * price,
-                              };
-                            }
-                          });
-
-                          List<DataRow> rows = itemMap.values.map((item) {
-                            final DataRow row = DataRow(cells: [
-                              DataCell(Text(item['Nama Barang'])),
-                              DataCell(Text(item['Transaksi'])),
-                              DataCell(Text(item['Jenis Barang'])),
-                              DataCell(Text(item['Unit'].toString())),
-                              DataCell(Text(formatRupiah(item['Harga']))),
-                              DataCell(Text(formatRupiah(item['Total']))),
-                            ]);
-                            return row;
-                          }).toList();
-
-                          return rows;
-                        }).toList(),
+                        rows: buildDataTableRows(purchases),
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -367,7 +429,7 @@ class LihatLaporanController extends GetxController {
                           ),
                           Obx(() {
                             int totalHarga = 0;
-                            for (var purchase in purchasesDay) {
+                            for (var purchase in purchases) {
                               if (purchase['Type Transaksi'] != 'Stok') {
                                 totalHarga +=
                                     (purchase['Total Harga'] ?? 0) as int;
@@ -384,7 +446,7 @@ class LihatLaporanController extends GetxController {
                           SizedBox(width: 140.w),
                           Obx(() {
                             num totalCapital = 0;
-                            for (var purchase in purchasesDay) {
+                            for (var purchase in purchases) {
                               final items = purchase['items'] ?? [];
                               items.forEach((item) {
                                 final unit = item['Banyak Barang'] ?? 0;
@@ -424,7 +486,7 @@ class LihatLaporanController extends GetxController {
                           Obx(() {
                             num totalHarga = 0;
                             num totalCapital = 0;
-                            for (var purchase in purchasesDay) {
+                            for (var purchase in purchases) {
                               totalHarga += purchase['Total Harga'] ?? 0;
                               final items = purchase['items'] ?? [];
                               items.forEach((item) {
@@ -447,513 +509,96 @@ class LihatLaporanController extends GetxController {
           }),
         ],
       ),
+    );
+  }
+
+  List<DataRow> buildDataTableRows(List<Map<String, dynamic>> purchases) {
+    // Map to store combined data based on item name, transaction, type, and price
+    final combinedDataMap = <String, Map<String, dynamic>>{};
+
+    // Iterate through purchases to combine data
+    for (final purchase in purchases) {
+      final transactionType = purchase['Type Transaksi'] ?? 'Unknown';
+      final items = purchase['items'] ?? [];
+
+      for (final item in items) {
+        final itemName = item['Nama Barang'] ?? 'Unknown';
+        final itemType = item['Jenis Barang'] ?? 'Unknown';
+        final itemPrice = (transactionType == 'Stok')
+            ? item['Harga Modal'] ?? 0
+            : item['Harga Jual'] ?? 0;
+
+        final key = '$itemName-$transactionType-$itemType-$itemPrice';
+        if (combinedDataMap.containsKey(key)) {
+          combinedDataMap[key]!['Unit'] += item['Banyak Barang'] ?? 0;
+          combinedDataMap[key]!['Total'] += item['Banyak Barang'] * itemPrice;
+        } else {
+          combinedDataMap[key] = {
+            'Nama Barang': itemName,
+            'Transaksi': transactionType,
+            'Jenis Barang': itemType,
+            'Harga': itemPrice,
+            'Unit': item['Banyak Barang'] ?? 0,
+            'Total': (item['Banyak Barang'] ?? 0) * itemPrice,
+          };
+        }
+      }
+    }
+
+    // Build rows for DataTable
+    final rows = <DataRow>[];
+    for (final entry in combinedDataMap.entries) {
+      final data = entry.value;
+      rows.add(DataRow(
+        cells: [
+          DataCell(Text(data['Nama Barang'])),
+          DataCell(Text(data['Transaksi'])),
+          DataCell(Text(data['Jenis Barang'])),
+          DataCell(Text(data['Unit'].toString())),
+          DataCell(Text(formatRupiah(data['Harga']))),
+          DataCell(Text(formatRupiah(data['Total']))),
+        ],
+      ));
+    }
+    return rows;
+  }
+
+  Widget harianLaporan() {
+    return laporan(
+      "Harian",
+      () async {
+        await selectDate(Get.context!);
+      },
+      fetchDailyPurchases,
+      purchasesDay,
+      10,
     );
   }
 
   Widget bulananLaporan() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(
-            height: 30.h,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 20.w,
-              ),
-              const Text('Tanggal :'),
-              SizedBox(
-                width: 10.w,
-              ),
-              GestureDetector(
-                onTap: () async {
-                  await selectMonth(Get.context!);
-                  await fetchMonthlyPurchases();
-                },
-                child: Container(
-                  width: 160.w,
-                  height: 40.h,
-                  color: const Color.fromRGBO(217, 217, 217, 1),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 8.h,
-                      ),
-                      Obx(() => Text(
-                            selectedMonth.value != null
-                                ? '${selectedMonth.value!.year}/${selectedMonth.value!.month.toString().padLeft(2, '0')}'
-                                : 'Pilih Bulan',
-                          )),
-                      const Spacer(),
-                      const Icon(Icons.calendar_month_outlined)
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 20.h,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 20.w,
-              ),
-              GestureDetector(
-                onTap: () async {
-                  await printPdf(purchasesMount, "Bulanan", 7);
-                },
-                child: Container(
-                    width: 100.w,
-                    height: 40.h,
-                    color: const Color.fromRGBO(217, 217, 217, 1),
-                    child: const Center(child: Text("Print"))),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () async {
-                  await fetchMonthlyPurchases();
-                },
-                child: Container(
-                  width: 100.w,
-                  height: 40.h,
-                  color: const Color.fromRGBO(217, 217, 217, 1),
-                  child: const Center(child: Text('Refresh')),
-                ),
-              ),
-              SizedBox(
-                width: 20.w,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 20.h,
-          ),
-          Obx(() {
-            if (purchasesMount.isEmpty) {
-              return Column(
-                children: [
-                  SizedBox(
-                    height: 150.h,
-                  ),
-                  const Text('Tidak ada data pembelian untuk bulan ini.'),
-                ],
-              );
-            } else {
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DataTable(
-                        border: TableBorder.all(color: Colors.black),
-                        columns: const [
-                          DataColumn(label: Text('Nama')),
-                          DataColumn(label: Text('Transaksi')),
-                          DataColumn(label: Text('Jenis')),
-                          DataColumn(label: Text('Unit')),
-                          DataColumn(label: Text('Harga')),
-                          DataColumn(label: Text('Total (per item)')),
-                        ],
-                        rows: purchasesMount.expand((purchase) {
-                          final typeTransaksi =
-                              purchase['Type Transaksi'] ?? 'Unknown';
-                          final items = purchase['items'] ?? [];
-
-                          Map<String, Map<String, dynamic>> itemMap = {};
-
-                          items.forEach((item) {
-                            final itemName = item['Nama Barang'] ?? 'Unknown';
-                            final modal = (typeTransaksi == 'Stok')
-                                ? item['Harga Modal']
-                                : item['Harga Awal'] ?? 0;
-                            final unit = item['Banyak Barang'] ?? 0;
-                            if (unit == 0) return;
-                            final jenis = item['Jenis Barang'] ?? 'Unknown';
-                            final price = (typeTransaksi == 'Stok')
-                                ? modal
-                                : item['Harga Jual'] ?? 0;
-
-                            final key = '$itemName-$jenis-$modal-$price';
-                            if (itemMap.containsKey(key)) {
-                              itemMap[key]!['Unit'] += unit;
-                              itemMap[key]!['Total'] =
-                                  itemMap[key]!['Unit'] * price;
-                            } else {
-                              itemMap[key] = {
-                                'Nama Barang': itemName,
-                                'Transaksi': typeTransaksi,
-                                'Jenis Barang': jenis,
-                                'Unit': unit,
-                                'Harga': price,
-                                'Total': unit * price,
-                              };
-                            }
-                          });
-
-                          List<DataRow> rows = itemMap.values.map((item) {
-                            final DataRow row = DataRow(cells: [
-                              DataCell(Text(item['Nama Barang'])),
-                              DataCell(Text(item['Transaksi'])),
-                              DataCell(Text(item['Jenis Barang'])),
-                              DataCell(Text(item['Unit'].toString())),
-                              DataCell(Text(formatRupiah(item['Harga']))),
-                              DataCell(Text(formatRupiah(item['Total']))),
-                            ]);
-                            return row;
-                          }).toList();
-                          return rows;
-                        }).toList(),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          const Text("Total Income :",
-                              textAlign: TextAlign.left),
-                          SizedBox(
-                            width: 100.w,
-                          ),
-                          Obx(() {
-                            int totalHarga = 0;
-                            for (var purchase in purchasesMount) {
-                              if (purchase['Type Transaksi'] != 'Stok') {
-                                totalHarga +=
-                                    (purchase['Total Harga'] ?? 0) as int;
-                              }
-                            }
-                            return Text(formatRupiah(totalHarga),
-                                textAlign: TextAlign.right);
-                          }),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const Text("Capital :", textAlign: TextAlign.left),
-                          SizedBox(width: 140.w),
-                          Obx(() {
-                            num totalCapital = 0;
-                            for (var purchase in purchasesMount) {
-                              final items = purchase['items'] ?? [];
-                              items.forEach((item) {
-                                final unit = item['Banyak Barang'] ?? 0;
-                                final modal = item['Harga Modal'] ?? 0;
-                                totalCapital += unit * modal;
-                              });
-                            }
-                            return Text(formatRupiah(totalCapital as int));
-                          }),
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 300.w,
-                            child: const Divider(
-                              thickness: 1,
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(width: 10.w),
-                          SizedBox(
-                            width: 10.w,
-                            child: const Divider(
-                              thickness: 1,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Row(
-                        children: [
-                          const Text("Net Income :", textAlign: TextAlign.left),
-                          SizedBox(width: 115.w),
-                          Obx(() {
-                            num totalHarga = 0;
-                            num totalCapital = 0;
-                            for (var purchase in purchasesMount) {
-                              totalHarga += purchase['Total Harga'] ?? 0;
-                              final items = purchase['items'] ?? [];
-                              items.forEach((item) {
-                                final unit = item['Banyak Barang'] ?? 0;
-                                final modal = item['Harga Modal'] ?? 0;
-                                totalCapital += unit * modal;
-                              });
-                            }
-                            final netIncome = totalHarga - totalCapital;
-                            return Text(formatRupiah(netIncome as int),
-                                textAlign: TextAlign.right);
-                          }),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-          }),
-        ],
-      ),
+    return laporan(
+      "Bulanan",
+      () async {
+        await selectMonth(Get.context!);
+      },
+      fetchMonthlyPurchases,
+      purchasesMount,
+      7,
     );
   }
 
   Widget tahunLaporan() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(
-            height: 30.h,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 20.w,
-              ),
-              const Text('Tanggal :'),
-              SizedBox(
-                width: 10.w,
-              ),
-              GestureDetector(
-                onTap: () async {
-                  int? year = await selectyear(Get.context!);
-                  if (year != null) {
-                    pilihyear.value = year;
-                  }
-                  await fetchYearlyMonthlyPurchases();
-                },
-                child: Container(
-                  width: 160.w,
-                  height: 40.h,
-                  color: const Color.fromRGBO(217, 217, 217, 1),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 8.h,
-                      ),
-                      Obx(() => Text(
-                            pilihyear.value != 0
-                                ? pilihyear.value.toString()
-                                : 'Pilih Tahun',
-                          )),
-                      const Spacer(),
-                      const Icon(Icons.calendar_month_outlined)
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 20.h,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 20.w,
-              ),
-              GestureDetector(
-                onTap: () async {
-                  await printPdf(purchasesYearly, "Tahunan", 4);
-                },
-                child: Container(
-                    width: 100.w,
-                    height: 40.h,
-                    color: const Color.fromRGBO(217, 217, 217, 1),
-                    child: const Center(child: Text("Print"))),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () async {
-                  await fetchYearlyMonthlyPurchases();
-                },
-                child: Container(
-                  width: 100.w,
-                  height: 40.h,
-                  color: const Color.fromRGBO(217, 217, 217, 1),
-                  child: const Center(child: Text('Refresh')),
-                ),
-              ),
-              SizedBox(
-                width: 20.w,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 20.h,
-          ),
-          Obx(() {
-            if (purchasesYearly.isEmpty) {
-              return Column(
-                children: [
-                  SizedBox(
-                    height: 150.h,
-                  ),
-                  const Text('Tidak ada data pembelian untuk tahun ini.'),
-                ],
-              );
-            } else {
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DataTable(
-                        border: TableBorder.all(color: Colors.black),
-                        columns: const [
-                          DataColumn(label: Text('Nama')),
-                          DataColumn(label: Text('Transaksi')),
-                          DataColumn(label: Text('Jenis')),
-                          DataColumn(label: Text('Unit')),
-                          DataColumn(label: Text('Harga')),
-                          DataColumn(label: Text('Total (per item)')),
-                        ],
-                        rows: purchasesYearly.expand((purchase) {
-                          final typeTransaksi =
-                              purchase['Type Transaksi'] ?? 'Unknown';
-                          final items = purchase['items'] ?? [];
-
-                          Map<String, Map<String, dynamic>> itemMap = {};
-
-                          items.forEach((item) {
-                            final itemName = item['Nama Barang'] ?? 'Unknown';
-                            final modal = (typeTransaksi == 'Stok')
-                                ? item['Harga Modal']
-                                : item['Harga Awal'] ?? 0;
-                            final unit = item['Banyak Barang'] ?? 0;
-                            if (unit == 0) return;
-                            final jenis = item['Jenis Barang'] ?? 'Unknown';
-                            final price = (typeTransaksi == 'Stok')
-                                ? modal
-                                : item['Harga Jual'] ?? 0;
-
-                            final key = '$itemName-$jenis-$modal-$price';
-                            if (itemMap.containsKey(key)) {
-                              itemMap[key]!['Unit'] += unit;
-                              itemMap[key]!['Total'] =
-                                  itemMap[key]!['Unit'] * price;
-                            } else {
-                              itemMap[key] = {
-                                'Nama Barang': itemName,
-                                'Transaksi': typeTransaksi,
-                                'Jenis Barang': jenis,
-                                'Unit': unit,
-                                'Harga': price,
-                                'Total': unit * price,
-                              };
-                            }
-                          });
-
-                          List<DataRow> rows = itemMap.values.map((item) {
-                            final DataRow row = DataRow(cells: [
-                              DataCell(Text(item['Nama Barang'])),
-                              DataCell(Text(item['Transaksi'])),
-                              DataCell(Text(item['Jenis Barang'])),
-                              DataCell(Text(item['Unit'].toString())),
-                              DataCell(Text(formatRupiah(item['Harga']))),
-                              DataCell(Text(formatRupiah(item['Total']))),
-                            ]);
-                            return row;
-                          }).toList();
-                          return rows;
-                        }).toList(),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          const Text("Total Income :",
-                              textAlign: TextAlign.left),
-                          SizedBox(
-                            width: 100.w,
-                          ),
-                          Obx(() {
-                            int totalHarga = 0;
-                            for (var purchase in purchasesYearly) {
-                              if (purchase['Type Transaksi'] != 'Stok') {
-                                totalHarga +=
-                                    (purchase['Total Harga'] ?? 0) as int;
-                              }
-                            }
-                            return Text(formatRupiah(totalHarga),
-                                textAlign: TextAlign.right);
-                          }),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const Text("Capital :", textAlign: TextAlign.left),
-                          SizedBox(width: 140.w),
-                          Obx(() {
-                            num totalCapital = 0;
-                            for (var purchase in purchasesYearly) {
-                              final items = purchase['items'] ?? [];
-                              items.forEach((item) {
-                                final unit = item['Banyak Barang'] ?? 0;
-                                final modal = item['Harga Modal'] ?? 0;
-                                totalCapital += unit * modal;
-                              });
-                            }
-                            return Text(formatRupiah(totalCapital as int));
-                          }),
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 300.w,
-                            child: const Divider(
-                              thickness: 1,
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(width: 10.w),
-                          SizedBox(
-                            width: 10.w,
-                            child: const Divider(
-                              thickness: 1,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Row(
-                        children: [
-                          const Text("Net Income :", textAlign: TextAlign.left),
-                          SizedBox(width: 115.w),
-                          Obx(() {
-                            num totalHarga = 0;
-                            num totalCapital = 0;
-                            for (var purchase in purchasesYearly) {
-                              totalHarga += purchase['Total Harga'] ?? 0;
-                              final items = purchase['items'] ?? [];
-                              items.forEach((item) {
-                                final unit = item['Banyak Barang'] ?? 0;
-                                final modal = item['Harga Modal'] ?? 0;
-                                totalCapital += unit * modal;
-                              });
-                            }
-                            final netIncome = totalHarga - totalCapital;
-                            return Text(formatRupiah(netIncome as int),
-                                textAlign: TextAlign.right);
-                          }),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-          }),
-        ],
-      ),
+    return laporan(
+      "Tahunan",
+      () async {
+        int? year = await selectyear(Get.context!);
+        if (year != null) {
+          pilihyear.value = year;
+        }
+      },
+      fetchYearlyMonthlyPurchases,
+      purchasesYearly,
+      4,
     );
   }
 
@@ -983,20 +628,18 @@ class LihatLaporanController extends GetxController {
 
       for (var item in items) {
         final itemName = item['Nama Barang'] ?? 'Unknown';
-        final modal = (typeTransaksi == 'Stok')
-            ? item['Harga Modal']
-            : item['Harga Awal'] ?? 0;
         final unit = item['Banyak Barang'] ?? 0;
         if (unit == 0) continue;
         final jenis = item['Jenis Barang'] ?? 'Unknown';
-        final price =
-            (typeTransaksi == 'Stok') ? modal : item['Harga Jual'] ?? 0;
+        final price = (typeTransaksi == 'Stok')
+            ? item['Harga Modal']
+            : item['Harga Jual'] ?? 0;
         final total = unit * price;
 
         final existingItemIndex = rows.indexWhere((row) =>
             row['Nama Barang'] == itemName &&
+            row['Transaksi'] == typeTransaksi &&
             row['Jenis Barang'] == jenis &&
-            row['Modal'] == modal &&
             row['Harga'] == price);
 
         if (existingItemIndex != -1) {
@@ -1008,7 +651,6 @@ class LihatLaporanController extends GetxController {
             'Transaksi': typeTransaksi,
             'Jenis Barang': jenis,
             'Unit': unit,
-            'Modal': modal,
             'Harga': price,
             'Total': total,
           });

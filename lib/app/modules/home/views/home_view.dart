@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,9 +18,14 @@ class HomeView extends GetView<HomeController> {
     ]);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Funtime Juice',),
+        title: const Text(
+          'Funtime Juice',
+        ),
         titleTextStyle: TextStyle(
-            fontSize: 25.sp, fontWeight: FontWeight.bold, color: Colors.black,fontFamily: "Pattaya"),
+            fontSize: 25.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            fontFamily: "Pattaya"),
         centerTitle: true,
         backgroundColor: const Color.fromRGBO(41, 128, 185, 1),
         actions: [
@@ -100,7 +103,7 @@ class HomeView extends GetView<HomeController> {
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.of(context).pop();
+                                    Get.back();
                                   },
                                   child: const Text('Batal'),
                                 ),
@@ -113,7 +116,7 @@ class HomeView extends GetView<HomeController> {
                                       'Total Transaksi': int.parse(newValue)
                                     });
 
-                                    Navigator.of(context).pop();
+                                    Get.back();
                                   },
                                   child: const Text('Simpan'),
                                 ),
