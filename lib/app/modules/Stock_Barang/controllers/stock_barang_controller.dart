@@ -27,7 +27,7 @@ class StockBarangController extends GetxController {
   final TextEditingController hargamasukController = TextEditingController();
   final TextEditingController priceAController = TextEditingController();
   final TextEditingController priceBController = TextEditingController();
-
+  final TextEditingController editstockController = TextEditingController();
   void setSelectedCategory(String value) {
     selectedCategory.value = value;
   }
@@ -70,7 +70,7 @@ class StockBarangController extends GetxController {
     sortAscending.value = !sortAscending.value;
   }
 
-  Widget buildDataTable(String title, List<Map<String, dynamic>> dataList) {
+  Widget buildDataTable(String title, List<Map<String, dynamic>> dataList,BuildContext context) {
     if (dataList.isEmpty) {
       return Container();
     }
@@ -193,9 +193,14 @@ class StockBarangController extends GetxController {
                     SizedBox(
                       width: 10.w,
                     ),
-                    Text(item['Banyak'] > 999
-                        ? '999+'
-                        : item['Banyak'].toString()),
+                    GestureDetector(
+                      onTap: (){
+                        tambahstockbanyak(context,item['docId'],item['Banyak']);
+                      },
+                      child: Text(item['Banyak'] > 999
+                          ? '999+'
+                          : item['Banyak'].toString()),
+                    ),
                     SizedBox(
                       width: 10.w,
                     ),
@@ -226,6 +231,47 @@ class StockBarangController extends GetxController {
       ],
     );
   }
+
+  Future<void> tambahstockbanyak(BuildContext context, String docId,int currentStock)async {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Tambah/Kurang Stock"),
+        content: TextField(
+          controller: editstockController,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(hintText: "Masukkan perubahan stok"),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () async {
+              int changeInStock = int.parse(editstockController.text);
+              await updateStock(docId, -changeInStock);
+              Get.back();
+            },
+            child: const Text('Kurang'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () async {
+              int changeInStock = int.parse(editstockController.text);
+              await updateStock(docId, changeInStock);
+              Get.back();
+            },
+            child: const Text('Tambah'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   Future<void> pickImage() async {
     final pickedFile =

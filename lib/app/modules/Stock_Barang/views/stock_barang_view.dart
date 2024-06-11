@@ -62,9 +62,9 @@ class StockBarangView extends GetView<StockBarangController> {
               return Expanded(
               child: TabBarView(
                 children: [
-                    Obx(() => controller.buildDataTable('Makanan', controller.makananList)),
-                    Obx(() =>controller.buildDataTable('Minuman', controller.minumanList)),
-                    Obx(() =>controller.buildDataTable('Lainnya', controller.lainnyaList)),
+                    Obx(() => controller.buildDataTable('Makanan', controller.makananList,context)),
+                    Obx(() =>controller.buildDataTable('Minuman', controller.minumanList,context)),
+                    Obx(() =>controller.buildDataTable('Lainnya', controller.lainnyaList,context)),
                 ],
               ),
               );
