@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:image/image.dart' as img;
 
 import '../../../../formatindo.dart';
 
@@ -31,6 +32,23 @@ class StockBarangController extends GetxController {
   void setSelectedCategory(String value) {
     selectedCategory.value = value;
   }
+
+  Future<File> convertImage(File file) async {
+  final bytes = await file.readAsBytes();
+  final image = img.decodeImage(bytes);
+
+  if (image != null) {
+    final resizedImage = img.copyResize(image, width: 600); // Mengubah ukuran gambar menjadi lebar 600 piksel
+
+    final convertedBytes = img.encodeJpg(resizedImage, quality: 85); // Mengubah gambar ke format JPG dengan kualitas 85%
+    final convertedFile = File('${file.parent.path}/converted_${file.path.split('/').last}')
+      ..writeAsBytesSync(convertedBytes);
+
+    return convertedFile;
+  } else {
+    throw Exception('Unable to decode image');
+  }
+}
 
   void sortData(
       String title, bool ascending, List<Map<String, dynamic>> dataList) {
@@ -290,11 +308,12 @@ class StockBarangController extends GetxController {
   Future<void> uploadData() async {
     if (selectedImagePath.value.isNotEmpty) {
       final file = File(selectedImagePath.value);
+      final convertedFile = await convertImage(file);
       final storageRef = FirebaseStorage.instance.ref().child(
           'menu_images/${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}');
 
       try {
-        final uploadTask = storageRef.putFile(file);
+        final uploadTask = storageRef.putFile(convertedFile);
         final snapshot = await uploadTask;
 
         final downloadURL = await snapshot.ref.getDownloadURL();
@@ -367,10 +386,14 @@ class StockBarangController extends GetxController {
     if (selectedImagePath.value.isNotEmpty &&
         !selectedImagePath.value.startsWith('http')) {
       final file = File(selectedImagePath.value);
-      FirebaseStorage.instance.ref().child(
+      final convertedFile = await convertImage(file);
+      final storageRef = FirebaseStorage.instance.ref().child(
           'menu_images/${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}');
       try {
-        final downloadURL = await uploadAndRetrieveImageURL(file);
+        final uploadTask = storageRef.putFile(convertedFile);
+        final snapshot = await uploadTask;
+
+        final downloadURL = await snapshot.ref.getDownloadURL();
         if (nameController.text.isNotEmpty) {
           final data = {
             "nama": nameController.text,

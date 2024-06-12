@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -16,6 +17,13 @@ class CostumerController extends GetxController {
   var totalPriceList = <int>[].obs;
   var selectedPrice = 0.obs;
   var isReseller = false.obs;
+
+  final AudioPlayer moeny = AudioPlayer();
+
+  void moneySound() async {
+    await moeny.setSource(AssetSource('sounds/ka_ching.mp3'));
+    await moeny.resume();
+  }
 
   @override
   void onInit() {
@@ -268,6 +276,7 @@ class CostumerController extends GetxController {
           'Total Harga': FieldValue.increment(selectedPrice.value),
         },
       );
+      moneySound();
       await saveTotalTransaction();
       fetchData();
       selectedPrice.value = 0;
@@ -290,6 +299,7 @@ class CostumerController extends GetxController {
           'Total Harga': selectedPrice.value,
         },
       );
+      moneySound();
       await saveTotalTransaction();
       fetchData();
       selectedPrice.value = 0;

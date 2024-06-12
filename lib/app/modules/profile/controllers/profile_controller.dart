@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img;
 
 class ProfileController extends GetxController {
   var userData = <String, dynamic>{}.obs;
@@ -40,12 +41,13 @@ class ProfileController extends GetxController {
 
   Future<void> updateUserData(String uid) async {
      if (selectedImage.value != null) {
+      final File convertedFile = await convertImage(selectedImage.value!);
       final String fileName = 'profile_pictures/$uid.jpg';
 
       try {
         await FirebaseStorage.instance
             .ref(fileName)
-            .putFile(selectedImage.value!);
+            .putFile(convertedFile);
 
         String downloadURL = await FirebaseStorage.instance
             .ref(fileName)
@@ -63,5 +65,21 @@ class ProfileController extends GetxController {
         .collection('userdata')
         .doc(uid)
         .set(userData);
+  }
+  Future<File> convertImage(File file) async {
+    final bytes = await file.readAsBytes();
+    final image = img.decodeImage(bytes);
+
+    if (image != null) {
+      final resizedImage = img.copyResize(image, width: 600); // Mengubah ukuran gambar menjadi lebar 600 piksel
+
+      final convertedBytes = img.encodeJpg(resizedImage, quality: 85); // Mengubah gambar ke format JPG dengan kualitas 85%
+      final convertedFile = File('${file.parent.path}/converted_${file.path.split('/').last}')
+        ..writeAsBytesSync(convertedBytes);
+
+      return convertedFile;
+    } else {
+      throw Exception('Unable to decode image');
+    }
   }
 }
