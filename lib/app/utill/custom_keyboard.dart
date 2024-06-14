@@ -5,7 +5,7 @@ import 'custom_keyboard_handler.dart';
 
 enum KeyType {
   key000('000'),
-  key00('00'),
+  keydelate('<-'),
   key0('0'),
   key1('1'),
   key2('2'),
@@ -15,11 +15,7 @@ enum KeyType {
   key6('6'),
   key7('7'),
   key8('8'),
-  key9('9'),
-  keyDelete('Delete'),
-  keyDone('Done');
-
-  bool get isFunctionKey => (this == keyDelete) || (this == keyDone);
+  key9('9');
 
   const KeyType(this.value);
 
@@ -38,18 +34,18 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
   bool _isKeyboardShowing = false;
   TextEditingController _controller = TextEditingController();
   final _keys = [
-    KeyType.key6,
-    KeyType.key7,
-    KeyType.key8,
-    KeyType.key9,
+    KeyType.key1,
     KeyType.key2,
     KeyType.key3,
     KeyType.key4,
     KeyType.key5,
-    KeyType.key0,
-    KeyType.key00,
+    KeyType.key6,
+    KeyType.key7,
+    KeyType.key8,
+    KeyType.key9,
     KeyType.key000,
-    KeyType.key1,
+    KeyType.key0,
+    KeyType.keydelate,
   ];
 
   @override
@@ -71,29 +67,13 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
     final characterSelectedNum =
         _controller.selection.end - _controller.selection.start;
     int cursorPosition = _controller.selection.base.offset;
-    if (keyType.isFunctionKey) {
-      switch (keyType) {
-        case KeyType.keyDelete:
-          if (currentText.isNotEmpty && (_controller.selection.end > 0)) {
-            int characterDeletedNum = characterSelectedNum;
-            if (characterDeletedNum <= 1) {
-              characterDeletedNum = 1;
-            }
-            final leftCursor = currentText.substring(
-              0,
-              _controller.selection.end - characterDeletedNum,
-            );
-            final rightCursor =
-                currentText.substring(_controller.selection.end);
-            newText = '$leftCursor$rightCursor';
-            cursorPosition = _controller.selection.end - characterDeletedNum;
-          }
-          break;
-        case KeyType.keyDone:
-          dismissKeyboard(context);
-          break;
-        default:
-          break;
+    if (keyType == KeyType.keydelate) {
+      if (currentText.isNotEmpty && (_controller.selection.end > 0)) {
+        final leftCursor =
+            currentText.substring(0, _controller.selection.end - 1);
+        final rightCursor = currentText.substring(_controller.selection.end);
+        newText = '$leftCursor$rightCursor';
+        cursorPosition = _controller.selection.end - 1;
       }
     } else {
       final String leftCursor = currentText.substring(
@@ -124,35 +104,31 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
     }
     return SizedBox(
       height: keyboardHeight,
-      child: Material(
-        color: Colors.grey,
-        child: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    alignment: WrapAlignment.center,
-                    children: _keys.map((e) => _keyWidget(e)).toList(),
+      child: GestureDetector(
+        onTap: () {
+          dismissKeyboard(context);
+        },
+        child: Material(
+          color: Colors.grey,
+          child: SingleChildScrollView(
+            physics: const NeverScrollableScrollPhysics(),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Wrap(
+                      spacing: 50,
+                      runSpacing: 20,
+                      alignment: WrapAlignment.center,
+                      runAlignment: WrapAlignment.spaceEvenly,
+                      children: _keys.map((e) => _keyWidget(e)).toList(),
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(4),
-                child: Column(
-                  children: [
-                    _bigKeyWidget(KeyType.keyDelete),
-                    const SizedBox(height: 8),
-                    _bigKeyWidget(KeyType.keyDone),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -166,8 +142,8 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
         _handleKeyPress(keysType);
       },
       child: Container(
-        width: 65,
-        height: 65,
+        width: 50,
+        height: 50,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
@@ -178,7 +154,7 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
     );
   }
 
-  Widget _bigKeyWidget(KeyType keysType) {
+  Widget bigKeyWidget(KeyType keysType) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeController extends GetxController {
   RxBool isTextHidden = false.obs;
+  TextEditingController totalsale = TextEditingController();
 
   final FirebaseAuth auth = FirebaseAuth.instance;
 

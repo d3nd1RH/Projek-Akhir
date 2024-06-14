@@ -1,4 +1,4 @@
-import 'package:custom_keyboard/components/custom_keyboard.dart';
+import 'custom_keyboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

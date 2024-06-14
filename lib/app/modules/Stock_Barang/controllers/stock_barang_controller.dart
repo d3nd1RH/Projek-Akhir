@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:image/image.dart' as img;
 
+import '../../../utill/custom_text_field.dart';
 import '../../../utill/formatindo.dart';
 
 class StockBarangController extends GetxController {
@@ -34,21 +35,22 @@ class StockBarangController extends GetxController {
   }
 
   Future<File> convertImage(File file) async {
-  final bytes = await file.readAsBytes();
-  final image = img.decodeImage(bytes);
+    final bytes = await file.readAsBytes();
+    final image = img.decodeImage(bytes);
 
-  if (image != null) {
-    final resizedImage = img.copyResize(image, width: 600);
+    if (image != null) {
+      final resizedImage = img.copyResize(image, width: 600);
 
-    final convertedBytes = img.encodeJpg(resizedImage, quality: 85);
-    final convertedFile = File('${file.parent.path}/converted_${file.path.split('/').last}')
-      ..writeAsBytesSync(convertedBytes);
+      final convertedBytes = img.encodeJpg(resizedImage, quality: 85);
+      final convertedFile =
+          File('${file.parent.path}/converted_${file.path.split('/').last}')
+            ..writeAsBytesSync(convertedBytes);
 
-    return convertedFile;
-  } else {
-    throw Exception('Unable to decode image');
+      return convertedFile;
+    } else {
+      throw Exception('Unable to decode image');
+    }
   }
-}
 
   void sortData(
       String title, bool ascending, List<Map<String, dynamic>> dataList) {
@@ -88,7 +90,8 @@ class StockBarangController extends GetxController {
     sortAscending.value = !sortAscending.value;
   }
 
-  Widget buildDataTable(String title, List<Map<String, dynamic>> dataList,BuildContext context) {
+  Widget buildDataTable(
+      String title, List<Map<String, dynamic>> dataList, BuildContext context) {
     if (dataList.isEmpty) {
       return Container();
     }
@@ -212,8 +215,9 @@ class StockBarangController extends GetxController {
                       width: 10.w,
                     ),
                     GestureDetector(
-                      onTap: (){
-                        tambahstockbanyak(context,item['docId'],item['Banyak']);
+                      onTap: () {
+                        tambahstockbanyak(
+                            context, item['docId'], item['Banyak']);
                       },
                       child: Text(item['Banyak'] > 999
                           ? '999+'
@@ -250,46 +254,46 @@ class StockBarangController extends GetxController {
     );
   }
 
-  Future<void> tambahstockbanyak(BuildContext context, String docId,int currentStock)async {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text("Tambah/Kurang Stock"),
-        content: TextField(
-          controller: editstockController,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(hintText: "Masukkan perubahan stok"),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () async {
-              int changeInStock = int.parse(editstockController.text);
-              await updateStock(docId, -changeInStock);
-              Get.back();
-            },
-            child: const Text('Kurang'),
+  Future<void> tambahstockbanyak(
+      BuildContext context, String docId, int currentStock) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Tambah/Kurang Stock"),
+          content: CustomTextField(
+            labelText: 'Masukan Stock Banyak',
+            controller: editstockController,
+            isUseCustomKeyBoard: true,
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Batal'),
-          ),
-          TextButton(
-            onPressed: () async {
-              int changeInStock = int.parse(editstockController.text);
-              await updateStock(docId, changeInStock);
-              Get.back();
-            },
-            child: const Text('Tambah'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                int changeInStock = int.tryParse(editstockController.text) ?? 0;
+                await updateStock(docId, -changeInStock);
+                Get.back();
+              },
+              child: const Text('Kurang'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () async {
+                int changeInStock = int.tryParse(editstockController.text) ?? 0;
+                await updateStock(docId, changeInStock);
+                Get.back();
+              },
+              child: const Text('Tambah'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> pickImage() async {
     final pickedFile =
@@ -565,49 +569,40 @@ class StockBarangController extends GetxController {
               SizedBox(
                 height: 20.h,
               ),
-              TextField(
+              CustomTextField(
+                labelText: 'Nama Barang',
                 controller: nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Nama Barang',
-                ),
+                isUseCustomKeyBoard: false,
               ),
               SizedBox(
                 height: 20.h,
               ),
-              TextField(
+              CustomTextField(
+                labelText: 'Jumlah',
                 controller: quantityController,
-                decoration: const InputDecoration(
-                  labelText: 'Jumlah',
-                ),
-                keyboardType: TextInputType.number,
+                isUseCustomKeyBoard: true,
               ),
               SizedBox(
                 height: 20.h,
               ),
-              TextField(
+              CustomTextField(
+                labelText: 'Harga Masuk',
                 controller: hargamasukController,
-                decoration: const InputDecoration(
-                  labelText: 'Harga Masuk',
-                ),
-                keyboardType: TextInputType.number,
+                isUseCustomKeyBoard: true,
               ),
               SizedBox(
                 height: 20.h,
               ),
-              TextField(
+              CustomTextField(
+                labelText: 'Harga Resaller',
                 controller: priceAController,
-                decoration: const InputDecoration(
-                  labelText: 'Harga Reseller',
-                ),
-                keyboardType: TextInputType.number,
+                isUseCustomKeyBoard: true,
               ),
               SizedBox(height: 20.h),
-              TextField(
+              CustomTextField(
+                labelText: 'Harga Regular',
                 controller: priceBController,
-                decoration: const InputDecoration(
-                  labelText: 'Harga Regular',
-                ),
-                keyboardType: TextInputType.number,
+                isUseCustomKeyBoard: true,
               ),
             ],
           ),
@@ -882,43 +877,34 @@ class StockBarangController extends GetxController {
                     },
                   )),
               SizedBox(height: 20.h),
-              TextField(
+              CustomTextField(
+                labelText: 'Nama Barang',
                 controller: nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Nama Barang',
-                ),
+                isUseCustomKeyBoard: false,
               ),
               SizedBox(height: 20.h),
-              TextField(
+              CustomTextField(
+                labelText: 'Jumlah',
                 controller: quantityController,
-                decoration: const InputDecoration(
-                  labelText: 'Jumlah',
-                ),
-                keyboardType: TextInputType.number,
+                isUseCustomKeyBoard: true,
               ),
               SizedBox(height: 20.h),
-              TextField(
+              CustomTextField(
+                labelText: 'Harga Masuk',
                 controller: hargamasukController,
-                decoration: const InputDecoration(
-                  labelText: 'Harga Masuk',
-                ),
-                keyboardType: TextInputType.number,
+                isUseCustomKeyBoard: true,
               ),
               SizedBox(height: 20.h),
-              TextField(
+              CustomTextField(
+                labelText: 'Harga Ressaler',
                 controller: priceAController,
-                decoration: const InputDecoration(
-                  labelText: 'Harga Reseller',
-                ),
-                keyboardType: TextInputType.number,
+                isUseCustomKeyBoard: true,
               ),
               SizedBox(height: 20.h),
-              TextField(
+              CustomTextField(
+                labelText: 'Harga Regullar',
                 controller: priceBController,
-                decoration: const InputDecoration(
-                  labelText: 'Harga Regular',
-                ),
-                keyboardType: TextInputType.number,
+                isUseCustomKeyBoard: true,
               ),
             ],
           ),

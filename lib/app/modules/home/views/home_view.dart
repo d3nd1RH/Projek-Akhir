@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../utill/custom_text_field.dart';
 import '../../../utill/formatindo.dart';
 import '../controllers/home_controller.dart';
 
@@ -89,16 +90,14 @@ class HomeView extends GetView<HomeController> {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            String newValue = totalSales.toString();
+                            String initialValue = totalSales.toString();
+                            controller.totalsale.text = initialValue;
 
                             return AlertDialog(
                               title: const Text("Edit Total Penjualan"),
-                              content: TextField(
-                                onChanged: (value) {
-                                  newValue = value;
-                                },
-                                controller:
-                                    TextEditingController(text: newValue),
+                              content: CustomTextField(
+                                controller: controller.totalsale,
+                                isUseCustomKeyBoard: true,
                               ),
                               actions: <Widget>[
                                 TextButton(
@@ -109,6 +108,7 @@ class HomeView extends GetView<HomeController> {
                                 ),
                                 TextButton(
                                   onPressed: () async {
+                                    String newValue = controller.totalsale.text;
                                     await FirebaseFirestore.instance
                                         .collection('TotalTransactions')
                                         .doc('Transaksi')

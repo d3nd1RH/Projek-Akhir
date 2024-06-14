@@ -513,10 +513,7 @@ class LihatLaporanController extends GetxController {
   }
 
   List<DataRow> buildDataTableRows(List<Map<String, dynamic>> purchases) {
-    // Map to store combined data based on item name, transaction, type, and price
     final combinedDataMap = <String, Map<String, dynamic>>{};
-
-    // Iterate through purchases to combine data
     for (final purchase in purchases) {
       final transactionType = purchase['Type Transaksi'] ?? 'Unknown';
       final items = purchase['items'] ?? [];
@@ -548,8 +545,6 @@ class LihatLaporanController extends GetxController {
         }
       }
     }
-
-    // Build rows for DataTable
     final rows = <DataRow>[];
     for (final entry in combinedDataMap.entries) {
       final data = entry.value;

@@ -7,6 +7,7 @@ class CustomTextField extends StatefulWidget {
   final TextInputType? inputType;
   final bool isUseCustomKeyBoard;
   final String? hintText;
+  final String? labelText;
 
   const CustomTextField({
     this.controller,
@@ -14,6 +15,7 @@ class CustomTextField extends StatefulWidget {
     this.inputType,
     this.isUseCustomKeyBoard = false,
     this.hintText,
+    this.labelText,
     super.key,
   });
 
@@ -48,7 +50,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller.clear();
     _focusNode.dispose();
     super.dispose();
   }
@@ -56,24 +58,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: widget.isUseCustomKeyBoard ? true : false,
       controller: _controller,
       focusNode: _focusNode,
       keyboardType:
           widget.isUseCustomKeyBoard ? TextInputType.none : widget.inputType,
       decoration: InputDecoration(
         hintText: widget.hintText,
-        labelText: widget.hintText,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Colors.green),
-        ),
+        labelText: widget.labelText,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12)
       ),
     );
   }
