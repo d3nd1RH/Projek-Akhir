@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../formatindo.dart';
+import '../../../utill/formatindo.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {

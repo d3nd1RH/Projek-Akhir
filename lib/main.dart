@@ -5,6 +5,12 @@ import 'package:get/get.dart';
 import 'package:project_akhir/firebase_options.dart';
 import 'app/routes/app_pages.dart';
 
+void dismissKeyboard(BuildContext context) {
+  FocusScopeNode currentFocus = FocusScope.of(context);
+  if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ScreenUtil.ensureScreenSize();

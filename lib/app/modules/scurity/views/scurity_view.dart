@@ -37,7 +37,10 @@ class ScurityView extends GetView<ScurityController> {
                 margin: const EdgeInsets.symmetric(vertical: 10.0),
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(user['photoUrl'] ?? ''),
+                    backgroundImage: user['photoUrl'] != null && user['photoUrl'].isNotEmpty
+                        ? NetworkImage(user['photoUrl'])
+                        : const AssetImage('assets/images/Logo_Funtime.jpg') as ImageProvider,
+                    onBackgroundImageError: (_, __) => const Icon(Icons.error),
                   ),
                   title: Text(user['nama'] ?? 'No Name'),
                   subtitle: Column(

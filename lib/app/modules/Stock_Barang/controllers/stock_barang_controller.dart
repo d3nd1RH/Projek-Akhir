@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:image/image.dart' as img;
 
-import '../../../../formatindo.dart';
+import '../../../utill/formatindo.dart';
 
 class StockBarangController extends GetxController {
   var sortColumnIndex = 0.obs;
@@ -38,9 +38,9 @@ class StockBarangController extends GetxController {
   final image = img.decodeImage(bytes);
 
   if (image != null) {
-    final resizedImage = img.copyResize(image, width: 600); // Mengubah ukuran gambar menjadi lebar 600 piksel
+    final resizedImage = img.copyResize(image, width: 600);
 
-    final convertedBytes = img.encodeJpg(resizedImage, quality: 85); // Mengubah gambar ke format JPG dengan kualitas 85%
+    final convertedBytes = img.encodeJpg(resizedImage, quality: 85);
     final convertedFile = File('${file.parent.path}/converted_${file.path.split('/').last}')
       ..writeAsBytesSync(convertedBytes);
 

@@ -8,7 +8,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-import '../../../../formatindo.dart';
+import '../../../utill/formatindo.dart';
 
 class LihatLaporanController extends GetxController {
   final Rx<DateTime?> selectedMonth = Rx<DateTime?>(null);
@@ -137,7 +137,7 @@ class LihatLaporanController extends GetxController {
         );
       },
     );
-    
+
     return selectedValue;
   }
 
@@ -529,6 +529,10 @@ class LihatLaporanController extends GetxController {
             : item['Harga Jual'] ?? 0;
 
         final key = '$itemName-$transactionType-$itemType-$itemPrice';
+        final unit = item['Banyak Barang'] ?? 0;
+        if (unit == 0) {
+          continue;
+        }
         if (combinedDataMap.containsKey(key)) {
           combinedDataMap[key]!['Unit'] += item['Banyak Barang'] ?? 0;
           combinedDataMap[key]!['Total'] += item['Banyak Barang'] * itemPrice;

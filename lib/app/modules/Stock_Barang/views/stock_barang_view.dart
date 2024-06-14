@@ -59,14 +59,12 @@ class StockBarangView extends GetView<StockBarangController> {
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
-              return Expanded(
-              child: TabBarView(
+              return TabBarView(
                 children: [
                     Obx(() => controller.buildDataTable('Makanan', controller.makananList,context)),
                     Obx(() =>controller.buildDataTable('Minuman', controller.minumanList,context)),
                     Obx(() =>controller.buildDataTable('Lainnya', controller.lainnyaList,context)),
                 ],
-              ),
               );
             }
           },
