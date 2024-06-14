@@ -63,6 +63,7 @@ class Splash extends StatelessWidget {
                     SizedBox(height: 100.h,),
                     Text("FUNTIME",style: TextStyle(fontFamily: 'Pattaya',fontSize: 60.w,color: Colors.white),),
                     Text("JUICE",style: TextStyle(fontFamily: 'Pattaya',fontSize: 60.w,color: Colors.white),),
+                    Image.asset("assets/images/jus-blander.png",width: 400.w,height: 400.h,),
                     SizedBox(height: 150.h,),
                     Text("Health is wealth",style: TextStyle(fontFamily: 'Pattaya',fontSize: 24.w,color: Colors.white),),
                     SizedBox(height: 20.h,),
