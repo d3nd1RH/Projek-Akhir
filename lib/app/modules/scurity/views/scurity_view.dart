@@ -25,7 +25,7 @@ class ScurityView extends GetView<ScurityController> {
         if (controller.users.isEmpty) {
           controller.fetchUsers();
           return const Center(
-            child: CircularProgressIndicator(),
+            child: Text("Tunggu Sebentar"),
           );
         } else {
           return ListView.builder(

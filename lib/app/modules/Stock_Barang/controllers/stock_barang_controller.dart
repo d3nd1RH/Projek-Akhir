@@ -680,10 +680,9 @@ class StockBarangController extends GetxController {
         List<dynamic> items = purchaseSnapshot.data()?['items'] ?? [];
         for (var item in items) {
           if (item['Nama Barang'] == menuData?['nama'] &&
-              item['Harga Modal'] == menuData?['Harga Awal']) {
+            item['Harga Modal'] == menuData?['Harga Awal']) {
             itemFound = true;
             item['Banyak Barang'] += changeInStock;
-            item['Last Update'] = Timestamp.now();
             item['Waktu Stock'] = Timestamp.now();
           }
           updatedItems.add(item);

@@ -44,20 +44,20 @@ class ResetPassView extends GetView<ResetPassController> {
                       SizedBox(height: 20.h),
                       Container(
                         decoration: BoxDecoration(
-                          color: Color.fromARGB(125, 242, 242, 242),
+                          color: const Color.fromARGB(125, 242, 242, 242),
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                         child: TextFormField(
                           controller: controller.reset,
                           decoration: InputDecoration(
                           filled: true,
-                          fillColor: Color.fromARGB(125, 242, 242, 242),
+                          fillColor: const Color.fromARGB(125, 242, 242, 242),
                           hintText: "Masukkan Email Anda",
                           hintStyle: const TextStyle(color: Colors.black),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
-                          contentPadding: EdgeInsets.all(10.0),
+                          contentPadding: const EdgeInsets.all(10.0),
                         ),
                           style: const TextStyle(color: Colors.black),
                         ),

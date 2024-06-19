@@ -15,13 +15,7 @@ class RegisterView extends GetView<RegisterController> {
     ]);
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-                "assets/images/bg-login.png"), // Ganti dengan path gambar latar belakang yang sesuai
-            fit: BoxFit.cover,
-          ),
-        ),
+        color: Colors.blue[600],
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -68,13 +62,13 @@ class RegisterView extends GetView<RegisterController> {
                           controller: controller.nama,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Color.fromRGBO(190, 213, 228, 1),
+                            fillColor: const Color.fromRGBO(190, 213, 228, 1),
                             hintText: "Masukkan Nama Anda",
                             hintStyle: const TextStyle(color: Colors.black),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),
-                            contentPadding: EdgeInsets.all(10.0),
+                            contentPadding: const EdgeInsets.all(10.0),
                           ),
                           style: const TextStyle(color: Colors.black),
                           validator: (namastate) {
@@ -95,13 +89,13 @@ class RegisterView extends GetView<RegisterController> {
                           controller: controller.email,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Color.fromRGBO(190, 213, 228, 1),
+                            fillColor: const Color.fromRGBO(190, 213, 228, 1),
                             hintText: "Masukkan Email Anda",
                             hintStyle: const TextStyle(color: Colors.black),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),
-                            contentPadding: EdgeInsets.all(10.0),
+                            contentPadding: const EdgeInsets.all(10.0),
                           ),
                           style: const TextStyle(color: Colors.black),
                           validator: (emailstate) {
@@ -125,7 +119,7 @@ class RegisterView extends GetView<RegisterController> {
                               obscureText: controller.obscurePassText.value,
                               decoration: InputDecoration(
                                 filled: true,
-                                fillColor: Color.fromRGBO(190, 213, 228, 1),
+                                fillColor: const Color.fromRGBO(190, 213, 228, 1),
                                 hintText: "Masukkan Password Anda",
                                 hintStyle: const TextStyle(color: Colors.black),
                                 suffixIcon: IconButton(
@@ -140,7 +134,7 @@ class RegisterView extends GetView<RegisterController> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
-                                contentPadding: EdgeInsets.all(10.0),
+                                contentPadding: const EdgeInsets.all(10.0),
                               ),
                               style: const TextStyle(color: Colors.black),
                               validator: (passwordstate) {
@@ -163,7 +157,7 @@ class RegisterView extends GetView<RegisterController> {
                               obscureText: controller.obscureCoritmText.value,
                               decoration: InputDecoration(
                                 filled: true,
-                                fillColor: Color.fromRGBO(190, 213, 228, 1),
+                                fillColor: const Color.fromRGBO(190, 213, 228, 1),
                                 hintText: "Konfirmasi Password Anda",
                                 hintStyle: const TextStyle(color: Colors.black),
                                 suffixIcon: IconButton(
@@ -178,7 +172,7 @@ class RegisterView extends GetView<RegisterController> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
-                                contentPadding: EdgeInsets.all(10.0),
+                                contentPadding: const EdgeInsets.all(10.0),
                               ),
                               style: const TextStyle(color: Colors.black),
                               validator: (passwordconfirmstate) {

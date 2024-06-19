@@ -60,20 +60,21 @@ class ProfileController extends GetxController {
     }
 
     userData['nama'] = nama.value;
-    
     await FirebaseFirestore.instance
         .collection('userdata')
         .doc(uid)
         .set(userData);
+    Get.back();
+    Get.snackbar('Sukeses', 'Berhasil Mengupdate profile', backgroundColor: Colors.green);
   }
   Future<File> convertImage(File file) async {
     final bytes = await file.readAsBytes();
     final image = img.decodeImage(bytes);
 
     if (image != null) {
-      final resizedImage = img.copyResize(image, width: 600); // Mengubah ukuran gambar menjadi lebar 600 piksel
+      final resizedImage = img.copyResize(image, width: 600);
 
-      final convertedBytes = img.encodeJpg(resizedImage, quality: 85); // Mengubah gambar ke format JPG dengan kualitas 85%
+      final convertedBytes = img.encodeJpg(resizedImage, quality: 85);
       final convertedFile = File('${file.parent.path}/converted_${file.path.split('/').last}')
         ..writeAsBytesSync(convertedBytes);
 

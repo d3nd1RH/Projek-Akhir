@@ -31,7 +31,7 @@ class ProfileView extends GetView<ProfileController> {
             controller.getUserData(uid);
             return Obx(() {
               if (controller.userData.isEmpty) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: Text("Tunggu Sebentar"));
               } else {
                 return Padding(
                   padding: EdgeInsets.only(right: 60.w, left: 60.w),
@@ -73,9 +73,9 @@ class ProfileView extends GetView<ProfileController> {
                             },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color.fromARGB(255, 41, 128, 185)),
+                                  const Color.fromARGB(255, 41, 128, 185)),
                               foregroundColor: MaterialStateProperty.all<Color>(
-                                  Color.fromARGB(255, 250, 250, 250)),
+                                  const Color.fromARGB(255, 250, 250, 250)),
                               minimumSize: MaterialStateProperty.all<Size>(
                                   Size(double.infinity, 50.h)),
                               shape: MaterialStateProperty.all<

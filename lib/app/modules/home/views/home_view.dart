@@ -10,13 +10,13 @@ import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Funtime Juice'),
@@ -87,7 +87,9 @@ class HomeView extends GetView<HomeController> {
 
                     bool isNegative = totalSales < 0;
                     String formattedTotalSales = formatRupiah(totalSales.abs());
-                    Color salesColor = isNegative ? Colors.red : Color.fromRGBO(37, 255, 124, 1);
+                    Color salesColor = isNegative
+                        ? Colors.red
+                        : const Color.fromRGBO(37, 255, 124, 1);
 
                     return GestureDetector(
                       onTap: () {
@@ -160,14 +162,16 @@ class HomeView extends GetView<HomeController> {
                       onTap: () {
                         Get.toNamed("/lihat-laporan");
                       },
+                      imagePath: "assets/images/lihat_laporan_wallpaper.jpg",
                     ),
                     SizedBox(width: 20.w),
                     buildFeatureCard(
                       icon: Icons.group_outlined,
-                      label: "Consumer",
+                      label: "Costumer",
                       onTap: () {
                         Get.toNamed("/costumer");
                       },
+                      imagePath: "assets/images/Consumer Wallpaper.jpg",
                     ),
                   ],
                 ),
@@ -178,6 +182,7 @@ class HomeView extends GetView<HomeController> {
                   onTap: () {
                     Get.toNamed("/stock-barang");
                   },
+                  imagePath: "assets/images/stock_barang_wallpaper.jpg",
                   fullWidth: true,
                 ),
               ],
@@ -208,6 +213,7 @@ class HomeView extends GetView<HomeController> {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
+    required String imagePath,
     bool fullWidth = false,
   }) {
     return GestureDetector(
@@ -219,31 +225,50 @@ class HomeView extends GetView<HomeController> {
             borderRadius: BorderRadius.circular(37.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(37.0),
-              child: Container(
-                width: fullWidth ? double.infinity : 175.w,
-                height: 175.h,
-                color: const Color.fromRGBO(41, 128, 185, 1),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        icon,
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        size: 80.sp,
+              child: Stack(
+                children: [
+                  Container(
+                    width: fullWidth ? double.infinity : 175.w,
+                    height: 175.h,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(imagePath),
+                        fit: BoxFit.cover,
                       ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        label,
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(41, 128, 185, 1)
+                            .withOpacity(0.8),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  SizedBox(
+                    width: fullWidth ? double.infinity : 175.w,
+                    height: 175.h,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            icon,
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            size: 80.sp,
+                          ),
+                          SizedBox(height: 10.h),
+                          Text(
+                            label,
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

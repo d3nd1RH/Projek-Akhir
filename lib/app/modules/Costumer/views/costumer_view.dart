@@ -49,7 +49,7 @@ class CostumerView extends GetView<CostumerController> {
       ),
     ],
     indicator: BoxDecoration(
-      color: Color.fromRGBO(217, 217, 217, 1),
+      color: const Color.fromRGBO(217, 217, 217, 1),
       borderRadius: BorderRadius.circular(25.0),
     ),
     indicatorSize: TabBarIndicatorSize.tab,
@@ -63,7 +63,7 @@ class CostumerView extends GetView<CostumerController> {
           future: controller.fetchData(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: Text("Tunggu Sebentar"));
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
@@ -95,9 +95,9 @@ class CostumerView extends GetView<CostumerController> {
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromARGB(255, 41, 128, 185)),
+                    const Color.fromARGB(255, 41, 128, 185)),
                 foregroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromARGB(255, 250, 250, 250)),
+                    const Color.fromARGB(255, 250, 250, 250)),
                 minimumSize: MaterialStateProperty.all<Size>(
                     Size(double.infinity, 50.h)),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(

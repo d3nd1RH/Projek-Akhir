@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
-  const LoginView({Key? key}) : super(key: key);
+  const LoginView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +15,7 @@ class LoginView extends GetView<LoginController> {
     ]);
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/bg-login.png"),
-            fit: BoxFit.cover,
-          ),
-        ),
+        color: Colors.blue[600],
         padding: EdgeInsets.all(20.w),
         child: Center(
           child: SingleChildScrollView(
@@ -71,13 +66,13 @@ class LoginView extends GetView<LoginController> {
                         controller: controller.email,
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: Color.fromRGBO(190, 213, 228, 1),
+                          fillColor: const Color.fromRGBO(190, 213, 228, 1),
                           hintText: "Masukkan Email Anda",
                           hintStyle: const TextStyle(color: Colors.black),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
-                          contentPadding: EdgeInsets.all(10.0),
+                          contentPadding: const EdgeInsets.all(10.0),
                         ),
                         style: const TextStyle(color: Colors.black),
                         validator: (emailstate) {
@@ -100,7 +95,7 @@ class LoginView extends GetView<LoginController> {
                           obscureText: controller.obscurePassText.value,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Color.fromRGBO(190, 213, 228, 1),
+                            fillColor: const Color.fromRGBO(190, 213, 228, 1),
                             hintText: "Masukkan Password Anda",
                             hintStyle: const TextStyle(color: Colors.black),
                             suffixIcon: IconButton(
@@ -111,7 +106,7 @@ class LoginView extends GetView<LoginController> {
                                     : Icons.visibility,
                               ),
                             ),
-                            contentPadding: EdgeInsets.all(10.0),
+                            contentPadding: const EdgeInsets.all(10.0),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),
@@ -165,8 +160,8 @@ class LoginView extends GetView<LoginController> {
                               borderRadius: BorderRadius.circular(25.0),
                             ),
                           ),
-                          shadowColor:
-                              MaterialStateProperty.all<Color>(Colors.black.withOpacity(0.5)),
+                          shadowColor: MaterialStateProperty.all<Color>(
+                              Colors.black.withOpacity(0.5)),
                           elevation: MaterialStateProperty.all<double>(5.0),
                         ),
                         child: Padding(

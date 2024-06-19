@@ -350,11 +350,11 @@ class LihatLaporanController extends GetxController {
                   width: 100.w,
                   height: 40.h,
                   decoration: BoxDecoration(
-                    color: Color.fromRGBO(
+                    color: const Color.fromRGBO(
                         255, 168, 38, 1), // Ganti warna sesuai preferensi Anda
                     borderRadius: BorderRadius.circular(12.0), // Rounded border
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       "Cetak", // Ganti teks tombol
                       style: TextStyle(
@@ -377,7 +377,7 @@ class LihatLaporanController extends GetxController {
                     color: Colors.grey, // Ganti warna sesuai preferensi Anda
                     borderRadius: BorderRadius.circular(12.0), // Rounded border
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       'Refresh', // Ganti teks tombol
                       style: TextStyle(

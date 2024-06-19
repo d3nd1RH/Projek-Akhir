@@ -17,79 +17,87 @@ class StockBarangView extends GetView<StockBarangController> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-  title: const Text('Stock Barang'),
-  titleTextStyle: TextStyle(
-      fontSize: 25.sp, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 255, 255, 255)),
-  centerTitle: true,
-  automaticallyImplyLeading: false,
-  backgroundColor: const Color.fromRGBO(16, 44, 87, 1),
-  actions: [
-    IconButton(
-      icon: const Icon(
-        Icons.search,
-        color: Colors.white,
-      ),
-      onPressed: () {
-        showSearch(
-            context: context, delegate: HomeSearchDelegate(controller));
-      },
-    ),
-  ],
-  bottom: TabBar(
-    tabs: const [
-      Tab(
-        child: Text(
-          'Makanan',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          title: const Text('Stock Barang'),
+          titleTextStyle: TextStyle(
+              fontSize: 25.sp,
+              fontWeight: FontWeight.bold,
+              color: const Color.fromARGB(255, 255, 255, 255)),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          backgroundColor: const Color.fromRGBO(16, 44, 87, 1),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                showSearch(
+                    context: context, delegate: HomeSearchDelegate(controller));
+              },
+            ),
+          ],
+          bottom: TabBar(
+            tabs: const [
+              Tab(
+                child: Text(
+                  'Makanan',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Tab(
+                child: Text(
+                  'Minuman',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Tab(
+                child: Text(
+                  'Lainnya',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+            indicator: BoxDecoration(
+              color: const Color.fromRGBO(217, 217, 217, 1),
+              borderRadius: BorderRadius.circular(25.0),
+            ),
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicatorPadding:
+                EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.0.h),
+            unselectedLabelColor: Colors.white,
+            labelColor: Colors.black,
+          ),
         ),
-      ),
-      Tab(
-        child: Text(
-          'Minuman',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-      Tab(
-        child: Text(
-          'Lainnya',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-    ],
-    indicator: BoxDecoration(
-      color: Color.fromRGBO(217, 217, 217, 1),
-      borderRadius: BorderRadius.circular(25.0), // Mengatur sudut tab
-    ),
-    indicatorSize: TabBarIndicatorSize.tab,
-    indicatorPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.0.h),
-    unselectedLabelColor: Colors.white,
-    labelColor: Colors.black,
-  ),
-),
-
         body: FutureBuilder(
           future: controller.fetchData(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: Text("Tunggu Sebentar"));
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
               return TabBarView(
                 children: [
-                    Obx(() => controller.buildDataTable('Makanan', controller.makananList,context)),
-                    Obx(() =>controller.buildDataTable('Minuman', controller.minumanList,context)),
-                    Obx(() =>controller.buildDataTable('Lainnya', controller.lainnyaList,context)),
+                  Obx(() => controller.buildDataTable(
+                      'Makanan', controller.makananList, context)),
+                  Obx(() => controller.buildDataTable(
+                      'Minuman', controller.minumanList, context)),
+                  Obx(() => controller.buildDataTable(
+                      'Lainnya', controller.lainnyaList, context)),
                 ],
               );
             }
           },
         ),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: RawMaterialButton(
           onPressed: () {
             controller.tambahBarang();
           },
-          child: const Icon(Icons.add),
+          fillColor: Colors.blue,
+          shape: const CircleBorder(),
+          padding: const EdgeInsets.all(16.0),
+          child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
     );
