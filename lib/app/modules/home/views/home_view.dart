@@ -230,7 +230,7 @@ class HomeView extends GetView<HomeController> {
                       Icon(
                         icon,
                         color: const Color.fromARGB(255, 255, 255, 255),
-                        size: 120.sp,
+                        size: 80.sp,
                       ),
                       SizedBox(height: 10.h),
                       Text(
