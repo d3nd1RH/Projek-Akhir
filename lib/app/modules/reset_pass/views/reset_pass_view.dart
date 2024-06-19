@@ -43,17 +43,22 @@ class ResetPassView extends GetView<ResetPassController> {
                       ),
                       SizedBox(height: 20.h),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
                         decoration: BoxDecoration(
-                          color: const Color.fromRGBO(217, 217, 217, 1),
+                          color: Color.fromARGB(125, 242, 242, 242),
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                         child: TextFormField(
                           controller: controller.reset,
-                          decoration: const InputDecoration(
-                            hintText: "Masukkan Email Anda",
-                            border: InputBorder.none,
+                          decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Color.fromARGB(125, 242, 242, 242),
+                          hintText: "Masukkan Email Anda",
+                          hintStyle: const TextStyle(color: Colors.black),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
                           ),
+                          contentPadding: EdgeInsets.all(10.0),
+                        ),
                           style: const TextStyle(color: Colors.black),
                         ),
                       ),
@@ -72,7 +77,7 @@ class ResetPassView extends GetView<ResetPassController> {
                             minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50.h)),
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
+                                borderRadius: BorderRadius.circular(25.0),
                               ),
                             ),
                           ),

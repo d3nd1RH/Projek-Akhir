@@ -347,10 +347,23 @@ class LihatLaporanController extends GetxController {
                   await printPdf(purchases, title, pdfType);
                 },
                 child: Container(
-                    width: 100.w,
-                    height: 40.h,
-                    color: const Color.fromRGBO(217, 217, 217, 1),
-                    child: const Center(child: Text("Print"))),
+                  width: 100.w,
+                  height: 40.h,
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(
+                        255, 168, 38, 1), // Ganti warna sesuai preferensi Anda
+                    borderRadius: BorderRadius.circular(12.0), // Rounded border
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Cetak", // Ganti teks tombol
+                      style: TextStyle(
+                        color: Colors.black, // Warna teks putih
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
               ),
               const Spacer(),
               GestureDetector(
@@ -360,8 +373,19 @@ class LihatLaporanController extends GetxController {
                 child: Container(
                   width: 100.w,
                   height: 40.h,
-                  color: const Color.fromRGBO(217, 217, 217, 1),
-                  child: const Center(child: Text('Refresh')),
+                  decoration: BoxDecoration(
+                    color: Colors.grey, // Ganti warna sesuai preferensi Anda
+                    borderRadius: BorderRadius.circular(12.0), // Rounded border
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Refresh', // Ganti teks tombol
+                      style: TextStyle(
+                        color: Colors.black, // Warna teks putih
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(

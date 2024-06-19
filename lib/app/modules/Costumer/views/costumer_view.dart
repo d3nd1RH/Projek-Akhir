@@ -8,7 +8,6 @@ import '../../../utill/formatindo.dart';
 import '../controllers/costumer_controller.dart';
 
 class CostumerView extends GetView<CostumerController> {
-  
   const CostumerView({super.key});
   @override
   Widget build(BuildContext context) {
@@ -19,31 +18,48 @@ class CostumerView extends GetView<CostumerController> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Obx(() => Text(controller.isReseller.value ? 'Reseller' : 'Customer')),
-          titleTextStyle: TextStyle(
-              fontSize: 25.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black),
-          backgroundColor: const Color.fromRGBO(41, 128, 185, 1),
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-          bottom: TabBar(
-            tabs: const [
-              Tab(text: 'Makanan'),
-              Tab(text: 'Minuman'),
-              Tab(text: 'Lainnya'),
-            ],
-            indicator: const BoxDecoration(
-              color: Color.fromRGBO(217, 217, 217, 1),
-            ),
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicatorPadding: EdgeInsets.only(
-                right: 30.0.w, left: 30.0.w, top: 8.0.h, bottom: 8.0.h),
-            unselectedLabelColor: Colors.white,
-            labelColor: Colors.black,
-          ),
+  title: Obx(() =>
+      Text(controller.isReseller.value ? 'Reseller' : 'Customer')),
+  titleTextStyle: TextStyle(
+      fontSize: 25.sp,
+      fontWeight: FontWeight.bold,
+      color: const Color.fromARGB(255, 255, 255, 255)),
+  backgroundColor: const Color.fromRGBO(16, 44, 87, 1),
+  centerTitle: true,
+  automaticallyImplyLeading: false,
+  bottom: TabBar(
+    tabs: const [
+      Tab(
+        child: Text(
+          'Makanan',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-         body: FutureBuilder<void>(
+      ),
+      Tab(
+        child: Text(
+          'Minuman',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      Tab(
+        child: Text(
+          'Lainnya',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+    ],
+    indicator: BoxDecoration(
+      color: Color.fromRGBO(217, 217, 217, 1),
+      borderRadius: BorderRadius.circular(25.0),
+    ),
+    indicatorSize: TabBarIndicatorSize.tab,
+    indicatorPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.0.h),
+    unselectedLabelColor: Colors.white,
+    labelColor: Colors.black,
+  ),
+),
+
+        body: FutureBuilder<void>(
           future: controller.fetchData(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -54,33 +70,49 @@ class CostumerView extends GetView<CostumerController> {
               return TabBarView(
                 children: [
                   controller.buildTab(controller.makananList, 0),
-                  controller.buildTab(controller.minumanList, controller.makananList.length),
-                  controller.buildTab(controller.lainnyaList, controller.makananList.length + controller.minumanList.length),
+                  controller.buildTab(
+                      controller.minumanList, controller.makananList.length),
+                  controller.buildTab(
+                      controller.lainnyaList,
+                      controller.makananList.length +
+                          controller.minumanList.length),
                 ],
               );
             }
           },
         ),
         bottomNavigationBar: Padding(
-            padding: EdgeInsets.only(bottom: 8.0.h, top: 8.0.h,right: 30.h,left: 30.h),
+            padding: EdgeInsets.only(
+                bottom: 8.0.h, top: 8.0.h, right: 30.h, left: 30.h),
             child: ElevatedButton(
               onPressed: () {
                 controller.showConfirmationDialog(context, () {
-                controller.savePurchase();
-              });
+                  controller.savePurchase();
+                });
               },
-              onLongPress: (){
+              onLongPress: () {
                 controller.toggleReseller();
               },
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(10.0),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Color.fromARGB(255, 41, 128, 185)),
+                foregroundColor: MaterialStateProperty.all<Color>(
+                    Color.fromARGB(255, 250, 250, 250)),
+                minimumSize: MaterialStateProperty.all<Size>(
+                    Size(double.infinity, 50.h)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                 ),
-                backgroundColor:
-                    const Color.fromRGBO(203, 82, 82, 1),
+                shadowColor: MaterialStateProperty.all<Color>(
+                    Colors.black.withOpacity(0.5)),
+                elevation: MaterialStateProperty.all<double>(5.0),
               ),
-              child: Obx(()=>Text(formatRupiah(controller.selectedPrice.value),style: const TextStyle(color:Colors.black),)),
+              child: Obx(() => Text(
+                    formatRupiah(controller.selectedPrice.value),
+                    style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                  )),
             )),
       ),
     );

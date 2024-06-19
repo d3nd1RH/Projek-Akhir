@@ -17,26 +17,43 @@ class LihatLaporanView extends GetView<LihatLaporanController> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Laporan'),
-          titleTextStyle: TextStyle(fontSize: 25.sp, fontWeight: FontWeight.bold, color: Colors.black),
-          backgroundColor: const Color.fromRGBO(41, 128, 185, 1),
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-          bottom: TabBar(
-            tabs: const [
-              Tab(text: 'Harian'),
-              Tab(text: 'Bulanan'),
-              Tab(text: 'Tahunan'),
-            ],
-            indicator: const BoxDecoration(
-              color: Color.fromRGBO(217, 217, 217, 1),
-            ),
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicatorPadding: EdgeInsets.only(right: 30.0.w ,left: 30.0.w,top: 8.0.h,bottom: 8.0.h),
-            unselectedLabelColor: Colors.white,
-            labelColor: Colors.black,
-          ),
+  title: const Text('Laporan'),
+  titleTextStyle: TextStyle(fontSize: 25.sp, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 255, 255, 255)),
+  backgroundColor: const Color.fromRGBO(16, 44, 87, 1),
+  centerTitle: true,
+  automaticallyImplyLeading: false,
+  bottom: TabBar(
+    tabs: const [
+      Tab(
+        child: Text(
+          'Harian',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
+      ),
+      Tab(
+        child: Text(
+          'Bulanan',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      Tab(
+        child: Text(
+          'Tahunan',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+    ],
+    indicator: BoxDecoration(
+      color: Color.fromRGBO(217, 217, 217, 1),
+      borderRadius: BorderRadius.circular(25.0),
+    ),
+    indicatorSize: TabBarIndicatorSize.tab,
+    indicatorPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.0.h),
+    unselectedLabelColor: Colors.white,
+    labelColor: Colors.black,
+  ),
+),
+
         body: TabBarView(
           children: [
             controller.harianLaporan(),

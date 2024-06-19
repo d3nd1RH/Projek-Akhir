@@ -7,7 +7,7 @@ import '../controllers/register_controller.dart';
 
 class RegisterView extends GetView<RegisterController> {
   const RegisterView({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -17,7 +17,8 @@ class RegisterView extends GetView<RegisterController> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/bg-login.png"), // Ganti dengan path gambar latar belakang yang sesuai
+            image: AssetImage(
+                "assets/images/bg-login.png"), // Ganti dengan path gambar latar belakang yang sesuai
             fit: BoxFit.cover,
           ),
         ),
@@ -29,7 +30,10 @@ class RegisterView extends GetView<RegisterController> {
                 SizedBox(height: 30.h),
                 Text(
                   'Register',
-                  style: TextStyle(fontSize: 40.sp, color: Colors.white,fontFamily: "Pattaya"),
+                  style: TextStyle(
+                      fontSize: 40.sp,
+                      color: Colors.white,
+                      fontFamily: "Pattaya"),
                 ),
                 SizedBox(height: 30.h),
                 Container(
@@ -64,12 +68,13 @@ class RegisterView extends GetView<RegisterController> {
                           controller: controller.nama,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: const Color.fromRGBO(217, 217, 217, 1),
+                            fillColor: Color.fromRGBO(190, 213, 228, 1),
                             hintText: "Masukkan Nama Anda",
                             hintStyle: const TextStyle(color: Colors.black),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),
+                            contentPadding: EdgeInsets.all(10.0),
                           ),
                           style: const TextStyle(color: Colors.black),
                           validator: (namastate) {
@@ -90,12 +95,13 @@ class RegisterView extends GetView<RegisterController> {
                           controller: controller.email,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: const Color.fromRGBO(217, 217, 217, 1),
+                            fillColor: Color.fromRGBO(190, 213, 228, 1),
                             hintText: "Masukkan Email Anda",
                             hintStyle: const TextStyle(color: Colors.black),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),
+                            contentPadding: EdgeInsets.all(10.0),
                           ),
                           style: const TextStyle(color: Colors.black),
                           validator: (emailstate) {
@@ -115,32 +121,37 @@ class RegisterView extends GetView<RegisterController> {
                         ),
                         SizedBox(height: 10.h),
                         Obx(() => TextFormField(
-                          controller: controller.password,
-                          obscureText: controller.obscurePassText.value,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: const Color.fromRGBO(217, 217, 217, 1),
-                            hintText: "Masukkan Password Anda",
-                            hintStyle: const TextStyle(color: Colors.black),
-                            suffixIcon: IconButton(
-                              onPressed: controller.togglePasswordVisibility,
-                              icon: Icon(
-                                controller.obscurePassText.value ? Icons.visibility_off : Icons.visibility,
+                              controller: controller.password,
+                              obscureText: controller.obscurePassText.value,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Color.fromRGBO(190, 213, 228, 1),
+                                hintText: "Masukkan Password Anda",
+                                hintStyle: const TextStyle(color: Colors.black),
+                                suffixIcon: IconButton(
+                                  onPressed:
+                                      controller.togglePasswordVisibility,
+                                  icon: Icon(
+                                    controller.obscurePassText.value
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                  ),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                contentPadding: EdgeInsets.all(10.0),
                               ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                          ),
-                          style: const TextStyle(color: Colors.black),
-                          validator: (passwordstate) {
-                            if (passwordstate == null || passwordstate.isEmpty) {
-                              return "Tolong isi Passwordnya";
-                            } else {
-                              return null;
-                            }
-                          },
-                        )),
+                              style: const TextStyle(color: Colors.black),
+                              validator: (passwordstate) {
+                                if (passwordstate == null ||
+                                    passwordstate.isEmpty) {
+                                  return "Tolong isi Passwordnya";
+                                } else {
+                                  return null;
+                                }
+                              },
+                            )),
                         SizedBox(height: 20.h),
                         const Text(
                           "Konfirmasi Password",
@@ -148,34 +159,40 @@ class RegisterView extends GetView<RegisterController> {
                         ),
                         SizedBox(height: 10.h),
                         Obx(() => TextFormField(
-                          controller: controller.passwordconfirm,
-                          obscureText: controller.obscureCoritmText.value,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: const Color.fromRGBO(217, 217, 217, 1),
-                            hintText: "Konfirmasi Password Anda",
-                            hintStyle: const TextStyle(color: Colors.black),
-                            suffixIcon: IconButton(
-                              onPressed: controller.togglePasswordconfirmVisibility,
-                              icon: Icon(
-                                controller.obscureCoritmText.value ? Icons.visibility_off : Icons.visibility,
+                              controller: controller.passwordconfirm,
+                              obscureText: controller.obscureCoritmText.value,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Color.fromRGBO(190, 213, 228, 1),
+                                hintText: "Konfirmasi Password Anda",
+                                hintStyle: const TextStyle(color: Colors.black),
+                                suffixIcon: IconButton(
+                                  onPressed: controller
+                                      .togglePasswordconfirmVisibility,
+                                  icon: Icon(
+                                    controller.obscureCoritmText.value
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                  ),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                contentPadding: EdgeInsets.all(10.0),
                               ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                          ),
-                          style: const TextStyle(color: Colors.black),
-                          validator: (passwordconfirmstate) {
-                            if (passwordconfirmstate == null || passwordconfirmstate.isEmpty) {
-                              return "Tolong konfirmasi Passwordnya";
-                            } else if (controller.password.text != passwordconfirmstate) {
-                              return "Password tidak sama";
-                            } else {
-                              return null;
-                            }
-                          },
-                        )),
+                              style: const TextStyle(color: Colors.black),
+                              validator: (passwordconfirmstate) {
+                                if (passwordconfirmstate == null ||
+                                    passwordconfirmstate.isEmpty) {
+                                  return "Tolong konfirmasi Passwordnya";
+                                } else if (controller.password.text !=
+                                    passwordconfirmstate) {
+                                  return "Password tidak sama";
+                                } else {
+                                  return null;
+                                }
+                              },
+                            )),
                         SizedBox(height: 30.h),
                         ElevatedButton(
                           onPressed: () {
@@ -188,12 +205,18 @@ class RegisterView extends GetView<RegisterController> {
                             }
                           },
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                            foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                            minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50.h)),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            elevation: MaterialStateProperty.all<double>(
+                                3.0), // Menambahkan elevasi bayangan
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.black),
+                            minimumSize: MaterialStateProperty.all<Size>(
+                                Size(double.infinity, 50.h)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
+                                borderRadius: BorderRadius.circular(25.0),
                               ),
                             ),
                           ),
@@ -213,7 +236,8 @@ class RegisterView extends GetView<RegisterController> {
                               },
                               child: const Text(
                                 "Login",
-                                style: TextStyle(color: Color.fromARGB(255, 23, 2, 255)),
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 21, 0, 255)),
                               ),
                             ),
                           ],

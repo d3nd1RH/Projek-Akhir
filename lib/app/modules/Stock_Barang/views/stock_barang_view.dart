@@ -17,40 +17,56 @@ class StockBarangView extends GetView<StockBarangController> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Stock Barang'),
-          titleTextStyle: TextStyle(
-              fontSize: 25.sp, fontWeight: FontWeight.bold, color: Colors.black),
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-          backgroundColor: const Color.fromRGBO(41, 128, 185, 1),
-          actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                showSearch(
-                    context: context, delegate: HomeSearchDelegate(controller));
-              },
-            ),
-          ],
-          bottom: TabBar(
-              tabs: const [
-                Tab(text: 'Makanan'),
-                Tab(text: 'Minuman'),
-                Tab(text: 'Lainnya'),
-              ],
-              indicator: const BoxDecoration(
-                color: Color.fromRGBO(217, 217, 217, 1),
-              ),
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicatorPadding: EdgeInsets.only(
-                  right: 30.0.w, left: 30.0.w, top: 8.0.h, bottom: 8.0.h),
-              unselectedLabelColor: Colors.white,
-              labelColor: Colors.black,
-            ),
+  title: const Text('Stock Barang'),
+  titleTextStyle: TextStyle(
+      fontSize: 25.sp, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 255, 255, 255)),
+  centerTitle: true,
+  automaticallyImplyLeading: false,
+  backgroundColor: const Color.fromRGBO(16, 44, 87, 1),
+  actions: [
+    IconButton(
+      icon: const Icon(
+        Icons.search,
+        color: Colors.white,
+      ),
+      onPressed: () {
+        showSearch(
+            context: context, delegate: HomeSearchDelegate(controller));
+      },
+    ),
+  ],
+  bottom: TabBar(
+    tabs: const [
+      Tab(
+        child: Text(
+          'Makanan',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
+      ),
+      Tab(
+        child: Text(
+          'Minuman',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      Tab(
+        child: Text(
+          'Lainnya',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+    ],
+    indicator: BoxDecoration(
+      color: Color.fromRGBO(217, 217, 217, 1),
+      borderRadius: BorderRadius.circular(25.0), // Mengatur sudut tab
+    ),
+    indicatorSize: TabBarIndicatorSize.tab,
+    indicatorPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.0.h),
+    unselectedLabelColor: Colors.white,
+    labelColor: Colors.black,
+  ),
+),
+
         body: FutureBuilder(
           future: controller.fetchData(),
           builder: (context, snapshot) {

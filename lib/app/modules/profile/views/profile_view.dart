@@ -18,9 +18,9 @@ class ProfileView extends GetView<ProfileController> {
       appBar: AppBar(
         title: const Text('Profile'),
         titleTextStyle: TextStyle(
-            fontSize: 25.sp, fontWeight: FontWeight.bold, color: Colors.black),
+            fontSize: 25.sp, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 255, 255, 255)),
         centerTitle: true,
-        backgroundColor: const Color.fromRGBO(233, 107, 107, 1),
+        backgroundColor: const Color.fromRGBO(16, 44, 87, 1),
         automaticallyImplyLeading: false,
       ),
       body: StreamBuilder(
@@ -59,10 +59,9 @@ class ProfileView extends GetView<ProfileController> {
                         SizedBox(height: 120.h),
                         TextField(
                           decoration: const InputDecoration(
-                            filled: true,
-                            labelText: 'Nama',
-                            border: OutlineInputBorder()
-                          ),
+                              filled: true,
+                              labelText: 'Nama',
+                              border: OutlineInputBorder()),
                           controller: controller.namaController,
                         ),
                         SizedBox(height: 100.h),
@@ -72,13 +71,27 @@ class ProfileView extends GetView<ProfileController> {
                             onPressed: () {
                               controller.updateUserData(uid);
                             },
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Color.fromARGB(255, 41, 128, 185)),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Color.fromARGB(255, 250, 250, 250)),
+                              minimumSize: MaterialStateProperty.all<Size>(
+                                  Size(double.infinity, 50.h)),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
                               ),
-                              backgroundColor: const Color.fromRGBO(203, 82, 82, 1),
+                              shadowColor: MaterialStateProperty.all<Color>(
+                                  Colors.black.withOpacity(0.5)),
+                              elevation: MaterialStateProperty.all<double>(5.0),
                             ),
-                            child: const Text('Simpan',style: TextStyle(color:Colors.black),),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10.h),
+                              child: const Text("Simpan"),
+                            ),
                           ),
                         ),
                       ],
