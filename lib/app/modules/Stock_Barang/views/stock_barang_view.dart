@@ -96,7 +96,7 @@ class StockBarangView extends GetView<StockBarangController> {
           },
           fillColor: Colors.blue,
           shape: const CircleBorder(),
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.only(left: 16.0.w, right: 16.0.w, top: 16.0.h, bottom: 16.0.h),
           child: const Icon(Icons.add, color: Colors.white),
         ),
       ),

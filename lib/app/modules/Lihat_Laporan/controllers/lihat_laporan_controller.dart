@@ -41,7 +41,7 @@ class LihatLaporanController extends GetxController {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 200.0,
+          height: 200.0.h,
           color: CupertinoColors.white,
           child: Column(
             children: [
@@ -53,7 +53,7 @@ class LihatLaporanController extends GetxController {
                         scrollController: FixedExtentScrollController(
                           initialItem: selectedYear - DateTime.now().year,
                         ),
-                        itemExtent: 32.0,
+                        itemExtent: 32.0.h,
                         onSelectedItemChanged: (int index) {
                           selectedYear = DateTime.now().year + index;
                         },
@@ -72,7 +72,7 @@ class LihatLaporanController extends GetxController {
                         scrollController: FixedExtentScrollController(
                           initialItem: selectedMonthop - 1,
                         ),
-                        itemExtent: 32.0,
+                        itemExtent: 32.0.h,
                         onSelectedItemChanged: (int index) {
                           selectedMonthop = index + 1;
                         },
@@ -113,13 +113,13 @@ class LihatLaporanController extends GetxController {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 200.0,
+          height: 200.0.h,
           color: Colors.grey[300],
           child: Column(
             children: [
               Expanded(
                 child: CupertinoPicker(
-                  itemExtent: 30.0,
+                  itemExtent: 30.0.h,
                   onSelectedItemChanged: (index) {
                     selectedYear = years[index];
                   },
@@ -351,14 +351,14 @@ class LihatLaporanController extends GetxController {
                   height: 40.h,
                   decoration: BoxDecoration(
                     color: const Color.fromRGBO(
-                        255, 168, 38, 1), // Ganti warna sesuai preferensi Anda
-                    borderRadius: BorderRadius.circular(12.0), // Rounded border
+                        255, 168, 38, 1),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: const Center(
                     child: Text(
-                      "Cetak", // Ganti teks tombol
+                      "Cetak", 
                       style: TextStyle(
-                        color: Colors.black, // Warna teks putih
+                        color: Colors.black, 
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -374,14 +374,14 @@ class LihatLaporanController extends GetxController {
                   width: 100.w,
                   height: 40.h,
                   decoration: BoxDecoration(
-                    color: Colors.grey, // Ganti warna sesuai preferensi Anda
-                    borderRadius: BorderRadius.circular(12.0), // Rounded border
+                    color: Colors.grey, 
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: const Center(
                     child: Text(
-                      'Refresh', // Ganti teks tombol
+                      'Refresh', 
                       style: TextStyle(
-                        color: Colors.black, // Warna teks putih
+                        color: Colors.black, 
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -410,7 +410,7 @@ class LihatLaporanController extends GetxController {
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0.w,vertical: 8.0.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -443,7 +443,7 @@ class LihatLaporanController extends GetxController {
                         ],
                         rows: buildDataTableRows(purchases),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       Row(
                         children: [
                           const Text("Total Income :",
@@ -686,11 +686,11 @@ class LihatLaporanController extends GetxController {
           return [
             pw.Container(
               alignment: pw.Alignment.center,
-              margin: const pw.EdgeInsets.only(bottom: 10),
+              margin: pw.EdgeInsets.only(bottom: 10.h),
               child: pw.Text(
                 'Laporan $jenis',
                 style:
-                    pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold),
+                    pw.TextStyle(fontSize: 20.sp, fontWeight: pw.FontWeight.bold),
               ),
             ),
             pw.Row(
@@ -715,9 +715,9 @@ class LihatLaporanController extends GetxController {
                   children: [
                     pw.Container(
                       color: PdfColors
-                          .grey300, // Warna latar belakang untuk baris tabel
+                          .grey300, 
                       child: pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
+                        padding: pw.EdgeInsets.symmetric(horizontal: 5.w, vertical:5.h),
                         child: pw.Text('Nama',
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
@@ -725,9 +725,9 @@ class LihatLaporanController extends GetxController {
                     ),
                     pw.Container(
                       color: PdfColors
-                          .grey300, // Warna latar belakang untuk baris tabel
+                          .grey300, 
                       child: pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
+                        padding: pw.EdgeInsets.symmetric(horizontal: 5.w, vertical:5.h),
                         child: pw.Text('Transaksi',
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
@@ -736,7 +736,7 @@ class LihatLaporanController extends GetxController {
                     pw.Container(
                       color: PdfColors.grey300,
                       child: pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
+                        padding: pw.EdgeInsets.symmetric(horizontal: 5.w, vertical:5.h),
                         child: pw.Text('Jenis',
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
@@ -745,7 +745,7 @@ class LihatLaporanController extends GetxController {
                     pw.Container(
                       color: PdfColors.grey300,
                       child: pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
+                        padding: pw.EdgeInsets.symmetric(horizontal: 5.w, vertical:5.h),
                         child: pw.Text('Unit',
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
@@ -754,7 +754,7 @@ class LihatLaporanController extends GetxController {
                     pw.Container(
                       color: PdfColors.grey300,
                       child: pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
+                        padding: pw.EdgeInsets.symmetric(horizontal: 5.w, vertical:5.h),
                         child: pw.Text('Harga',
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
@@ -763,7 +763,7 @@ class LihatLaporanController extends GetxController {
                     pw.Container(
                       color: PdfColors.grey300,
                       child: pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
+                        padding: pw.EdgeInsets.symmetric(horizontal: 5.w, vertical:5.h),
                         child: pw.Text('Total (per item)',
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
@@ -775,27 +775,27 @@ class LihatLaporanController extends GetxController {
                   return pw.TableRow(
                     children: [
                       pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
+                        padding: pw.EdgeInsets.symmetric(horizontal: 5.w, vertical:5.h),
                         child: pw.Text(row['Nama Barang'].toString()),
                       ),
                       pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
+                        padding: pw.EdgeInsets.symmetric(horizontal: 5.w, vertical:5.h),
                         child: pw.Text(row['Transaksi'].toString()),
                       ),
                       pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
+                        padding: pw.EdgeInsets.symmetric(horizontal: 5.w, vertical:5.h),
                         child: pw.Text(row['Jenis Barang'].toString()),
                       ),
                       pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
+                        padding: pw.EdgeInsets.symmetric(horizontal: 5.w, vertical:5.h),
                         child: pw.Text(row['Unit'].toString()),
                       ),
                       pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
+                        padding: pw.EdgeInsets.symmetric(horizontal: 5.w, vertical:5.h),
                         child: pw.Text(formatRupiah(row['Harga'] as int)),
                       ),
                       pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
+                        padding: pw.EdgeInsets.symmetric(horizontal: 5.w, vertical:5.h),
                         child: pw.Text(formatRupiah(row['Total'] as int)),
                       ),
                     ],

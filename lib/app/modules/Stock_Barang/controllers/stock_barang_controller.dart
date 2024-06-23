@@ -162,8 +162,8 @@ class StockBarangController extends GetxController {
                                       : '${formatRupiah(item['Harga Awal']).substring(0, 9)}...',
                                   style: const TextStyle(color: Colors.white),
                                 ),
-                                const SizedBox(
-                                  width: 10,
+                                 SizedBox(
+                                  width: 10.w,
                                 ),
                                 GestureDetector(
                                   onTap: () {
@@ -172,8 +172,8 @@ class StockBarangController extends GetxController {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(5),
                                     child: Container(
-                                      width: 40,
-                                      height: 20,
+                                      width: 40.w,
+                                      height: 20.h,
                                       color: Colors.orange,
                                       child: const Center(
                                           child: Text(

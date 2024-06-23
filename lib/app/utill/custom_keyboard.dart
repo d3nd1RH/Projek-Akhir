@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../main.dart';
 import 'custom_keyboard_handler.dart';
@@ -30,7 +31,7 @@ class CustomKeyboard extends StatefulWidget {
 }
 
 class _CustomKeyboardState extends State<CustomKeyboard> {
-  final double _defaultKeyboardHeight = 280;
+  final double _defaultKeyboardHeight = 300.h;
   bool _isKeyboardShowing = false;
   TextEditingController _controller = TextEditingController();
   final _keys = [
@@ -117,10 +118,10 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
               children: [
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(10),
+                    padding: EdgeInsets.only(left :10.w, right:10.w,bottom: 10.h, top:10.h),
                     child: Wrap(
-                      spacing: 50,
-                      runSpacing: 20,
+                      spacing: 10.w,
+                      runSpacing: 10.h,
                       alignment: WrapAlignment.center,
                       runAlignment: WrapAlignment.spaceEvenly,
                       children: _keys.map((e) => _keyWidget(e)).toList(),
@@ -142,8 +143,8 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
         _handleKeyPress(keysType);
       },
       child: Container(
-        width: 50,
-        height: 50,
+        width: 100.w,
+        height: 60.h,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
@@ -161,8 +162,8 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
         _handleKeyPress(keysType);
       },
       child: Container(
-        width: 100,
-        height: 100,
+        width: 100.w,
+        height: 100.h,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),

@@ -1,3 +1,5 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'custom_keyboard_handler.dart';
 import 'package:flutter/material.dart';
 
@@ -66,7 +68,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       decoration: InputDecoration(
         hintText: widget.hintText,
         labelText: widget.labelText,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12)
+        contentPadding: EdgeInsets.symmetric(horizontal: 12.h)
       ),
     );
   }

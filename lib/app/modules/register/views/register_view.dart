@@ -95,7 +95,7 @@ class RegisterView extends GetView<RegisterController> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),
-                            contentPadding: const EdgeInsets.all(10.0),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 10.0.w,vertical: 10.0.h),
                           ),
                           style: const TextStyle(color: Colors.black),
                           validator: (emailstate) {
@@ -134,7 +134,7 @@ class RegisterView extends GetView<RegisterController> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
-                                contentPadding: const EdgeInsets.all(10.0),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 10.0.w,vertical: 10.0.h),
                               ),
                               style: const TextStyle(color: Colors.black),
                               validator: (passwordstate) {
@@ -200,7 +200,7 @@ class RegisterView extends GetView<RegisterController> {
                           },
                           style: ButtonStyle(
                             elevation: MaterialStateProperty.all<double>(
-                                3.0), // Menambahkan elevasi bayangan
+                                3.0), 
                             backgroundColor:
                                 MaterialStateProperty.all<Color>(Colors.white),
                             foregroundColor:

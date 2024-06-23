@@ -37,12 +37,12 @@ class ScurityView extends GetView<ScurityController> {
                   controller.userPeran[index]; 
 
               return Card(
-                margin: const EdgeInsets.symmetric(vertical: 10.0),
+                margin: EdgeInsets.symmetric(vertical: 10.0.h),
                 child: ListTile(
                   leading: CircleAvatar(
                     backgroundImage: user['photoUrl'] != null && user['photoUrl'].isNotEmpty
                         ? NetworkImage(user['photoUrl'])
-                        : const AssetImage('assets/images/Logo_Funtime.jpg') as ImageProvider,
+                        : const AssetImage('assets/images/Default Profile.png') as ImageProvider,
                     onBackgroundImageError: (_, __) => const Icon(Icons.error),
                   ),
                   title: Text(user['nama'] ?? 'No Name'),

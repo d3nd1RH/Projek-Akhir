@@ -34,7 +34,7 @@ class ProfileView extends GetView<ProfileController> {
                 return const Center(child: Text("Tunggu Sebentar"));
               } else {
                 return Padding(
-                  padding: EdgeInsets.only(right: 60.w, left: 60.w),
+                  padding: EdgeInsets.symmetric(horizontal: 60.w),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -50,10 +50,11 @@ class ProfileView extends GetView<ProfileController> {
                               backgroundImage: controller.selectedImage.value !=
                                       null
                                   ? FileImage(controller.selectedImage.value!)
-                                  : NetworkImage(
-                                          controller.userData['photoUrl'] ?? '')
-                                      as ImageProvider,
-                            );
+                                  : (controller.userData['photoUrl'] != null && controller.userData['photoUrl'].isNotEmpty
+          ? NetworkImage(controller.userData['photoUrl'])
+          : const AssetImage('assets/images/Default Profile.png')) as ImageProvider,
+);
+
                           }),
                         ),
                         SizedBox(height: 120.h),
