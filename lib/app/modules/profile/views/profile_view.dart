@@ -18,7 +18,9 @@ class ProfileView extends GetView<ProfileController> {
       appBar: AppBar(
         title: const Text('Profile'),
         titleTextStyle: TextStyle(
-            fontSize: 25.sp, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 255, 255, 255)),
+            fontSize: 25.sp,
+            fontWeight: FontWeight.bold,
+            color: const Color.fromARGB(255, 255, 255, 255)),
         centerTitle: true,
         backgroundColor: const Color.fromRGBO(16, 44, 87, 1),
         automaticallyImplyLeading: false,
@@ -50,11 +52,15 @@ class ProfileView extends GetView<ProfileController> {
                               backgroundImage: controller.selectedImage.value !=
                                       null
                                   ? FileImage(controller.selectedImage.value!)
-                                  : (controller.userData['photoUrl'] != null && controller.userData['photoUrl'].isNotEmpty
-          ? NetworkImage(controller.userData['photoUrl'])
-          : const AssetImage('assets/images/Default Profile.png')) as ImageProvider,
-);
-
+                                  : (controller.userData['photoUrl'] != null &&
+                                              controller
+                                                  .userData['photoUrl'].isNotEmpty
+                                          ? NetworkImage(
+                                              controller.userData['photoUrl'])
+                                          : const AssetImage(
+                                              'assets/images/Default Profile.png'))
+                                      as ImageProvider,
+                            );
                           }),
                         ),
                         SizedBox(height: 120.h),
