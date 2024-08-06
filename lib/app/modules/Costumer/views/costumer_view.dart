@@ -94,20 +94,20 @@ class CostumerView extends GetView<CostumerController> {
                 controller.toggleReseller();
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
+                backgroundColor: WidgetStateProperty.all<Color>(
                     const Color.fromARGB(255, 41, 128, 185)),
-                foregroundColor: MaterialStateProperty.all<Color>(
+                foregroundColor: WidgetStateProperty.all<Color>(
                     const Color.fromARGB(255, 250, 250, 250)),
-                minimumSize: MaterialStateProperty.all<Size>(
+                minimumSize: WidgetStateProperty.all<Size>(
                     Size(double.infinity, 50.h)),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-                shadowColor: MaterialStateProperty.all<Color>(
+                shadowColor: WidgetStateProperty.all<Color>(
                     Colors.black.withOpacity(0.5)),
-                elevation: MaterialStateProperty.all<double>(5.0),
+                elevation: WidgetStateProperty.all<double>(5.0),
               ),
               child: Obx(() => Text(
                     formatRupiah(controller.selectedPrice.value),

@@ -176,14 +176,29 @@ class HomeView extends GetView<HomeController> {
                   ],
                 ),
                 SizedBox(height: 5.h),
-                buildFeatureCard(
-                  icon: Icons.fastfood,
-                  label: "Stock Barang",
-                  onTap: () {
-                    Get.toNamed("/stock-barang");
-                  },
-                  imagePath: "assets/images/stock_barang_wallpaper.jpg",
-                  fullWidth: true,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buildFeatureCard(
+                      icon: Icons.fastfood,
+                      label: "Stock Barang",
+                      onTap: () {
+                        Get.toNamed("/stock-barang");
+                      },
+                      imagePath: "assets/images/stock_barang_wallpaper.jpg",
+                      fullWidth: true,
+                    ),
+                    SizedBox(width: 20.w),
+                    buildFeatureCard(
+                    icon: Icons.print_outlined,
+                    label: "Resi",
+                    fullWidth: true,
+                    onTap: () {
+                      Get.toNamed("/resi");
+                    },
+                    imagePath: "assets/images/lihat_laporan_wallpaper.jpg",
+                  ),
+                  ],
                 ),
               ],
             ),

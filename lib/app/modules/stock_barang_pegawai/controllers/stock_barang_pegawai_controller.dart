@@ -12,7 +12,7 @@ import 'package:image/image.dart' as img;
 import '../../../utill/custom_text_field.dart';
 import '../../../utill/formatindo.dart';
 
-class StockBarangController extends GetxController {
+class StockBarangPegawaiController extends GetxController {
   var sortColumnIndex = 0.obs;
   var sortAscending = true.obs;
   bool isUpdating = false;
@@ -309,83 +309,6 @@ class StockBarangController extends GetxController {
     fetchData();
   }
 
-  Future<void> uploadData() async {
-    if (selectedImagePath.value.isNotEmpty) {
-      final file = File(selectedImagePath.value);
-      final convertedFile = await convertImage(file);
-      final storageRef = FirebaseStorage.instance.ref().child(
-          'menu_images/${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}');
-
-      try {
-        final uploadTask = storageRef.putFile(convertedFile);
-        final snapshot = await uploadTask;
-
-        final downloadURL = await snapshot.ref.getDownloadURL();
-        final int quantity = quantityController.text.isNotEmpty
-            ? int.parse(quantityController.text)
-            : 0;
-
-        if (nameController.text.isNotEmpty) {
-          final data = {
-            "docid": nameController.text,
-            "nama": nameController.text,
-            "kategori": selectedCategory.value,
-            "Banyak": quantity,
-            "Harga Awal": hargamasukController.text.isNotEmpty
-                ? int.parse(hargamasukController.text)
-                : 0,
-            "Harga Reseller": priceAController.text.isNotEmpty
-                ? int.parse(priceAController.text)
-                : 0,
-            "Harga Biasa": priceBController.text.isNotEmpty
-                ? int.parse(priceBController.text)
-                : 0,
-            "imageURL": downloadURL,
-          };
-
-          final refDoc = ref.doc(nameController.text);
-          await refDoc.set(data);
-          fetchData();
-          await saveStock(nameController.text, quantity);
-        } else {
-          Get.snackbar("Error", 'Name is empty', backgroundColor: Colors.red);
-        }
-      } catch (e) {
-        Get.snackbar("Error", 'Error uploading image: $e',
-            backgroundColor: Colors.red);
-      }
-    } else {
-      if (nameController.text.isNotEmpty) {
-        final int quantity = quantityController.text.isNotEmpty
-            ? int.parse(quantityController.text)
-            : 0;
-        final data = {
-          "docid": nameController.text,
-          "nama": nameController.text,
-          "kategori": selectedCategory.value,
-          "Banyak": quantity,
-          "Harga Awal": hargamasukController.text.isNotEmpty
-              ? int.parse(hargamasukController.text)
-              : 0,
-          "Harga Reseller": priceAController.text.isNotEmpty
-              ? int.parse(priceAController.text)
-              : 0,
-          "Harga Biasa": priceBController.text.isNotEmpty
-              ? int.parse(priceBController.text)
-              : 0,
-          "imageURL": null,
-        };
-
-        final refDoc = ref.doc(nameController.text);
-        await refDoc.set(data);
-        fetchData();
-        await saveStock(nameController.text, quantity);
-      } else {
-        Get.snackbar("Error", 'Name is empty', backgroundColor: Colors.red);
-      }
-    }
-  }
-
   Future<void> updatedData(String docId, int previousStock) async {
     if (selectedImagePath.value.isNotEmpty &&
         !selectedImagePath.value.startsWith('http')) {
@@ -405,15 +328,6 @@ class StockBarangController extends GetxController {
             "Banyak": quantityController.text.isNotEmpty
                 ? int.parse(quantityController.text)
                 : 0,
-            "Harga Awal": hargamasukController.text.isNotEmpty
-                ? int.parse(hargamasukController.text)
-                : 0,
-            "Harga Reseller": priceAController.text.isNotEmpty
-                ? int.parse(priceAController.text)
-                : 0,
-            "Harga Biasa": priceBController.text.isNotEmpty
-                ? int.parse(priceBController.text)
-                : 0,
             "imageURL": downloadURL,
           };
 
@@ -430,15 +344,6 @@ class StockBarangController extends GetxController {
           "kategori": selectedCategory.value,
           "Banyak": quantityController.text.isNotEmpty
               ? int.parse(quantityController.text)
-              : 0,
-          "Harga Awal": hargamasukController.text.isNotEmpty
-              ? int.parse(hargamasukController.text)
-              : 0,
-          "Harga Reseller": priceAController.text.isNotEmpty
-              ? int.parse(priceAController.text)
-              : 0,
-          "Harga Biasa": priceBController.text.isNotEmpty
-              ? int.parse(priceBController.text)
               : 0,
           "imageURL": selectedImagePath.value.isNotEmpty
               ? selectedImagePath.value
@@ -512,134 +417,6 @@ class StockBarangController extends GetxController {
           backgroundColor: Colors.red);
     }
   }
-
-  void tambahBarang() {
-    Get.dialog(
-      SingleChildScrollView(
-        child: AlertDialog(
-          title: const Text('Tambah Barang'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Column(
-                  children: [
-                    const Text("Gambar Barang"),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    GestureDetector(
-                      onTap: pickImage,
-                      child: Obx(() => Container(
-                            color: Colors.grey,
-                            height: 150.h,
-                            width: 150.h,
-                            child: selectedImagePath.value.isEmpty
-                                ? const Center(
-                                    child: Icon(Icons.add, size: 50),
-                                  )
-                                : Image.file(
-                                    File(selectedImagePath.value),
-                                    fit: BoxFit.cover,
-                                  ),
-                          )),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Obx(() => DropdownButton<String>(
-                    value: selectedCategory.value,
-                    items: <String>['Makanan', 'Minuman', 'Lainnya']
-                        .map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      if (newValue != null) {
-                        setSelectedCategory(newValue);
-                      }
-                    },
-                  )),
-              SizedBox(
-                height: 20.h,
-              ),
-              CustomTextField(
-                labelText: 'Nama Barang',
-                controller: nameController,
-                isUseCustomKeyBoard: false,
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              CustomTextField(
-                labelText: 'Jumlah',
-                controller: quantityController,
-                isUseCustomKeyBoard: true,
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              CustomTextField(
-                labelText: 'Harga Masuk',
-                controller: hargamasukController,
-                isUseCustomKeyBoard: true,
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              CustomTextField(
-                labelText: 'Harga Resaller',
-                controller: priceAController,
-                isUseCustomKeyBoard: true,
-              ),
-              SizedBox(height: 20.h),
-              CustomTextField(
-                labelText: 'Harga Regular',
-                controller: priceBController,
-                isUseCustomKeyBoard: true,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                selectedCategory = 'Makanan'.obs;
-                selectedImagePath = ''.obs;
-                nameController.clear();
-                quantityController.clear();
-                hargamasukController.clear();
-                priceAController.clear();
-                priceBController.clear();
-                Get.back();
-              },
-              child: const Text('Batal'),
-            ),
-            TextButton(
-              onPressed: () async {
-                await uploadData();
-                selectedCategory = 'Makanan'.obs;
-                selectedImagePath = ''.obs;
-                nameController.clear();
-                quantityController.clear();
-                hargamasukController.clear();
-                priceAController.clear();
-                priceBController.clear();
-                Get.back();
-              },
-              child: const Text('Tambah'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Future<void> updateStock(String docId, int changeInStock) async {
     if (isUpdating) {
       return;
@@ -806,9 +583,6 @@ class StockBarangController extends GetxController {
 
     nameController.text = item['nama'];
     quantityController.text = item['Banyak'].toString();
-    hargamasukController.text = item['Harga Awal'].toString();
-    priceAController.text = item['Harga Reseller'].toString();
-    priceBController.text = item['Harga Biasa'].toString();
     selectedCategory.value = item['kategori'];
     selectedImagePath.value = item['imageURL'] ?? '';
 
@@ -888,23 +662,6 @@ class StockBarangController extends GetxController {
                 isUseCustomKeyBoard: true,
               ),
               SizedBox(height: 20.h),
-              CustomTextField(
-                labelText: 'Harga Masuk',
-                controller: hargamasukController,
-                isUseCustomKeyBoard: true,
-              ),
-              SizedBox(height: 20.h),
-              CustomTextField(
-                labelText: 'Harga Ressaler',
-                controller: priceAController,
-                isUseCustomKeyBoard: true,
-              ),
-              SizedBox(height: 20.h),
-              CustomTextField(
-                labelText: 'Harga Regullar',
-                controller: priceBController,
-                isUseCustomKeyBoard: true,
-              ),
             ],
           ),
           actions: [
@@ -914,9 +671,6 @@ class StockBarangController extends GetxController {
                 selectedImagePath = ''.obs;
                 nameController.clear();
                 quantityController.clear();
-                hargamasukController.clear();
-                priceAController.clear();
-                priceBController.clear();
                 Get.back();
               },
               child: const Text('Batal'),
@@ -929,27 +683,9 @@ class StockBarangController extends GetxController {
                 selectedImagePath = ''.obs;
                 nameController.clear();
                 quantityController.clear();
-                hargamasukController.clear();
-                priceAController.clear();
-                priceBController.clear();
                 Get.back();
               },
               child: const Text('Simpan'),
-            ),
-            TextButton(
-              onPressed: () async {
-                await ref.doc(docId).delete();
-                fetchData();
-                selectedCategory = 'Makanan'.obs;
-                selectedImagePath = ''.obs;
-                nameController.clear();
-                quantityController.clear();
-                hargamasukController.clear();
-                priceAController.clear();
-                priceBController.clear();
-                Get.back();
-              },
-              child: const Text('Hapus'),
             ),
           ],
         ),
@@ -959,7 +695,7 @@ class StockBarangController extends GetxController {
 }
 
 class HomeSearchDelegate extends SearchDelegate<Map<String, dynamic>> {
-  final StockBarangController controller;
+  final StockBarangPegawaiController controller;
 
   HomeSearchDelegate(this.controller);
 

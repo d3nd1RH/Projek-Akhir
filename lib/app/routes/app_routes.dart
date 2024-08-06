@@ -16,6 +16,8 @@ abstract class Routes {
   static const WORKHOME = _Paths.WORKHOME;
   static const SCURITY = _Paths.SCURITY;
   static const PROFILE = _Paths.PROFILE;
+  static const STOCK_BARANG_PEGAWAI = _Paths.STOCK_BARANG_PEGAWAI;
+  static const RESI = _Paths.RESI;
 }
 
 abstract class _Paths {
@@ -31,4 +33,6 @@ abstract class _Paths {
   static const WORKHOME = '/workhome';
   static const SCURITY = '/scurity';
   static const PROFILE = '/profile';
+  static const STOCK_BARANG_PEGAWAI = '/stock-barang-pegawai';
+  static const RESI = '/resi';
 }

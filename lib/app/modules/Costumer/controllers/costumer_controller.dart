@@ -4,12 +4,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 
 class CostumerController extends GetxController {
   var makananList = <Map<String, dynamic>>[].obs;
   var minumanList = <Map<String, dynamic>>[].obs;
   var lainnyaList = <Map<String, dynamic>>[].obs;
+  var selectedDevice = Rxn<BluetoothDevice>();
 
+  BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
   final CollectionReference ref = FirebaseFirestore.instance.collection('Menu');
 
   var isCheckedList = <RxBool>[].obs;
@@ -339,14 +342,56 @@ class CostumerController extends GetxController {
 
   Future<void> showConfirmationDialog(
       BuildContext context, Function onConfirm) async {
+    List<Map<String, dynamic>> items = [];
+
+    for (int i = 0; i < isCheckedList.length; i++) {
+      if (isCheckedList[i].value) {
+        Map<String, dynamic> data;
+        if (i < makananList.length) {
+          data = makananList[i];
+        } else if (i < makananList.length + minumanList.length) {
+          data = minumanList[i - makananList.length];
+        } else {
+          data = lainnyaList[i - makananList.length - minumanList.length];
+        }
+
+        items.add({
+          'nama': data['nama'],
+          'banyak': clickCountList[i].value,
+          'harga':
+              isReseller.value ? data['Harga Reseller'] : data['Harga Biasa'],
+        });
+      }
+    }
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Konfirmasi'),
-          content:
-              const Text('Apakah Anda yakin ingin menyimpan pembelian ini?'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text('Apakah Anda yakin ingin menyimpan pembelian ini?'),
+                SizedBox(height: 20.h),
+                const Text('Detail Pembelian:',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                ...items.map((item) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 5.0.w),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(item['nama']),
+                        Text(item['banyak'].toString()),
+                      ],
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
           actions: <Widget>[
             TextButton(
               child: const Text('Tidak'),
@@ -357,13 +402,214 @@ class CostumerController extends GetxController {
             TextButton(
               child: const Text('Iya'),
               onPressed: () {
-                onConfirm();
                 Navigator.of(context).pop();
+                onConfirm();
+                int totalPrice = items.fold(0, (acc, item) {
+                  return acc +
+                      ((item['banyak'] as int) * (item['harga'] as int));
+                });
+                showPrintConfirmationDialog(items, totalPrice);
               },
             ),
           ],
         );
       },
     );
+  }
+
+  Future<void> showPrintConfirmationDialog(
+      List<Map<String, dynamic>> items, int totalPrice) async {
+    List<BluetoothDevice> devices = await bluetooth.getBondedDevices();
+    return Get.dialog(
+      AlertDialog(
+        title: const Text('Konfirmasi Cetak Resi'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'FunTime Juice',
+                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                'Alamat Toko',
+                style: TextStyle(fontSize: 16.sp),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 10.h),
+              Text(
+                '----------------------------------------------------',
+                style: TextStyle(fontSize: 16.sp),
+                textAlign: TextAlign.center,
+              ),
+              ...items.map((item) {
+                return Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5.0.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(item['nama']),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.0.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            item['banyak'].toString(),
+                            style: TextStyle(fontSize: 16.sp),
+                            textAlign: TextAlign.left,
+                          ),
+                          Text(
+                            item['harga'].toString(),
+                            style: TextStyle(fontSize: 16.sp),
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            (item['harga'] * item['banyak']).toString(),
+                            style: TextStyle(fontSize: 16.sp),
+                            textAlign: TextAlign.right,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              }),
+              SizedBox(height: 10.h),
+              Text(
+                '----------------------------------------------------',
+                style: TextStyle(fontSize: 16.sp),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 10.h),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Total',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text(totalPrice.toString(),
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+              SizedBox(height: 10.h),
+              const Text(
+                'Terima kasih atas pembelian Anda!',
+                style: TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 20.h),
+              const Text('Pilih Perangkat Bluetooth:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Obx(() {
+                return DropdownButton<BluetoothDevice>(
+                  value: selectedDevice.value,
+                  hint: const Text('Pilih Perangkat'),
+                  onChanged: (BluetoothDevice? device) {
+                    selectedDevice.value = device;
+                  },
+                  items: devices.map((device) {
+                    return DropdownMenuItem<BluetoothDevice>(
+                      value: device,
+                      child: Text(device.name ?? "Perangkat Tidak Dikenal"),
+                    );
+                  }).toList(),
+                );
+              }),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Tidak Cetak'),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          TextButton(
+            child: const Text('Cetak'),
+            onPressed: () async {
+              if (selectedDevice.value != null) {
+                printReceipt(
+                  items,
+                  totalPrice,
+                  selectedDevice.value!,
+                );
+                Get.back();
+                selectedDevice.value = null;
+              } else {
+                Get.snackbar(
+                    'Error', 'Pilih perangkat Bluetooth terlebih dahulu',
+                    backgroundColor: Colors.red);
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void printReceipt(List<Map<String, dynamic>> items, int totalPrice,
+      BluetoothDevice device) async {
+    try {
+      await bluetooth.connect(device);
+      bool? isConnected = await bluetooth.isConnected;
+
+      if (isConnected == true) {
+        bluetooth.printNewLine();
+        bluetooth.printCustom("FunTime Juice", 2, 1);
+        bluetooth.printCustom("Alamat Toko", 0, 1);
+        bluetooth.printNewLine();
+        bluetooth.printCustom("--------------------------------", 0, 1);
+
+        for (var item in items) {
+          bluetooth.printCustom(item['nama'], 0, 0);
+          bluetooth.print3Column(
+              "  ${item['banyak']}  ",
+              item['harga'].toString(),
+              (item['harga'] * item['banyak']).toString(),
+              1);
+        }
+
+        bluetooth.printCustom("--------------------------------", 0, 1);
+        bluetooth.printLeftRight("Total", totalPrice.toString(), 1);
+        bluetooth.printNewLine();
+        bluetooth.printCustom("Terima kasih atas pembelian Anda", 1, 1);
+        bluetooth.printNewLine();
+        bluetooth.paperCut();
+        await bluetooth.disconnect();
+      } else {
+        Get.snackbar('Error',
+            'Tidak dapat terhubung ke printer Bluetooth. Pastikan perangkat yang dipilih adalah printer.',
+            backgroundColor: Colors.red);
+      }
+    } catch (e) {
+      if (e.toString().contains('connect_error')) {
+        Get.snackbar('Error',
+            'Kesalahan koneksi: Gagal menyambung ke perangkat. Pastikan perangkat dalam jangkauan dan sudah dipasangkan.',
+            backgroundColor: Colors.red);
+      } else if (e.toString().contains('socket might closed or timeout')) {
+        Get.snackbar('Error',
+            'Kesalahan timeout: Tidak ada respons dari perangkat. Periksa kembali perangkat dan coba lagi.',
+            backgroundColor: Colors.red);
+      } else {
+        Get.snackbar('Error', 'Terjadi kesalahan: $e',
+            backgroundColor: Colors.red);
+      }
+    }
+    try {
+      await bluetooth.disconnect();
+    } catch (disconnectError) {
+      Get.snackbar('Error', 'Gagal memutuskan koneksi: $disconnectError',
+          backgroundColor: Colors.red);
+    }
   }
 }

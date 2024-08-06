@@ -59,24 +59,36 @@ class WorkhomeView extends GetView<WorkhomeController> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  buildFeatureCard(
-                    icon: Icons.group_outlined,
-                    label: "Costumer",
-                    fullWidth: true,
-                    onTap: () {
-                      Get.toNamed("/costumer");
-                    },
-                    imagePath: "assets/images/Consumer Wallpaper.jpg",
+                  Row(
+                    children: [
+                      buildFeatureCard(
+                        icon: Icons.group_outlined,
+                        label: "Costumer",
+                        onTap: () {
+                          Get.toNamed("/costumer");
+                        },
+                        imagePath: "assets/images/Consumer Wallpaper.jpg",
+                      ),
+                      SizedBox(width: 20.w),
+                      buildFeatureCard(
+                        icon: Icons.fastfood,
+                        label: "Stock Barang",
+                        onTap: () {
+                          Get.toNamed("/stock-barang-pegawai");
+                        },
+                        imagePath: "assets/images/stock_barang_wallpaper.jpg",
+                      ),
+                    ],
                   ),
                   SizedBox(height: 20.h),
                   buildFeatureCard(
-                    icon: Icons.fastfood,
-                    label: "Stock Barang",
+                    icon: Icons.print_outlined,
+                    label: "Resi",
                     fullWidth: true,
                     onTap: () {
-                      Get.toNamed("/stock-barang");
+                      Get.toNamed("/resi");
                     },
-                    imagePath: "assets/images/stock_barang_wallpaper.jpg",
+                    imagePath: "assets/images/lihat_laporan_wallpaper.jpg",
                   ),
                 ],
               ),
@@ -155,5 +167,4 @@ class WorkhomeView extends GetView<WorkhomeController> {
       ),
     );
   }
-
 }

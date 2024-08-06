@@ -148,21 +148,21 @@ class LoginView extends GetView<LoginController> {
                         },
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
+                              WidgetStateProperty.all<Color>(Colors.white),
                           foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.black),
-                          minimumSize: MaterialStateProperty.all<Size>(
+                              WidgetStateProperty.all<Color>(Colors.black),
+                          minimumSize: WidgetStateProperty.all<Size>(
                             Size(double.infinity, 50.h),
                           ),
                           shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25.0),
                             ),
                           ),
-                          shadowColor: MaterialStateProperty.all<Color>(
+                          shadowColor: WidgetStateProperty.all<Color>(
                               Colors.black.withOpacity(0.5)),
-                          elevation: MaterialStateProperty.all<double>(5.0),
+                          elevation: WidgetStateProperty.all<double>(5.0),
                         ),
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.h),

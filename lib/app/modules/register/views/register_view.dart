@@ -199,15 +199,15 @@ class RegisterView extends GetView<RegisterController> {
                             }
                           },
                           style: ButtonStyle(
-                            elevation: MaterialStateProperty.all<double>(
+                            elevation: WidgetStateProperty.all<double>(
                                 3.0), 
                             backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white),
+                                WidgetStateProperty.all<Color>(Colors.white),
                             foregroundColor:
-                                MaterialStateProperty.all<Color>(Colors.black),
-                            minimumSize: MaterialStateProperty.all<Size>(
+                                WidgetStateProperty.all<Color>(Colors.black),
+                            minimumSize: WidgetStateProperty.all<Size>(
                                 Size(double.infinity, 50.h)),
-                            shape: MaterialStateProperty.all<
+                            shape: WidgetStateProperty.all<
                                 RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25.0),
